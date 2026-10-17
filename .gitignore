@@ -5,6 +5,15 @@
 *.pem
 *.key
 
+# Supplied assignment material and local assistant files; never commit.
+docs/assignment_brief.docx
+CLAUDE.md
+AGENTS.md
+.claude/
+
+# Local progress checklist derived from the assignment brief; never commit.
+docs/phase_completion.md
+
 # Python environments, bytecode, test/lint caches, and build products.
 .venv/
 .tools/

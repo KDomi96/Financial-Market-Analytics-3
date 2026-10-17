@@ -1,8 +1,8 @@
 # Project directory guide
 
 The project root is the existing `Final Project` folder. The approved directory
-scaffold is present. Examples below describe future contents, not files that
-already exist or implemented functionality.
+scaffold is present. Market-data acquisition is implemented; later analytical
+components remain planned. Implemented acquisition files are listed below.
 
 ## Root files
 
@@ -10,8 +10,9 @@ already exist or implemented functionality.
 | --- | --- | --- |
 | `README.md` | Human entry point: scope, status, and eventually installation and end-to-end run instructions. | Created. |
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
+| `.gitattributes` | Preserves raw source-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/. |
 | `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
-| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Created; no third-party runtime dependencies yet. |
+| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance and pandas; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
 | `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Created; default command checks the package import. |
@@ -28,7 +29,7 @@ is ignored and is not part of the submission.
 | `docs/` | Requirements and supporting documentation. |
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
 | `docs/methodology.md` | Future record of analytical decisions and their rationale. |
-| `docs/data_sources.md` | Future data provenance and citations. |
+| `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
 | `docs/deployment.md` | Future operational guide. |
 
 ## Data and the meaning of interim
@@ -76,8 +77,22 @@ data folders.
 | `app/` | User-facing web interface that calls the API. |
 
 The root package has an `__init__.py` so it can be installed and imported.
-The functional subdirectories remain placeholders; their modules, scripts,
-and tests will be added with implementation.
+The data subpackage implements Yahoo acquisition; other functional subdirectories
+remain placeholders. Current acquisition files are:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/yahoo_finance.json` | Eight Yahoo symbols and separate historical/unseen date boundaries. |
+| `src/market_analytics/data/yahoo.py` | Downloads, source-preserving CSV exports, validation, and acquisition manifests. |
+| `scripts/download_yahoo.py` | Thin executable entry point; see README for the verified command. |
+| `tests/test_yahoo.py` | Offline checks for dates, missing data, and VIX nontrading records. |
+| `data/raw/yahoo_finance/<UTC timestamp>/historical/` | Eight provider-returned CSVs for 2018-2025. |
+| `data/raw/yahoo_finance/<UTC timestamp>/unseen/` | Eight provider-returned CSVs for January-July 2026. |
+| `data/raw/yahoo_finance/<UTC timestamp>/manifest.json` | Settings, library versions, timestamps, hashes, validation, and calendar differences. |
+
+Raw CSVs preserve the records returned by yfinance, including missing values.
+They are not byte-for-byte Yahoo HTTP responses. No interim or processed market
+datasets have been created yet.
 
 ## Fitted artifacts, generated results, and final reporting
 

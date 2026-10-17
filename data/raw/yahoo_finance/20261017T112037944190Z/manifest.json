@@ -1,0 +1,886 @@
+{
+  "provider": "Yahoo Finance",
+  "access_library": "yfinance",
+  "started_at_utc": "2026-10-17T11:20:37.944190+00:00",
+  "versions": {
+    "yfinance": "1.7.0",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4"
+  },
+  "python": "3.12.13",
+  "configuration": {
+    "instruments": {
+      "MSFT": "Microsoft",
+      "GOOGL": "Alphabet Class A",
+      "NVDA": "NVIDIA",
+      "AAPL": "Apple",
+      "AMZN": "Amazon",
+      "META": "Meta Platforms",
+      "^GSPC": "S&P 500 index",
+      "^VIX": "Cboe VIX index"
+    },
+    "periods": {
+      "historical": {
+        "start": "2018-01-01",
+        "end_exclusive": "2026-01-01",
+        "first_session": "2018-01-02",
+        "last_session": "2025-12-31"
+      },
+      "unseen": {
+        "start": "2026-01-01",
+        "end_exclusive": "2026-08-01",
+        "first_session": "2026-01-02",
+        "last_session": "2026-07-31"
+      }
+    }
+  },
+  "download_settings": {
+    "interval": "1d",
+    "auto_adjust": false,
+    "back_adjust": false,
+    "actions": true,
+    "repair": false,
+    "keepna": true,
+    "prepost": false,
+    "rounding": false,
+    "threads": false,
+    "ignore_tz": true,
+    "multi_level_index": false,
+    "progress": false,
+    "timeout": 30
+  },
+  "representation": "CSV serialization of yfinance-returned records; not raw HTTP payloads",
+  "adjustment_policy": "Preserve Close and Adj Close as supplied. auto_adjust=False does not undo Yahoo's existing split adjustments. No additional adjustment, repair, imputation, filtering, or rounding is applied. Analytical price choice and P&L treatment remain to be established.",
+  "records": [
+    {
+      "period": "historical",
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "file": "historical/MSFT.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:38.548498+00:00",
+      "attempts": 1,
+      "sha256": "c19046531fd216a4c327166c4d2f0910325e7591b3f06df03fd98cf1d1640253",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "GOOGL",
+      "name": "Alphabet Class A",
+      "file": "historical/GOOGL.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:38.829024+00:00",
+      "attempts": 1,
+      "sha256": "89a616d721dbc7e076ad7b61dd67b0a06b1d2202b8042231feaf2f43294dbe7a",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "file": "historical/NVDA.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:39.044544+00:00",
+      "attempts": 1,
+      "sha256": "078bb19d83f0947366c5e083b2086e4fe6155b3d0d1b2f3bd033e87c14cba0c5",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "AAPL",
+      "name": "Apple",
+      "file": "historical/AAPL.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:39.288613+00:00",
+      "attempts": 1,
+      "sha256": "9a61999227720b7eb98b5517bd89b31f2b588aacac63499f0f47a801203ad648",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "AMZN",
+      "name": "Amazon",
+      "file": "historical/AMZN.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:39.509717+00:00",
+      "attempts": 1,
+      "sha256": "0b17fbdf5460899b5eb06b31eb1504f83b7e5c19c819e5aab029df445d1a0504",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "file": "historical/META.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:39.735780+00:00",
+      "attempts": 1,
+      "sha256": "dc7c981a54492c1e58e3a373b14d0735e8c1e3ea4a6c9b47ed8a644f411c3b86",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "^GSPC",
+      "name": "S&P 500 index",
+      "file": "historical/GSPC.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:39.935934+00:00",
+      "attempts": 1,
+      "sha256": "e27059d38d87e1c28bececd21019d5684ea1dbd5c7681e1791274c31840da54c",
+      "validation": {
+        "rows": 2011,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "historical",
+      "symbol": "^VIX",
+      "name": "Cboe VIX index",
+      "file": "historical/VIX.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.129269+00:00",
+      "attempts": 1,
+      "sha256": "d9a7182ee5890b0da8e4ebd0863cbe957a2c3854215fd541cb646b2561593efd",
+      "validation": {
+        "rows": 2087,
+        "first_date": "2018-01-02",
+        "last_date": "2025-12-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 76,
+          "High": 76,
+          "Low": 76,
+          "Close": 76,
+          "Adj Close": 76,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [
+          "2018-01-15",
+          "2018-02-19",
+          "2018-03-30",
+          "2018-05-28",
+          "2018-07-04",
+          "2018-09-03",
+          "2018-11-22",
+          "2018-12-05",
+          "2018-12-25",
+          "2019-01-01",
+          "2019-01-21",
+          "2019-02-18",
+          "2019-04-19",
+          "2019-05-27",
+          "2019-07-04",
+          "2019-09-02",
+          "2019-11-28",
+          "2019-12-25",
+          "2020-01-01",
+          "2020-01-20",
+          "2020-02-17",
+          "2020-04-10",
+          "2020-05-25",
+          "2020-07-03",
+          "2020-09-07",
+          "2020-11-26",
+          "2020-12-25",
+          "2021-01-01",
+          "2021-01-18",
+          "2021-02-15",
+          "2021-04-02",
+          "2021-05-31",
+          "2021-07-05",
+          "2021-09-06",
+          "2021-11-25",
+          "2021-12-24",
+          "2022-01-17",
+          "2022-02-21",
+          "2022-04-15",
+          "2022-05-30",
+          "2022-06-20",
+          "2022-07-04",
+          "2022-09-05",
+          "2022-11-24",
+          "2022-12-26",
+          "2023-01-02",
+          "2023-01-16",
+          "2023-02-20",
+          "2023-04-07",
+          "2023-05-29",
+          "2023-06-19",
+          "2023-07-04",
+          "2023-09-04",
+          "2023-11-23",
+          "2023-12-25",
+          "2024-01-01",
+          "2024-01-15",
+          "2024-02-19",
+          "2024-03-29",
+          "2024-05-27",
+          "2024-06-19",
+          "2024-07-04",
+          "2024-09-02",
+          "2024-11-28",
+          "2024-12-25",
+          "2025-01-01",
+          "2025-01-09",
+          "2025-01-20",
+          "2025-02-17",
+          "2025-04-18",
+          "2025-05-26",
+          "2025-06-19",
+          "2025-07-04",
+          "2025-09-01",
+          "2025-11-27",
+          "2025-12-25"
+        ],
+        "valid_close_rows": 2011,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": [
+          "2018-01-15",
+          "2018-02-19",
+          "2018-03-30",
+          "2018-05-28",
+          "2018-07-04",
+          "2018-09-03",
+          "2018-11-22",
+          "2018-12-05",
+          "2018-12-25",
+          "2019-01-01",
+          "2019-01-21",
+          "2019-02-18",
+          "2019-04-19",
+          "2019-05-27",
+          "2019-07-04",
+          "2019-09-02",
+          "2019-11-28",
+          "2019-12-25",
+          "2020-01-01",
+          "2020-01-20",
+          "2020-02-17",
+          "2020-04-10",
+          "2020-05-25",
+          "2020-07-03",
+          "2020-09-07",
+          "2020-11-26",
+          "2020-12-25",
+          "2021-01-01",
+          "2021-01-18",
+          "2021-02-15",
+          "2021-04-02",
+          "2021-05-31",
+          "2021-07-05",
+          "2021-09-06",
+          "2021-11-25",
+          "2021-12-24",
+          "2022-01-17",
+          "2022-02-21",
+          "2022-04-15",
+          "2022-05-30",
+          "2022-06-20",
+          "2022-07-04",
+          "2022-09-05",
+          "2022-11-24",
+          "2022-12-26",
+          "2023-01-02",
+          "2023-01-16",
+          "2023-02-20",
+          "2023-04-07",
+          "2023-05-29",
+          "2023-06-19",
+          "2023-07-04",
+          "2023-09-04",
+          "2023-11-23",
+          "2023-12-25",
+          "2024-01-01",
+          "2024-01-15",
+          "2024-02-19",
+          "2024-03-29",
+          "2024-05-27",
+          "2024-06-19",
+          "2024-07-04",
+          "2024-09-02",
+          "2024-11-28",
+          "2024-12-25",
+          "2025-01-01",
+          "2025-01-09",
+          "2025-01-20",
+          "2025-02-17",
+          "2025-04-18",
+          "2025-05-26",
+          "2025-06-19",
+          "2025-07-04",
+          "2025-09-01",
+          "2025-11-27",
+          "2025-12-25"
+        ],
+        "missing_valid_close_dates": [],
+        "extra_valid_close_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "file": "unseen/MSFT.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.290097+00:00",
+      "attempts": 1,
+      "sha256": "032ab0fab4ce32c2020c34be095088e4ab41081c4e60c601fcbb11eca0ba9025",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "GOOGL",
+      "name": "Alphabet Class A",
+      "file": "unseen/GOOGL.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.459704+00:00",
+      "attempts": 1,
+      "sha256": "c831adc65432478ec4032729fe77308fd510ed2a96e77b3b3282b8134f131f35",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "file": "unseen/NVDA.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.622897+00:00",
+      "attempts": 1,
+      "sha256": "6d0f50591015b1e7257a4840064c43ebd8d8398812537405903603acc4f58ec7",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "AAPL",
+      "name": "Apple",
+      "file": "unseen/AAPL.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.797690+00:00",
+      "attempts": 1,
+      "sha256": "5d3634305c063c20d3e793599108731092703a31115c621e917218595489b30a",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "AMZN",
+      "name": "Amazon",
+      "file": "unseen/AMZN.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:40.926379+00:00",
+      "attempts": 1,
+      "sha256": "91ad4d2c7088b7cd8f59391af72d7752e02af3d99bc01633ce024f469317f224",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "file": "unseen/META.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:41.074727+00:00",
+      "attempts": 1,
+      "sha256": "a15751cce5cafebce0178c5d66fac7ea9016804ce5fe8c78dfec0e260809ec42",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "^GSPC",
+      "name": "S&P 500 index",
+      "file": "unseen/GSPC.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:41.210046+00:00",
+      "attempts": 1,
+      "sha256": "d94f1754a1e76b632c05414d7a4e5ccc18d169219663664eff80d3eb1e966a0c",
+      "validation": {
+        "rows": 145,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 0,
+          "High": 0,
+          "Low": 0,
+          "Close": 0,
+          "Adj Close": 0,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [],
+        "valid_close_rows": 145,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "valid_close_dates": null,
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": []
+      }
+    },
+    {
+      "period": "unseen",
+      "symbol": "^VIX",
+      "name": "Cboe VIX index",
+      "file": "unseen/VIX.csv",
+      "downloaded_at_utc": "2026-10-17T11:20:41.360858+00:00",
+      "attempts": 1,
+      "sha256": "2d15e4e210db66c9d799a07416d727a54a1f9dac24765f97b6a4f02d16474906",
+      "validation": {
+        "rows": 151,
+        "first_date": "2026-01-02",
+        "last_date": "2026-07-31",
+        "fields": [
+          "Adj Close",
+          "Close",
+          "Dividends",
+          "High",
+          "Low",
+          "Open",
+          "Stock Splits",
+          "Volume"
+        ],
+        "missing_values": {
+          "Open": 5,
+          "High": 5,
+          "Low": 5,
+          "Close": 5,
+          "Adj Close": 5,
+          "Volume": 0
+        },
+        "empty_nontrading_dates": [
+          "2026-01-19",
+          "2026-02-16",
+          "2026-04-03",
+          "2026-06-19",
+          "2026-07-03"
+        ],
+        "valid_close_rows": 146,
+        "duplicate_dates": 0,
+        "errors": []
+      },
+      "calendar_vs_sp500": {
+        "missing_dates": [],
+        "extra_dates": [
+          "2026-01-19",
+          "2026-02-16",
+          "2026-04-03",
+          "2026-05-25",
+          "2026-06-19",
+          "2026-07-03"
+        ],
+        "missing_valid_close_dates": [],
+        "extra_valid_close_dates": [
+          "2026-05-25"
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "status": "complete",
+  "finished_at_utc": "2026-10-17T11:20:41.372764+00:00"
+}

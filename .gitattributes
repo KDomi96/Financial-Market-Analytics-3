@@ -1,0 +1,2 @@
+# Preserve acquired source records so manifest hashes survive every checkout.
+data/raw/** -text
