@@ -1,0 +1,38 @@
+# Local credentials; tracked templates contain no secret values.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments, bytecode, test/lint caches, and build products.
+.venv/
+.tools/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Notebook checkpoints and frontend dependencies/build output.
+.ipynb_checkpoints/
+node_modules/
+.next/
+
+# Editor and operating-system files.
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+~$*
+
+# Data, models, and results are deliberately not blanket-ignored.
+# Establish storage/versioning policy once providers and file sizes are known.
