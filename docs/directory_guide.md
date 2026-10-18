@@ -28,7 +28,7 @@ is ignored and is not part of the submission.
 | `configs/` | Non-secret settings consumed by the pipeline. |
 | `docs/` | Requirements and supporting documentation. |
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
-| `docs/methodology.md` | Future record of analytical decisions and their rationale. |
+| `docs/methodology.md` | Analytical and engineering decisions, their status, and rationale. |
 | `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
 | `docs/deployment.md` | Future operational guide. |
 
