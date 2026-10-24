@@ -1,0 +1,31 @@
+{
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 4001,
+    "client_id": 18
+  },
+  "instruments": {
+    "MSFT": {"sec_type": "STK", "symbol": "MSFT", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "GOOGL": {"sec_type": "STK", "symbol": "GOOGL", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "NVDA": {"sec_type": "STK", "symbol": "NVDA", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "AAPL": {"sec_type": "STK", "symbol": "AAPL", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "AMZN": {"sec_type": "STK", "symbol": "AMZN", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "META": {"sec_type": "STK", "symbol": "META", "exchange": "SMART", "primary_exchange": "NASDAQ", "currency": "USD"},
+    "GSPC": {"sec_type": "IND", "symbol": "SPX", "exchange": "CBOE", "currency": "USD"},
+    "VIX": {"sec_type": "IND", "symbol": "VIX", "exchange": "CBOE", "currency": "USD"}
+  },
+  "periods": {
+    "historical": {
+      "end_utc": "20260101-05:00:00",
+      "duration": "9 Y",
+      "formal_start": "2018-01-01",
+      "formal_end": "2025-12-31"
+    },
+    "unseen": {
+      "end_utc": "20260801-04:00:00",
+      "duration": "150 D",
+      "formal_start": "2026-01-01",
+      "formal_end": "2026-07-31"
+    }
+  }
+}

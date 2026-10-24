@@ -14,6 +14,10 @@ AGENTS.md
 # Local progress checklist derived from the assignment brief; never commit.
 docs/phase_completion.md
 
+# IBKR market data may not be redistributed under the subscriber agreement.
+# Nothing from IBKR is committed: not the snapshots, not their manifests.
+data/raw/ibkr/
+
 # Python environments, bytecode, test/lint caches, and build products.
 .venv/
 .tools/

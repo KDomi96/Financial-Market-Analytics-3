@@ -1,0 +1,5 @@
+period,source,days_compared,days_off,max_abs_diff
+historical,yahoo,2011,2,0.11
+historical,ibkr,2011,28,2.03
+unseen,yahoo,146,1,2.61
+unseen,ibkr,145,3,2.98

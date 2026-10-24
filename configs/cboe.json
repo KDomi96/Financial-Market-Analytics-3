@@ -1,0 +1,9 @@
+{
+  "instruments": {
+    "VIX": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"
+  },
+  "periods": {
+    "historical": {"formal_start": "2018-01-01", "formal_end": "2025-12-31"},
+    "unseen": {"formal_start": "2026-01-01", "formal_end": "2026-07-31"}
+  }
+}

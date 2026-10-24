@@ -21,6 +21,8 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-10-24 | Data sources | VIX close from Cboe; stocks and S&P 500 from Yahoo; IBKR used only to check Yahoo | Adopted |
+| 2026-10-24 | Master layout | Column set, hard stops instead of filling, 15% move flag, `\n` line endings | Adopted |
 | 2026-10-18 | Prices | Close drives returns, spreads, and P&L; dividends are omitted and documented | Adopted |
 | 2026-10-18 | Calendar fields | Master stores integer Year, Quarter, and Month; each analysis encodes them as needed | Adopted |
 | 2026-10-18 | Pair selection | If no pair qualifies, carry forward the strongest candidates labelled exploratory | Adopted |
@@ -31,6 +33,28 @@ unseen results.
 | 2026-10-18 | API and app | FastAPI API; Streamlit interface calling it over HTTP; local Docker first | Adopted |
 
 ## Phase 1: Master data
+
+### Data sources (Adopted)
+
+The six stocks (OHLC and volume) and the S&P 500 come from the Yahoo snapshot.
+VIX comes from Cboe's official daily history. IBKR daily bars were downloaded
+as an independent reference for checking Yahoo; nothing from IBKR goes into
+the master. IBKR's subscriber agreement does not allow redistributing its
+data, so nothing from IBKR is committed.
+
+Yahoo and IBKR agree on every trading date and on every stock close to within
+0.1%. Against Cboe, Yahoo's VIX close is wrong on three days, including
+2026-02-06 in the unseen period (20.37 against 17.76), so the whole VIX series
+is taken from Cboe. Yahoo's S&P 500 close differs from IBKR's on one day
+(2021-08-11, 0.12%); Yahoo's value is kept and the difference recorded as a
+limitation, because patching single values from another provider is harder to
+reproduce and explain than the error is worth. The full comparison is in the
+[Phase 1 source analysis](phase_planning/phase_1_analysis.md).
+
+Open prices differ between Yahoo and IBKR on many days, but on 97-99% of
+historical days per stock by less than 0.15%. Yahoo's open is used, including
+as the execution price in the backtests; that it may not be the official
+opening auction price is recorded as a limitation.
 
 ### Price series (Adopted)
 
@@ -58,16 +82,18 @@ snapshot contains no splits.
 
 ### Trading calendar (Adopted)
 
-The S&P 500 trading dates in the snapshot define the calendar: 2,011 historical
-and 145 unseen dates, identical to the six stocks' dates. VIX rows outside that
-calendar are excluded and listed in the cleaning log: 76 historical and 5 unseen
-empty holiday rows, and the nonempty VIX-only record on 2026-05-25. No stock
-observations are created for closed-market dates. The calendar is not checked
-against an independent exchange calendar, so a date missing from every series
-would not be detected.
+The S&P 500 trading dates in the Yahoo snapshot define the calendar: 2,011
+historical and 145 unseen dates, identical to the six stocks' dates. The Cboe
+VIX series must have a close on every one of those dates. Cboe also publishes
+VIX on some days when stocks did not trade (27 historical and 5 unseen,
+including 2026-05-25); those rows are excluded and listed in the exclusion
+log. No stock observations are created for closed-market dates. IBKR has the
+same trading dates as Yahoo, which supports the calendar, but a date missing
+from every source would still not be detected.
 
-Extreme price moves are investigated before any action. Genuine market moves are
-kept even when large.
+Daily returns larger than 15% in either direction are flagged and their cause
+noted. A flag never changes the data; genuine market moves are kept even when
+large.
 
 ### Returns (Adopted)
 
@@ -90,13 +116,27 @@ them to another encoding only when an analysis needs one:
 
 Calendar fields are not LSTM inputs unless a later recorded decision adds them.
 
-### Dataset layout (Proposed)
+### Dataset layout (Adopted)
 
 The historical and unseen masters are built by the same function and saved
-separately as CSV, with a common schema. Each has one row per trading date and
-columns named `<SYMBOL>_<Field>` (for example `MSFT_Close`, `MSFT_Return`,
-`GSPC_Return`, `VIX_Close`). The wide layout places pair members side by side.
-A data dictionary and cleaning log accompany the files.
+separately as CSV, with a common schema and one row per trading date. The wide
+layout places pair members side by side. Columns:
+
+- For each stock: `_Open`, `_High`, `_Low`, `_Close`, `_AdjClose`, `_Volume`,
+  and `_Return`, prefixed with the symbol (for example `MSFT_Close`).
+  `AdjClose` is a labelled reference column, not an analysis input.
+- `GSPC_Close` and `GSPC_Return`. Index volume is left out because Yahoo's is
+  unreliable (zero on 2023-05-24).
+- `VIX_Close`, from Cboe's CLOSE. The VIX open, high, and low are not needed.
+- `Year`, `Quarter`, and `Month`.
+
+Dividends and split records stay in the interim checkpoints rather than the
+master. A missing or duplicated date, or an invalid required price, stops the
+build; values are never filled, interpolated, or silently dropped. CSVs are
+written with `\n` line endings so the same data give the same file hash on
+Windows and in Docker. A data dictionary, an exclusion log, and a manifest of
+input and output hashes accompany the files. File names and the order of work
+are in the [Phase 1 plan](phase_planning/phase_1_plan.md).
 
 ## Phase 2: Exploratory analysis
 

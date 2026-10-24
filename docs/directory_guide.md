@@ -30,6 +30,9 @@ is ignored and is not part of the submission.
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
 | `docs/methodology.md` | Analytical and engineering decisions, their status, and rationale. |
 | `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
+| `docs/phase_planning/` | Phase-specific implementation roadmaps for later reference; decisions and completion evidence remain in their existing documents. |
+| `docs/phase_planning/phase_1_plan.md` | Phase 1 roadmap covering the master schema, cleaning, calculations, planned files, and verification. |
+| `docs/phase_planning/phase_1_analysis.md` | Check of the Yahoo data against IBKR and Cboe, and why VIX comes from Cboe. |
 | `docs/deployment.md` | Future operational guide. |
 
 ## Data and the meaning of interim
@@ -89,6 +92,9 @@ remain placeholders. Current acquisition files are:
 | `data/raw/yahoo_finance/<UTC timestamp>/historical/` | Eight provider-returned CSVs for 2018-2025. |
 | `data/raw/yahoo_finance/<UTC timestamp>/unseen/` | Eight provider-returned CSVs for January-July 2026. |
 | `data/raw/yahoo_finance/<UTC timestamp>/manifest.json` | Settings, library versions, timestamps, hashes, validation, and calendar differences. |
+| `configs/cboe.json`, `src/market_analytics/data/cboe.py`, `scripts/download_cboe.py` | Cboe VIX history download; the file is saved unchanged under `data/raw/cboe/<UTC timestamp>/`. |
+| `configs/ibkr.json`, `src/market_analytics/data/ibkr.py`, `scripts/download_ibkr.py` | IBKR daily bars for the cross-check, saved under `data/raw/ibkr/<UTC timestamp>/{historical,unseen}/`; Git-ignored because IBKR data may not be redistributed. |
+| `src/market_analytics/data/source_comparison.py`, `scripts/compare_sources.py` | Yahoo/IBKR/Cboe comparison; tables in `outputs/metrics/source_comparison/`. |
 
 Raw CSVs preserve the records returned by yfinance, including missing values.
 They are not byte-for-byte Yahoo HTTP responses. No interim or processed market

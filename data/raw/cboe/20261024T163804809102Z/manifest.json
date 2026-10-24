@@ -1,0 +1,37 @@
+{
+  "provider": "Cboe Global Markets (official index history files)",
+  "started_at_utc": "2026-10-24T16:38:04.809102+00:00",
+  "versions": {
+    "python": "3.12.13",
+    "pandas": "3.0.6"
+  },
+  "representation": "HTTP response bodies saved unchanged",
+  "records": [
+    {
+      "name": "VIX",
+      "url": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv",
+      "final_url": "https://cdn-api.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv",
+      "file": "VIX.csv",
+      "downloaded_at_utc": "2026-10-24T16:38:05.140604+00:00",
+      "sha256": "f94378e505b286168d8dd466cc3a30bb12606ba34084d7ac53de953c75ba2ecd",
+      "rows": 9301,
+      "columns": [
+        "DATE",
+        "OPEN",
+        "HIGH",
+        "LOW",
+        "CLOSE"
+      ],
+      "first_date": "1990-01-02",
+      "last_date": "2026-10-23",
+      "duplicate_dates": 0,
+      "missing_close": 0,
+      "rows_in_formal_periods": {
+        "historical": 2038,
+        "unseen": 150
+      }
+    }
+  ],
+  "status": "complete",
+  "finished_at_utc": "2026-10-24T16:38:05.143109+00:00"
+}

@@ -64,6 +64,38 @@ The acquisition checks have a small offline test suite:
 uv run --locked python -m unittest discover -s tests -v
 ```
 
+## Download Cboe VIX and the IBKR cross-check
+
+VIX for the master comes from Cboe's official history file:
+
+```powershell
+uv run --locked python scripts/download_cboe.py
+```
+
+The IBKR download is only a cross-check. It needs IB Gateway (or TWS) running
+and logged in, with the API enabled and set to read-only on port 4001, and
+market data for US stocks and Cboe indices. `ib_async` is supplied for the run
+rather than added to the project, because it pins an older `tzdata`. No IBKR data
+is included in the repository because IBKR's subscriber agreement forbids
+redistributing its data (details in
+[data sources](docs/data_sources.md)), so this step only works with your own
+IBKR account:
+
+```powershell
+uv run --locked --with ib_async==2.1.0 python scripts/download_ibkr.py
+```
+
+To compare the three sources and write the tables to
+`outputs/metrics/source_comparison/`:
+
+```powershell
+uv run --locked python scripts/compare_sources.py --yahoo data/raw/yahoo_finance/20261017T112037944190Z --ibkr data/raw/ibkr/20261024T163751761776Z --cboe data/raw/cboe/20261024T163804809102Z
+```
+
+All three commands were run on this workstation with `.\.tools\uv.exe
+--cache-dir .tools/uv-cache` in place of `uv`. The results and the reasons for
+the chosen sources are in the [Phase 1 source analysis](docs/phase_planning/phase_1_analysis.md).
+
 See [data sources and acquisition results](docs/data_sources.md), including
 VIX holiday records that must be handled during later alignment. Downloading
 data does not fit models or use the unseen period for analytical decisions.

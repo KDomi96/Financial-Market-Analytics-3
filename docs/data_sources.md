@@ -56,8 +56,9 @@ Missing prices on actual benchmark dates remain validation errors.
 
 Later cleaning should align to the documented stock trading calendar and
 report excluded VIX-only rows. Do not fill closed-market stock prices or use
-VIX's zero volume as a measure of tradable activity. The extra VIX quote can
-be cross-checked against Cboe during that phase. No cleaning has been applied.
+VIX's zero volume as a measure of tradable activity. Cboe's own file confirms
+the 2026-05-25 value as a genuine holiday publication (see below). VIX for the
+master comes from Cboe rather than this Yahoo file. No cleaning has been applied.
 
 An earlier snapshot has `status: failed` because its first validation policy
 treated empty VIX holiday rows as missing trading observations. It is retained
@@ -88,6 +89,61 @@ folders rather than overwrite source files. Commands are in `README.md`.
 The root `.gitattributes` disables Git line-ending conversion under `data/raw/`
 so committed source-file bytes continue to match their recorded checksums.
 
+## Cboe VIX history (used for VIX)
+
+VIX in the master comes from Cboe's official daily history file, not from
+Yahoo. The reasons are in the [Phase 1 source analysis](phase_planning/phase_1_analysis.md).
+
+Snapshot: `data/raw/cboe/20261024T163804809102Z/VIX.csv`, downloaded on
+24 October 2026 with `scripts/download_cboe.py` from
+`https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv`
+(Cboe redirects to `cdn-api.cboe.com`). The response body is saved unchanged,
+so unlike the Yahoo files this is the provider's original file. It holds
+9,301 daily rows from 1990-01-02 to 2026-10-23 with columns DATE, OPEN, HIGH,
+LOW, and CLOSE; 2,038 rows fall in the historical period and 150 in the unseen
+period. The manifest records the URL, SHA-256 checksum, and row counts.
+
+Since 30 May 2022 Cboe has published VIX on US stock-market holidays: 27 such
+days in the historical period and 5 in the unseen period, including
+2026-05-25. Stocks did not trade on those dates, so they are excluded when VIX
+is aligned to the stock calendar.
+
+## Interactive Brokers (cross-check only)
+
+Snapshot: `data/raw/ibkr/20261024T163751761776Z/`, downloaded on 24 October
+2026 with `scripts/download_ibkr.py` through a read-only IB Gateway session
+(ib_async 2.1.0, API server version 178). It contains daily `TRADES` bars for
+the same eight instruments: date, open, high, low, close, volume, average
+(VWAP), and barCount. IBKR documents `TRADES` bars as split-adjusted but not
+dividend-adjusted, and its volume as filtered. The S&P 500 is IBKR contract
+`SPX` and VIX is `VIX`, both on CBOE.
+
+IBKR requests take an end time and a duration, not a start date. The windows
+used ("9 Y" ending 2026-01-01 and "150 D" ending 2026-08-01) are wider than the
+formal periods, and the extra rows are kept as returned; each period has
+exactly 2,011 and 145 rows inside its formal dates. The manifest records the
+requests, contract IDs, checksums, and per-period row counts, and nothing
+about the account. Re-running the download needs an IBKR account with US
+equity and Cboe index market data. These data are not used to build the master.
+
+**The IBKR price files are not published with this project.** IBKR's Market
+Data and Analytics Subscriber Agreement says the data remain the property of
+IBKR and its data suppliers, and clause 3 (headed "No Right to Redistribute")
+adds: "Subscriber agrees not to reproduce, distribute, sell or commercially
+exploit the Software or Data in any manner without the written consent of IB
+and/or the Data Supplier." I did not ask for consent, so nothing from IBKR is
+committed: `data/raw/ibkr/` is excluded by `.gitignore`, manifests included,
+and the comparison tables and notes contain no per-day IBKR prices, only
+summary statistics, counts, dates, and yes/no flags. I read the agreement as published on
+IBKR's website; I could not retrieve the separate Market Data API
+Acknowledgement signed in the client portal, and exchange-level terms may add
+further limits. Anyone wanting to reproduce the cross-check needs their own
+IBKR account and data subscriptions and can regenerate the snapshot with
+`scripts/download_ibkr.py`. The comparison tables in
+`outputs/metrics/source_comparison/` and the conclusions in the
+[Phase 1 source analysis](phase_planning/phase_1_analysis.md) are my own
+results.
+
 ## Sources and permitted use
 
 - [yfinance documentation](https://ranaroussi.github.io/yfinance/): independent
@@ -98,8 +154,14 @@ so committed source-file bytes continue to match their recorded checksums.
 - [Yahoo Finance S&P 500 history](https://finance.yahoo.com/quote/%5EGSPC/history/):
   benchmark identifier and provider price-field descriptions.
 - [Cboe VIX historical data](https://www.cboe.com/tradable-products/vix/vix-historical-data):
-  original-source reference for a later cross-check; this snapshot was obtained
-  from Yahoo, not Cboe.
+  the official VIX history, downloaded on 24 October 2026 and used for VIX in
+  the master.
+- [IBKR TWS API historical data documentation](https://interactivebrokers.github.io/tws-api/historical_bars.html):
+  bar fields, `TRADES` adjustment, and volume filtering for the cross-check
+  snapshot.
+- [IBKR Market Data and Analytics Subscriber Agreement](https://ndcdyn.interactivebrokers.com/Universal/servlet/Registration_v2.formSampleView?file=IBISAgreement.html):
+  the redistribution restriction that keeps the IBKR price files out of the
+  public repository.
 
 Public display or redistribution through the eventual app requires checking
 the applicable provider permissions. This acquisition does not establish

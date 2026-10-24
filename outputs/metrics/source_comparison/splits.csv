@@ -1,0 +1,6 @@
+instrument,split_date,ibkr_matches_yahoo_day_before,ibkr_matches_yahoo_on_split_day,yahoo_split_day_change_pct
+AAPL,2020-08-31,True,True,3.39121
+NVDA,2021-07-20,True,True,-0.893256
+AMZN,2022-06-06,True,True,1.99428
+GOOGL,2022-07-18,True,True,-2.45801
+NVDA,2024-06-10,True,True,0.746146
