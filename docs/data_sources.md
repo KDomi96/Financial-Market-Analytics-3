@@ -60,11 +60,6 @@ VIX's zero volume as a measure of tradable activity. Cboe's own file confirms
 the 2026-05-25 value as a genuine holiday publication (see below). VIX for the
 master comes from Cboe rather than this Yahoo file. No cleaning has been applied.
 
-An earlier snapshot has `status: failed` because its first validation policy
-treated empty VIX holiday rows as missing trading observations. It is retained
-locally for audit and is not included in the Git commit. Select the successful
-snapshot above for subsequent processing.
-
 ## Fields and preservation policy
 
 Each CSV contains Open, High, Low, Close, Adj Close, Volume, Dividends, and
