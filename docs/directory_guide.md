@@ -1,8 +1,9 @@
 # Project directory guide
 
 The project root is the existing `Final Project` folder. The approved directory
-scaffold is present. Market-data acquisition and the Phase 1 master build are
-implemented; later analytical components remain planned.
+scaffold is present. Market-data acquisition, the Phase 1 master build, and the
+Phase 2 exploratory analysis are implemented; later analytical components
+remain planned.
 
 ## Root files
 
@@ -10,12 +11,12 @@ implemented; later analytical components remain planned.
 | --- | --- | --- |
 | `README.md` | Human entry point: scope, status, and eventually installation and end-to-end run instructions. | Created. |
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
-| `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/, data/interim/, data/processed/, and for outputs/metrics/phase1_*.csv. |
+| `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/, data/interim/, data/processed/, and for outputs/metrics/phase1_*.csv and outputs/metrics/eda/*.csv. |
 | `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
-| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance and pandas; versions resolved in uv.lock. |
+| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, and statsmodels; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
-| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Phase 1 build and offline tests verified in Docker. |
+| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs the batch pipeline (master build, then EDA); Phase 1 and Phase 2 runs verified in Docker. |
 | `.dockerignore` | Excludes local environments, tooling, credentials, and caches from the build context. | Created. |
 
 The uv-managed `.venv/` environment is configured. Local uv tooling in `.tools/`
@@ -30,11 +31,13 @@ is ignored and is not part of the submission.
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
 | `docs/methodology.md` | Analytical and engineering decisions, their status, and rationale. |
 | `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
-| `docs/data_dictionary.md` | Every master column, its unit and type, and allowed missing values. |
+| `docs/data_dictionary.md` | Every master and EDA table column, its unit and type, and allowed missing values or statuses. |
 | `docs/phase_planning/` | Phase-specific implementation roadmaps for later reference; decisions and completion evidence remain in their existing documents. |
 | `docs/phase_planning/phase_1_plan.md` | Phase 1 roadmap covering the master schema, cleaning, calculations, planned files, and verification. |
 | `docs/phase_planning/phase_1_analysis.md` | Check of the Yahoo data against IBKR and Cboe, and why VIX comes from Cboe. |
-| `docs/experiment_log.md` | Planned; created with the first logged run in Phase 3. Append-only record of each run's settings, date windows, and results, with links to saved outputs. |
+| `docs/phase_planning/phase_2_plan.md` | EDA roadmap covering return/risk comparisons, all stock pairs, benchmark sensitivity, stability, VIX context, and verification. |
+| `docs/phase_planning/phase_2_analysis.md` | EDA findings and limitations, with numbers traced to the saved tables and figures. |
+| `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
 | `docs/deployment.md` | Future operational guide. |
 
 ## Data and the meaning of interim
@@ -118,6 +121,21 @@ Phase 1 files are:
 | `outputs/metrics/phase1_large_moves.csv` | Returns exceeding 15%, with source notes for historical observations. |
 | `outputs/metrics/phase1_return_checks.csv` | Independent calculations of three returns from raw Close strings. |
 | `outputs/metrics/phase1_docker_validation.json` | Docker image/container identifiers, runtime versions, successful checks, and hashes matching Windows. |
+
+Phase 2 files are:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/eda.json` | Historical input and manifest paths, stock order, adopted calculation settings, and output directories. |
+| `src/market_analytics/analysis/eda.py`, `scripts/run_eda.py` | Input checks, summaries, pair correlations, benchmark regressions, rolling and VIX tables, metadata; thin entry point. |
+| `src/market_analytics/analysis/eda_plots.py` | The nine EDA figures, drawn from the saved tables. |
+| `scripts/run_pipeline.py` | Runs the master build and then the EDA; the Docker default command. |
+| `notebooks/02_eda.ipynb` | Executed walk-through of the EDA tables and figures with short explanations. |
+| `tests/test_eda.py` | Small examples for compounding, drawdowns, pairs, regressions, rolling windows, VIX groups, and historical isolation. |
+| `outputs/metrics/eda/` | Ten EDA tables and `run_metadata.json` (input/settings hashes, VIX boundaries, versions, checks, table hashes). |
+| `outputs/figures/eda/` | Nine PNG figures. |
+| `outputs/metrics/phase2_docker_validation.json` | Docker run of the historical-only pipeline compared with the Windows results. |
+| `outputs/metrics/phase2_review_validation.json` | Regression-test results, independent numerical checks, notebook execution, unchanged table hashes, and the Phase 2 leakage audit. |
 
 ## Fitted artifacts, generated results, and final reporting
 

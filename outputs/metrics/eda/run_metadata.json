@@ -1,0 +1,255 @@
+{
+  "status": "complete",
+  "input": {
+    "file": "data/processed/master_historical.csv",
+    "sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "manifest": "data/processed/master_manifest.json",
+    "rows": 2011,
+    "first_date": "2018-01-02",
+    "last_date": "2025-12-31",
+    "return_dates": 2010,
+    "first_return_date": "2018-01-03"
+  },
+  "settings": {
+    "file": "configs/eda.json",
+    "sha256": "ee27740ab9073f8114db22cbaaddf51cc260cf6e350fd0f36104a4e943794f1b",
+    "values": {
+      "input": "data/processed/master_historical.csv",
+      "manifest": "data/processed/master_manifest.json",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2025-12-31",
+        "first_session": "2018-01-02",
+        "last_session": "2025-12-31",
+        "rows": 2011
+      },
+      "stocks": [
+        "MSFT",
+        "GOOGL",
+        "NVDA",
+        "AAPL",
+        "AMZN",
+        "META"
+      ],
+      "benchmark": "GSPC",
+      "annualization_days": 252,
+      "rolling_window": 60,
+      "min_observations": 3,
+      "vix_groups": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "vix_quantile_method": "linear",
+      "cross_platform_tolerance": 1e-09,
+      "outputs": {
+        "metrics": "outputs/metrics/eda",
+        "figures": "outputs/figures/eda"
+      }
+    }
+  },
+  "code": [
+    {
+      "file": "market_analytics/analysis/eda.py",
+      "sha256": "0c260aa30ca1541949b15d459f36f0e01b6e64e72b00dfd4ebfe10674a20c09b"
+    },
+    {
+      "file": "market_analytics/analysis/eda_plots.py",
+      "sha256": "0809f8f9f2dd9186a8c006c4a8f884fe91bcb5a8c106bb1c9d5a15db51506424"
+    }
+  ],
+  "conventions": {
+    "returns": "Close-based daily percentage returns from the master; dividends excluded",
+    "first_return": "2018-01-02 has no return and is excluded, not treated as zero",
+    "volatility": "sample standard deviation (ddof=1) of daily percent returns; annualized by sqrt(annualization_days)",
+    "compounding": "100 * (product(1 + r/100) - 1); annual windows start from the previous session's Close",
+    "drawdown": "wealth starts at 1 on base_date and the start counts toward the running peak",
+    "correlation": "Pearson, same-date observations; log-price correlation uses natural log of Close",
+    "benchmark": "OLS stock_return = alpha + beta * GSPC_return with explicit intercept; descriptive only",
+    "rolling": "trailing window of rolling_window paired returns ending on the labelled date",
+    "vix_groups": "linear quantiles of VIX_Close on return dates; value equal to a boundary joins the lower group"
+  },
+  "vix_groups": {
+    "levels": [
+      0.3333333333333333,
+      0.6666666666666666
+    ],
+    "method": "linear",
+    "boundaries": [
+      15.93,
+      20.743333333333332
+    ],
+    "labels": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "estimation_n": 2010,
+    "estimation_first_date": "2018-01-03",
+    "estimation_last_date": "2025-12-31"
+  },
+  "versions": {
+    "python": "3.12.13",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  },
+  "validation": [
+    {
+      "check": "required_columns",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "unique_increasing_dates_in_period",
+      "status": "pass",
+      "count": 2011,
+      "details": "2018-01-02 to 2025-12-31"
+    },
+    {
+      "check": "positive_finite_closes_including_vix",
+      "status": "pass",
+      "count": 16088,
+      "details": ""
+    },
+    {
+      "check": "missing_returns_only_on_first_date",
+      "status": "pass",
+      "count": 7,
+      "details": "2018-01-02"
+    },
+    {
+      "check": "compounded_return_matches_close_ratio",
+      "status": "pass",
+      "count": 63,
+      "details": ""
+    },
+    {
+      "check": "beta_and_r_squared_match_covariance_identities",
+      "status": "pass",
+      "count": 54,
+      "details": ""
+    },
+    {
+      "check": "rolling_matches_direct_window_calculation",
+      "status": "pass",
+      "count": 45,
+      "details": "largest gap 5.662e-15"
+    },
+    {
+      "check": "saved_vix_boundaries_reproduce_groups",
+      "status": "pass",
+      "count": 2010,
+      "details": ""
+    },
+    {
+      "check": "stock_summary_rows",
+      "status": "pass",
+      "count": 7,
+      "details": ""
+    },
+    {
+      "check": "stock_annual_summary_rows",
+      "status": "pass",
+      "count": 56,
+      "details": ""
+    },
+    {
+      "check": "pair_correlations_rows",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "benchmark_sensitivity_rows",
+      "status": "pass",
+      "count": 54,
+      "details": ""
+    },
+    {
+      "check": "pair_annual_correlations_rows",
+      "status": "pass",
+      "count": 120,
+      "details": ""
+    },
+    {
+      "check": "rolling_correlations_rows",
+      "status": "pass",
+      "count": 30150,
+      "details": ""
+    },
+    {
+      "check": "vix_group_stock_summary_rows",
+      "status": "pass",
+      "count": 21,
+      "details": ""
+    },
+    {
+      "check": "vix_group_pair_correlations_rows",
+      "status": "pass",
+      "count": 45,
+      "details": ""
+    },
+    {
+      "check": "vix_group_year_counts_rows",
+      "status": "pass",
+      "count": 24,
+      "details": ""
+    },
+    {
+      "check": "incomplete_rolling_windows",
+      "status": "pass",
+      "count": 885,
+      "details": ""
+    },
+    {
+      "check": "vix_group_counts_reconcile_to_return_dates",
+      "status": "pass",
+      "count": 2010,
+      "details": ""
+    },
+    {
+      "check": "unique_unordered_pairs_and_symmetric_matrix",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "defined_correlations_within_bounds",
+      "status": "pass",
+      "count": 29514,
+      "details": ""
+    },
+    {
+      "check": "input_unchanged_after_run",
+      "status": "pass",
+      "count": 1,
+      "details": ""
+    }
+  ],
+  "outputs": {
+    "outputs/metrics/eda/stock_summary.csv": "be1d9140c32593a2466fb177c2554ae9e79155e2c3bb2c1ec83f70b4c3e22d52",
+    "outputs/metrics/eda/stock_annual_summary.csv": "8b05f93d69b87d5d1443121fb511784b35ea5c4980b33eed5bad6369aaab9fb0",
+    "outputs/metrics/eda/pair_correlations.csv": "7b4a321d83943e27049df819c43776939d813e18447ff79db3687075c955ae04",
+    "outputs/metrics/eda/return_correlation_matrix.csv": "bf0cb5c88e92e6d207ec592315c4c9514f131d8c8784ee1c79014cfce94b3033",
+    "outputs/metrics/eda/benchmark_sensitivity.csv": "82e1fa76ed41ba2a60d2ea4cf8cab63128592f224ccf3f8ec6f191a90094cf3d",
+    "outputs/metrics/eda/pair_annual_correlations.csv": "a21eac7d9fe32be07ee2572ce7d82fded73e65abefbade342412849207db9f4a",
+    "outputs/metrics/eda/rolling_correlations.csv": "864ac693f971d04538172dddfb60b25ba65ee3b5ec43594d085d4ed7e2d51ea0",
+    "outputs/metrics/eda/vix_group_stock_summary.csv": "4486192564add544e5d9d53453cf881ffb7ea5b59ccd80a32055921473c74e4d",
+    "outputs/metrics/eda/vix_group_pair_correlations.csv": "48699b9ed02713dcd9c23838d052fff57b1270dd7a4ee393811292981c016734",
+    "outputs/metrics/eda/vix_group_year_counts.csv": "ca4ae7d40db5087a946c3627263941d3719f0f9e8667e7900036f80482c5b0cb"
+  },
+  "figures": [
+    "outputs/figures/eda/performance_index.png",
+    "outputs/figures/eda/drawdowns.png",
+    "outputs/figures/eda/pair_log_prices.png",
+    "outputs/figures/eda/pair_return_scatter.png",
+    "outputs/figures/eda/return_correlation_heatmap.png",
+    "outputs/figures/eda/benchmark_scatter.png",
+    "outputs/figures/eda/pair_annual_correlation_heatmap.png",
+    "outputs/figures/eda/rolling_correlations.png",
+    "outputs/figures/eda/vix_timeline.png"
+  ]
+}

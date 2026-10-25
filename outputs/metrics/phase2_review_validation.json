@@ -1,0 +1,163 @@
+{
+  "status": "complete",
+  "verified_date": "2026-10-25",
+  "experiment": "EXP-002",
+  "historical_input": {
+    "file": "data/processed/master_historical.csv",
+    "sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "manifest": "data/processed/master_manifest.json",
+    "rows": 2011,
+    "first_date": "2018-01-02",
+    "last_date": "2025-12-31",
+    "return_dates": 2010,
+    "first_return_date": "2018-01-03"
+  },
+  "settings": {
+    "file": "configs/eda.json",
+    "sha256": "ee27740ab9073f8114db22cbaaddf51cc260cf6e350fd0f36104a4e943794f1b",
+    "values": {
+      "input": "data/processed/master_historical.csv",
+      "manifest": "data/processed/master_manifest.json",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2025-12-31",
+        "first_session": "2018-01-02",
+        "last_session": "2025-12-31",
+        "rows": 2011
+      },
+      "stocks": [
+        "MSFT",
+        "GOOGL",
+        "NVDA",
+        "AAPL",
+        "AMZN",
+        "META"
+      ],
+      "benchmark": "GSPC",
+      "annualization_days": 252,
+      "rolling_window": 60,
+      "min_observations": 3,
+      "vix_groups": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "vix_quantile_method": "linear",
+      "cross_platform_tolerance": 1e-09,
+      "outputs": {
+        "metrics": "outputs/metrics/eda",
+        "figures": "outputs/figures/eda"
+      }
+    }
+  },
+  "code_before_corrections": [
+    {
+      "file": "market_analytics/analysis/eda.py",
+      "sha256": "ec3918aa66db9ff15814cab1677b515c38ccb5186bac3a194b267297b281515e"
+    },
+    {
+      "file": "market_analytics/analysis/eda_plots.py",
+      "sha256": "0809f8f9f2dd9186a8c006c4a8f884fe91bcb5a8c106bb1c9d5a15db51506424"
+    }
+  ],
+  "code_after_corrections": [
+    {
+      "file": "market_analytics/analysis/eda.py",
+      "sha256": "0c260aa30ca1541949b15d459f36f0e01b6e64e72b00dfd4ebfe10674a20c09b"
+    },
+    {
+      "file": "market_analytics/analysis/eda_plots.py",
+      "sha256": "0809f8f9f2dd9186a8c006c4a8f884fe91bcb5a8c106bb1c9d5a15db51506424"
+    }
+  ],
+  "regression_tests": {
+    "file": "tests/test_eda.py",
+    "sha256": "7f5c12e3cca3347aa90dc528078224b1cb0034d82390d7011a5ad4257f27f549",
+    "added": [
+      "test_constant_stock_keeps_undefined_correlations_through_full_analysis",
+      "test_history_shorter_than_window_remains_incomplete"
+    ],
+    "failed_before_fix": 2,
+    "passed_after_fix": 2
+  },
+  "local_tests_passed": 31,
+  "eda_tests_passed": 18,
+  "eda_run_checks_passed": 22,
+  "notebook": {
+    "file": "notebooks/02_eda.ipynb",
+    "sha256": "649325f4e89fe20968137dd720dcda751cd15cf7b90d47da9d50357779a0e703",
+    "executed_code_cells": 9,
+    "error_outputs": 0
+  },
+  "tables_unchanged_from_EXP_001": true,
+  "table_sha256": {
+    "outputs/metrics/eda/stock_summary.csv": "be1d9140c32593a2466fb177c2554ae9e79155e2c3bb2c1ec83f70b4c3e22d52",
+    "outputs/metrics/eda/stock_annual_summary.csv": "8b05f93d69b87d5d1443121fb511784b35ea5c4980b33eed5bad6369aaab9fb0",
+    "outputs/metrics/eda/pair_correlations.csv": "7b4a321d83943e27049df819c43776939d813e18447ff79db3687075c955ae04",
+    "outputs/metrics/eda/return_correlation_matrix.csv": "bf0cb5c88e92e6d207ec592315c4c9514f131d8c8784ee1c79014cfce94b3033",
+    "outputs/metrics/eda/benchmark_sensitivity.csv": "82e1fa76ed41ba2a60d2ea4cf8cab63128592f224ccf3f8ec6f191a90094cf3d",
+    "outputs/metrics/eda/pair_annual_correlations.csv": "a21eac7d9fe32be07ee2572ce7d82fded73e65abefbade342412849207db9f4a",
+    "outputs/metrics/eda/rolling_correlations.csv": "864ac693f971d04538172dddfb60b25ba65ee3b5ec43594d085d4ed7e2d51ea0",
+    "outputs/metrics/eda/vix_group_stock_summary.csv": "4486192564add544e5d9d53453cf881ffb7ea5b59ccd80a32055921473c74e4d",
+    "outputs/metrics/eda/vix_group_pair_correlations.csv": "48699b9ed02713dcd9c23838d052fff57b1270dd7a4ee393811292981c016734",
+    "outputs/metrics/eda/vix_group_year_counts.csv": "ca4ae7d40db5087a946c3627263941d3719f0f9e8667e7900036f80482c5b0cb"
+  },
+  "independent_numeric_checks": {
+    "status": "pass",
+    "historical_input_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "saved_table_hashes_verified": 10,
+    "return_and_drawdown_windows": 63,
+    "benchmark_regressions": 54,
+    "rolling_windows": 29265,
+    "rolling_largest_absolute_difference": 1.2212453270876722e-14,
+    "benchmark_largest_absolute_difference": 2.220446049250313e-15,
+    "vix_pair_correlations": 45,
+    "methods": "Drawdowns from Close running peaks; centered sums for OLS and each full rolling window; same-date VIX masks; no imports of EDA calculations",
+    "unseen_market_data_read": false
+  },
+  "figures_visually_reviewed": [
+    "outputs/figures/eda/performance_index.png",
+    "outputs/figures/eda/drawdowns.png",
+    "outputs/figures/eda/pair_log_prices.png",
+    "outputs/figures/eda/pair_return_scatter.png",
+    "outputs/figures/eda/return_correlation_heatmap.png",
+    "outputs/figures/eda/benchmark_scatter.png",
+    "outputs/figures/eda/pair_annual_correlation_heatmap.png",
+    "outputs/figures/eda/rolling_correlations.png",
+    "outputs/figures/eda/vix_timeline.png"
+  ],
+  "docker_validation": "outputs/metrics/phase2_docker_validation.json",
+  "default_docker_pipeline": {
+    "image": "financial-market-analytics-3:phase2-review",
+    "container": "financial-market-analytics-3-phase2-review-full",
+    "exit_code": 0,
+    "eda_checks_passed": 22
+  },
+  "leakage_audit": [
+    {
+      "object": "54 descriptive OLS fits",
+      "fit_window": "2018-01-03 through 2025-12-31, or each calendar year within it",
+      "applied_to": "same dates",
+      "result": "No out-of-sample claim or saved trading parameter"
+    },
+    {
+      "object": "VIX tercile boundaries",
+      "fit_window": "2010 historical return dates, 2018-01-03 through 2025-12-31",
+      "applied_to": "same dates",
+      "result": "Descriptive only; not a trading threshold"
+    },
+    {
+      "object": "Rolling correlations",
+      "fit_window": "60 paired returns ending at each labelled date",
+      "applied_to": "that date",
+      "result": "Trailing windows; future perturbation test passes"
+    },
+    {
+      "object": "Unseen market data",
+      "fit_window": "none in EDA",
+      "applied_to": "none in EDA",
+      "result": "Historical-only container has no unseen master. Full pipeline rebuilds unseen data for Phase 1 but EDA reads only the historical master."
+    }
+  ],
+  "limitations": "Checks validate this descriptive implementation and its recorded outputs. Cointegration, strategy performance and predictive usefulness have not been tested in Phase 2."
+}

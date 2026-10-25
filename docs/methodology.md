@@ -21,6 +21,10 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-10-25 | Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
+| 2026-10-25 | Phase 2 methods | Pearson return and log-price correlations, return/risk definitions, OLS beta with intercept, 60-session rolling window, VIX terciles | Adopted |
+| 2026-10-25 | Docker runtime | One image; ordered batch pipeline as the default command; API and app as two containers from that image | Adopted |
+| 2026-10-25 | LSTM device | CPU-only PyTorch build; final models and reported metrics produced on CPU | Adopted |
 | 2026-10-25 | Build reproducibility | Verify only selected Yahoo periods; slice shared Cboe history before price checks; omit wall-clock time from the build manifest | Adopted |
 | 2026-10-24 | Data sources | VIX close from Cboe; stocks and S&P 500 from Yahoo; IBKR used only to check Yahoo | Adopted |
 | 2026-10-24 | Master layout | Column set, hard stops instead of filling, 15% move flag, `\n` line endings | Adopted |
@@ -150,23 +154,150 @@ also reproduces the manifest bytes; acquisition times remain in the raw manifest
 
 ## Phase 2: Exploratory analysis
 
-### Analysis package (Proposed)
+### Scope (Adopted 2026-10-25)
 
-| Question | Evidence |
+The analysis compares the six stocks' returns and risk, examines all 15 stock
+pairs, and describes each stock's sensitivity to the S&P 500. Annual
+comparisons and rolling correlations show how those relationships change
+within the historical period. A small VIX investigation adds context about
+market uncertainty. Month/quarter pattern investigations remain optional,
+outside this agreed scope.
+
+The only market-data input is `data/processed/master_historical.csv`.
+These are retrospective descriptions of 2018-2025, not out-of-sample tests.
+All 15 pairs continue to Phase 3; an EDA correlation does not qualify or
+exclude a pair. Cointegration tests, spread regressions, and pair ranking
+belong to that phase.
+
+### Return and risk measures (Adopted 2026-10-25)
+
+Use the existing Close-based percentage returns, with dividends excluded.
+Include the S&P 500 as a reference alongside the six stocks in the performance
+and risk summaries. Report the same measures for the whole period and each
+calendar year:
+
+| Measure | Definition and unit |
 | --- | --- |
-| How do the six stocks differ in return and risk? | Cumulative compounded performance, daily-return summaries, annualized volatility, and drawdowns, overall and by year. |
-| Which stocks move together? | Daily-return correlation matrix; for all 15 pairs, rebased log-price panels and return scatterplots. |
-| How sensitive is each stock to the benchmark? | OLS of stock daily returns on S&P 500 daily returns with an intercept; beta interpreted with correlation and R-squared. |
+| Daily return summary | Arithmetic mean, median, minimum, maximum, and sample standard deviation; all in percent |
+| Compounded price return | `100 * (product(1 + daily_return / 100) - 1)`; percent, kept separate from the arithmetic mean |
+| Annualized volatility | Sample standard deviation of daily percentage returns times `sqrt(252)`; percent, annualized |
+| Maximum drawdown | Minimum of `100 * (wealth / running_peak - 1)`; zero or negative percent |
 
-Volatility is the daily standard deviation annualized with 252 trading days.
-Cumulative compounded returns are reported separately from arithmetic average
-returns. Selected rolling correlations or subperiod comparisons may show
-whether relationships change; the plot set is kept to what the findings use.
+Use `ddof=1` explicitly for sample standard deviation. The divisor is `N - 1`,
+as described in the [pandas standard-deviation documentation](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.std.html).
+The 252-day factor is a fixed reporting convention, not an estimate of the
+number of sessions in each year or a forecast of future volatility.
 
-Correlations of price levels are shown only to explain why they differ from
-return correlations. Trending series can have high level correlation without
-any stable relationship, so correlation is not treated as evidence of
-cointegration.
+For the whole-period performance chart, index each Close to 100 on the first
+historical date. Its endpoint must agree with compounding the valid returns.
+The first historical return remains missing and is excluded from return
+statistics. It does not become a zero-return observation. For annual
+calculations, group the existing returns by their dates; retain each later
+year's first-session return from the preceding year's final Close. The 2018
+return covers the first observed Close onward because no 2017 Close is present.
+
+Drawdown uses a wealth path starting at 1, including that starting value when
+calculating the running peak. Reset this starting wealth for each annual
+summary, so a loss on the first session of a later year is counted. Annual
+drawdowns describe losses within that year; the whole-period drawdown can
+span several years. They are labelled separately.
+
+### Pair relationships (Adopted 2026-10-25)
+
+Use Pearson correlation of same-day daily returns as the main comparison.
+Save all 15 unique unordered pairs, their sample counts, and a six-stock
+correlation matrix. Each pair gets a time-series panel of
+`log(Close_t / Close_first)` and a scatterplot of the two daily returns.
+The former is in natural-log units; the latter uses percentage returns.
+
+Also report Pearson correlation of the log-price levels in the pair table,
+labelled separately from return correlation. This comparison illustrates how
+similar trends can produce high level correlations without establishing a
+stable equilibrium. Neither measure is evidence of cointegration.
+
+### Benchmark sensitivity (Adopted 2026-10-25)
+
+For each stock, fit `stock_return = alpha + beta * GSPC_return + error`, using
+same-day percentage returns and an explicit intercept. Save beta, alpha in
+percent per day, R-squared, stock/benchmark return correlation, sample count,
+and the actual observation dates. Repeat the regression within each calendar
+year to show changes in sensitivity.
+
+The [statsmodels OLS documentation](https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html)
+states that an intercept must be supplied when using the array interface.
+After explicitly removing the permitted first historical missing-return row,
+use an error on any remaining missing observation rather than silent deletion.
+Beta describes the fitted association with the benchmark: a one percentage
+point benchmark move corresponds to a fitted beta percentage point stock move.
+It is not a causal effect, a cointegration hedge ratio, or a CAPM estimate
+using excess returns. Alpha is not presented as evidence of investment skill.
+P-values and confidence intervals are outside this descriptive analysis.
+
+### Relationship stability (Adopted 2026-10-25)
+
+Compare daily-return correlations for all 15 pairs within each calendar year.
+Alongside them, use one fixed trailing window of 60 trading observations,
+approximately three months, for every pair. Require 60 valid paired returns,
+include the current day's return, and label each result by the window's end
+date. These are after-close descriptive plots, not trading inputs. Windows
+continue across calendar years and never use future observations.
+
+Do not try several window lengths and retain the one producing the most
+attractive relationship. The 60-day window was fixed before any EDA result
+was calculated. Early incomplete windows stay missing.
+Constant-return windows also have undefined correlation and stay missing with
+a recorded reason. pandas does not mark them itself: in pandas 3.0.6,
+[`Rolling.corr`](https://pandas.pydata.org/docs/reference/api/pandas.api.typing.Rolling.corr.html)
+returned `inf` for a constant window in a synthetic check, while the rolling
+standard deviation returned exactly zero. Zero variance is therefore detected
+from the inputs before an estimate is accepted. Constant or insufficient
+samples in static correlations or benchmark regressions likewise produce
+missing estimates with a status, not invented zeros or infinities.
+
+### VIX context (Adopted 2026-10-25)
+
+Plot the historical VIX and compare stock volatility and pair correlations
+across low-, medium-, and high-VIX groups. VIX measures expected S&P 500
+volatility over the next 30 days, as explained by
+[Cboe](https://www.cboe.com/tradable_products/cboe_minis/vix_mini_vix/).
+This provides context for changing stock relationships: greater market
+uncertainty may coincide with different volatility and correlations. The
+analysis checks whether those differences exist rather than assuming them.
+
+Use the Cboe `VIX_Close` already aligned in the historical master. The
+groups use the historical VIX's one-third and two-thirds quantiles, estimated
+on dates with valid returns for all six stocks and the benchmark. Use linear
+quantile interpolation. Low is at or below the lower boundary, medium is
+above the lower boundary and at or below the upper boundary, and high is
+above the upper boundary. Tied VIX values stay together, so group sizes need
+not be equal. The labels describe relative VIX levels within this historical
+sample. Record both boundaries and the dates used to estimate them.
+This rule is set before viewing the grouped results; the numerical boundaries
+are calculated during the EDA run.
+
+Within each group, report daily-return sample standard deviation and mean
+absolute daily return for the six stocks and S&P 500, and Pearson daily-return
+correlation for all 15 stock pairs. Use same-date VIX and returns. Volatility
+and mean absolute return are in daily percentage units; correlation is
+dimensionless. Save observation counts and dates.
+Also show group counts by year, so a result dominated by one historical
+episode is visible. Each group pools non-consecutive dates; it is not a
+continuous holding period, and no compounded group return is calculated.
+
+These comparisons describe historical associations. They do not establish
+cointegration or add VIX to the LSTM or trading rules. If a later decision
+uses VIX for prediction, its thresholds must be fitted within that stage's
+training window and its information must be available at the prediction time.
+No 2026 observations enter this investigation.
+
+### Adoption
+
+The methods above were reviewed and adopted on 2026-10-25, before any of them
+was calculated on the historical master: Pearson return correlations, the
+log-price comparison, the return/risk definitions, OLS benchmark sensitivity
+with an intercept, the fixed 60-session rolling window, and the VIX grouping
+rule. The work order, planned outputs, and verification are in the
+[Phase 2 plan](phase_planning/phase_2_plan.md).
 
 ## Phase 3: Pair selection
 
@@ -302,11 +433,25 @@ strategies trade the same series and no scale conversion is needed.
 
 PyTorch was chosen for explicit control over the training loop, early
 stopping, and the final-refit epoch rule. Models are saved as `.pt` files with
-metadata: pair, feature order, window lengths, split dates, seed, and library
-versions. The starting design is one compact LSTM per selected pair (one layer,
+metadata: pair, feature order, window lengths, split dates, seed, training
+device, and library versions. The starting design is one compact LSTM per selected pair (one layer,
 about 32 units, five outputs, MSE loss, Adam, early stopping on validation),
 with a small recorded set of experiments and fixed seeds. Unsuccessful trials
 are recorded.
+
+### Training device (Adopted 2026-10-25)
+
+Training and inference run on CPU, using the CPU-only PyTorch build on both
+Windows and Docker. Each pair contributes under 2,000 short sequences to a
+small network, so CPU training should take minutes at most, and a GPU would
+add little speed at this size. The CUDA build would add several gigabytes of
+packages, and its GPU kernels do not reproduce CPU results exactly. With a
+rule that picked the GPU whenever one was present, the reported metrics would
+depend on the machine that trained the model.
+
+The device is saved in each model's metadata. If tuning on the validation
+years turns out to be slow, a GPU may be used for those trials only. Final
+models and reported metrics are always produced on CPU.
 
 ### Evaluation (Proposed)
 
@@ -388,6 +533,22 @@ use them as model inputs.
   path is what gets tested.
 - **Deployment:** local Docker first. Hosting is Open; a public URL is claimed
   only if verified.
+
+### Docker runtime (Adopted 2026-10-25)
+
+One Dockerfile builds one image holding all project code and the locked
+dependencies. Its default command runs the batch phases in order, each phase
+reading the files the previous one wrote inside the same container. Single
+phases can still be run by passing their script as the command. The API and
+the Streamlit app run as two containers started from the same image with
+different commands, through one Compose file, because both are long-running
+servers and the app reaches the API over HTTP.
+
+The image never contains `data/interim`, `data/processed`, or `outputs` from
+the workstation. Every container run rebuilds derived data from the raw
+snapshots, so a result that exists only on the workstation, or a script that
+fails without writing its file, cannot pass the Docker check. IBKR data are
+excluded for licensing reasons.
 
 ### Routes and user flow (Proposed)
 

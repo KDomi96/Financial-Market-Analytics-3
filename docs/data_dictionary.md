@@ -1,4 +1,6 @@
-# Master data dictionary
+# Data dictionary
+
+The master files come first; the Phase 2 EDA tables are at the end.
 
 Both masters have the same 49 columns, including Date. Each row is one stock
 trading date. The historical file contains 2,011 rows from 2018-01-02 to
@@ -114,3 +116,43 @@ versions, input and build-file hashes, dataset dimensions, missing-value counts,
 and hashes of all eight generated CSVs. The manifest does not hash itself.
 It records no wall-clock build time so identical rebuilds can reproduce its
 bytes. Acquisition timestamps remain in the source manifests.
+
+## Phase 2 EDA tables
+
+The ten tables in `outputs/metrics/eda/` describe 2018-2025 only. Dates are
+`YYYY-MM-DD` strings. Columns ending in `_pct` are percentages in the same
+units as the master returns (1.5 means 1.5%). Correlations, beta, and
+R-squared are dimensionless. Values keep full calculation precision.
+
+The detailed estimate tables carry `status` (or `<prefix>status`) and the count
+and date range of the observations used. Missing estimates have a status
+explaining the reason. The matrix is a compact view of the pair table and has
+no separate status columns. Drawdown dates are empty when there is no loss,
+even when the summary's status is `ok`.
+
+| Status | Meaning |
+| --- | --- |
+| `ok` | Estimate calculated. |
+| `insufficient_observations` | Fewer than `min_observations` (3) observations. |
+| `zero_variance` | One input is constant. Correlation is undefined; the adopted policy also omits benchmark fits with a constant stock or benchmark. |
+| `incomplete_window` | Rolling window has fewer than 60 paired returns. |
+
+On the real master, every status except the 885 early rolling windows is `ok`.
+
+| File | Rows | Key columns | Other columns |
+| --- | --- | --- | --- |
+| `stock_summary.csv` | 7 | `instrument` (six stocks and GSPC) | `n`, `first_date`, `last_date`, `base_date` (Close the compounding and drawdown start from), `mean_pct`, `median_pct`, `min_pct`, `max_pct`, `std_pct` (sample, ddof=1), `annualized_vol_pct` (std times sqrt(252)), `compounded_return_pct`, `max_drawdown_pct` (zero or negative), `drawdown_peak_date`, `drawdown_trough_date`, `status` |
+| `stock_annual_summary.csv` | 56 | `instrument`, `year` | As above; `base_date` is the previous session (2018-01-02 for 2018) |
+| `pair_correlations.csv` | 15 | `pair`, `stock_a`, `stock_b` | `return_correlation`, `return_n`, `return_first_date`, `return_last_date`, `return_status`, and the same five fields with prefix `log_price_` for natural-log Close levels |
+| `return_correlation_matrix.csv` | 6 | `symbol` | One column per stock; symmetric, including matching missing values; diagonal is 1 for a varying series with enough observations and empty otherwise |
+| `benchmark_sensitivity.csv` | 54 | `stock`, `period` (`2018-2025` or a year) | `alpha_pct` (percent per day), `beta`, `r_squared`, `correlation`, `n`, `first_date`, `last_date`, `status` |
+| `pair_annual_correlations.csv` | 120 | `pair`, `stock_a`, `stock_b`, `year` | `correlation`, `n`, `first_date`, `last_date`, `status` |
+| `rolling_correlations.csv` | 30,150 | `date` (window end, included), `pair` | `n` (paired returns in the window, up to 60), `correlation`, `status` |
+| `vix_group_stock_summary.csv` | 21 | `vix_group`, `instrument` | `n`, `first_date`, `last_date`, `std_pct`, `mean_abs_pct`, `status`; daily units, not annualized |
+| `vix_group_pair_correlations.csv` | 45 | `vix_group`, `pair`, `stock_a`, `stock_b` | `correlation`, `n`, `first_date`, `last_date`, `status` |
+| `vix_group_year_counts.csv` | 24 | `vix_group`, `year` | `n`, including zero counts |
+
+Pairs are in the fixed display order, with `stock_a` the earlier symbol, so
+`MSFT_GOOGL` comes first and `AMZN_META` last. VIX groups are `low`, `medium`,
+and `high`; their boundaries are stored unrounded in `run_metadata.json`.
+Group dates are pooled and non-consecutive, so no compounded return is given.

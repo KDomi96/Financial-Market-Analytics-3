@@ -1,0 +1,17 @@
+{
+  "input": "data/processed/master_historical.csv",
+  "manifest": "data/processed/master_manifest.json",
+  "period": {"start": "2018-01-01", "end": "2025-12-31", "first_session": "2018-01-02", "last_session": "2025-12-31", "rows": 2011},
+  "stocks": ["MSFT", "GOOGL", "NVDA", "AAPL", "AMZN", "META"],
+  "benchmark": "GSPC",
+  "annualization_days": 252,
+  "rolling_window": 60,
+  "min_observations": 3,
+  "vix_groups": ["low", "medium", "high"],
+  "vix_quantile_method": "linear",
+  "cross_platform_tolerance": 1e-9,
+  "outputs": {
+    "metrics": "outputs/metrics/eda",
+    "figures": "outputs/figures/eda"
+  }
+}

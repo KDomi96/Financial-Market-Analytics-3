@@ -3,3 +3,4 @@ data/raw/** -text
 data/interim/** -text
 data/processed/** -text
 outputs/metrics/phase1_*.csv -text
+outputs/metrics/eda/*.csv -text

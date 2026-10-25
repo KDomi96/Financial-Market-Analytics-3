@@ -1,0 +1,115 @@
+{
+  "status": "complete",
+  "verified_date": "2026-10-25",
+  "docker_engine_version": "29.8.2",
+  "image": "financial-market-analytics-3:phase2-review",
+  "image_id": "sha256:e2fa798f7cd2ac275e6c3f361cc302e48902be418252ea1c7c0e84b035c5adae",
+  "container": "financial-market-analytics-3-phase2-review",
+  "command": "python scripts/run_pipeline.py --historical-only",
+  "container_exit_code": 0,
+  "runtime_versions": {
+    "python": "3.12.13",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  },
+  "processed_files_in_container": [
+    "master_historical.csv",
+    "master_manifest.json"
+  ],
+  "rebuilt_master_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+  "rebuilt_master_matches_windows": true,
+  "eda_checks_passed": 22,
+  "offline_tests_passed": 31,
+  "settings_and_code_hashes_match_windows": true,
+  "vix_boundaries_match_windows": true,
+  "tables_compared": 10,
+  "tables_byte_identical": 5,
+  "numeric_cells_compared": 60965,
+  "largest_absolute_difference": 1.3322676295501878e-15,
+  "tolerance": 1e-09,
+  "comparison_note": "All column names, row counts, non-numeric values and missing-value positions match. Numeric comparisons use absolute tolerance only.",
+  "table_comparisons": [
+    {
+      "file": "outputs/metrics/eda/stock_summary.csv",
+      "local_sha256": "be1d9140c32593a2466fb177c2554ae9e79155e2c3bb2c1ec83f70b4c3e22d52",
+      "docker_sha256": "be1d9140c32593a2466fb177c2554ae9e79155e2c3bb2c1ec83f70b4c3e22d52",
+      "byte_identical": true,
+      "numeric_cells": 63,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "file": "outputs/metrics/eda/stock_annual_summary.csv",
+      "local_sha256": "8b05f93d69b87d5d1443121fb511784b35ea5c4980b33eed5bad6369aaab9fb0",
+      "docker_sha256": "8b05f93d69b87d5d1443121fb511784b35ea5c4980b33eed5bad6369aaab9fb0",
+      "byte_identical": true,
+      "numeric_cells": 560,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "file": "outputs/metrics/eda/pair_correlations.csv",
+      "local_sha256": "7b4a321d83943e27049df819c43776939d813e18447ff79db3687075c955ae04",
+      "docker_sha256": "478de221d0894d5f0dbf537388b225336db690a59633e9511a47fed838ab2d15",
+      "byte_identical": false,
+      "numeric_cells": 60,
+      "max_absolute_difference": 5.551115123125783e-16
+    },
+    {
+      "file": "outputs/metrics/eda/return_correlation_matrix.csv",
+      "local_sha256": "bf0cb5c88e92e6d207ec592315c4c9514f131d8c8784ee1c79014cfce94b3033",
+      "docker_sha256": "f37ab42abac1d5198c72866a085765bec76a35b1475a66884987932b6346004b",
+      "byte_identical": false,
+      "numeric_cells": 36,
+      "max_absolute_difference": 4.440892098500626e-16
+    },
+    {
+      "file": "outputs/metrics/eda/benchmark_sensitivity.csv",
+      "local_sha256": "82e1fa76ed41ba2a60d2ea4cf8cab63128592f224ccf3f8ec6f191a90094cf3d",
+      "docker_sha256": "dda32ad7b1f686f900c363cc03b00a56c844a7745a185624c96e26077f3b500a",
+      "byte_identical": false,
+      "numeric_cells": 270,
+      "max_absolute_difference": 1.3322676295501878e-15
+    },
+    {
+      "file": "outputs/metrics/eda/pair_annual_correlations.csv",
+      "local_sha256": "a21eac7d9fe32be07ee2572ce7d82fded73e65abefbade342412849207db9f4a",
+      "docker_sha256": "4a56761cab5a89387e61eadc24d2d8f43d999573fab96f7cf5c18632379da86e",
+      "byte_identical": false,
+      "numeric_cells": 360,
+      "max_absolute_difference": 9.992007221626409e-16
+    },
+    {
+      "file": "outputs/metrics/eda/rolling_correlations.csv",
+      "local_sha256": "864ac693f971d04538172dddfb60b25ba65ee3b5ec43594d085d4ed7e2d51ea0",
+      "docker_sha256": "864ac693f971d04538172dddfb60b25ba65ee3b5ec43594d085d4ed7e2d51ea0",
+      "byte_identical": true,
+      "numeric_cells": 59415,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "file": "outputs/metrics/eda/vix_group_stock_summary.csv",
+      "local_sha256": "4486192564add544e5d9d53453cf881ffb7ea5b59ccd80a32055921473c74e4d",
+      "docker_sha256": "4486192564add544e5d9d53453cf881ffb7ea5b59ccd80a32055921473c74e4d",
+      "byte_identical": true,
+      "numeric_cells": 63,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "file": "outputs/metrics/eda/vix_group_pair_correlations.csv",
+      "local_sha256": "48699b9ed02713dcd9c23838d052fff57b1270dd7a4ee393811292981c016734",
+      "docker_sha256": "423545db9cec4f2a42e898f12f9a46013a7a3142459a9d8aaa265119f5379a48",
+      "byte_identical": false,
+      "numeric_cells": 90,
+      "max_absolute_difference": 7.771561172376096e-16
+    },
+    {
+      "file": "outputs/metrics/eda/vix_group_year_counts.csv",
+      "local_sha256": "ca4ae7d40db5087a946c3627263941d3719f0f9e8667e7900036f80482c5b0cb",
+      "docker_sha256": "ca4ae7d40db5087a946c3627263941d3719f0f9e8667e7900036f80482c5b0cb",
+      "byte_identical": true,
+      "numeric_cells": 48,
+      "max_absolute_difference": 0.0
+    }
+  ]
+}

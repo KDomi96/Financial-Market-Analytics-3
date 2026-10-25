@@ -18,4 +18,4 @@ USER appuser
 COPY --chown=appuser:appuser . .
 RUN uv sync --locked --no-dev --no-editable
 
-CMD ["python", "scripts/build_master.py"]
+CMD ["python", "scripts/run_pipeline.py"]
