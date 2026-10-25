@@ -17,3 +17,9 @@ dependencies = [
 where = ["src"]
 include = ["market_analytics*"]
 
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+    "nbconvert>=7.17.2",
+]
+

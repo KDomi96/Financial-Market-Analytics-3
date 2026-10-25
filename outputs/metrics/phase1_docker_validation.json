@@ -1,0 +1,47 @@
+{
+  "status": "complete",
+  "verified_date": "2026-10-25",
+  "docker_engine_version": "29.8.2",
+  "image": "financial-market-analytics-3:latest",
+  "image_id": "sha256:5445ce362fce12289a654ef94226bbc240e49ccfd3dc21788b750aa1047f8e61",
+  "container": "fma3-review",
+  "container_exit_code": 0,
+  "runtime_versions": {
+    "python": "3.12.13",
+    "pandas": "3.0.6"
+  },
+  "datasets": {
+    "historical": {
+      "rows": 2011,
+      "columns_including_date": 49,
+      "first_date": "2018-01-02",
+      "last_date": "2025-12-31",
+      "missing_values": 7
+    },
+    "unseen": {
+      "rows": 145,
+      "columns_including_date": 49,
+      "first_date": "2026-01-02",
+      "last_date": "2026-07-31",
+      "missing_values": 0
+    }
+  },
+  "quality_checks_passed": 64,
+  "offline_tests_passed": 13,
+  "matching_output_files": 8,
+  "output_hashes": {
+    "data/interim/aligned_historical.csv": "cfe07ec0e855f3cb5c03c663ff2e51eda1607e936322c623442b3c848555ccf8",
+    "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "data/interim/aligned_unseen.csv": "7105bcf2d5b3bdf780d6148345259989f6a83ebd8ddc7b11b3641381e1e806cd",
+    "data/processed/master_unseen.csv": "c7d74612ca232262ad9d2627056c4eb3410d0a34ea914335e246634d091f171c",
+    "data/interim/excluded_rows.csv": "59c960876985f9a6a7cd7616bafe10ccbec3abad8b5acca93d17b5876a3e20a4",
+    "outputs/metrics/phase1_quality_summary.csv": "2f8afc02f08c008ffb6750d6e692dbb5b8f4996da215c1e7345cb50a5408ccdf",
+    "outputs/metrics/phase1_large_moves.csv": "85021f74014bd31b8d814042a0ef497248372f53493e0d1af7c9fd5a830f5a8d",
+    "outputs/metrics/phase1_return_checks.csv": "2620f0e331976756b51b588f6e6ca9ad6854b058da269a0ebf5e9b69dde24e3f"
+  },
+  "manifest_sha256": "b0ce6976a716dcc9959daccd198601cd86975d587efd1018a417beff2b1c79d9",
+  "manifest_note": "The manifest is byte-identical to the Windows build, including the build-file hash of market_analytics/data/master.py.",
+  "runtime_uid": 10001,
+  "private_inputs_excluded": true,
+  "prebuilt_outputs_excluded": true
+}

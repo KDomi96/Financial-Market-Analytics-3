@@ -2,6 +2,10 @@
 .agents
 .codex
 .aws
+.claude
+AGENTS.md
+CLAUDE.md
+docs/assignment_brief.docx
 .tools
 .venv
 venv
@@ -29,3 +33,9 @@ dist
 **/.DS_Store
 **/Thumbs.db
 **/~$*
+
+# Rebuild derived data inside the image from permitted raw snapshots.
+data/raw/ibkr
+data/interim
+data/processed
+outputs

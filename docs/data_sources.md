@@ -58,7 +58,8 @@ Later cleaning should align to the documented stock trading calendar and
 report excluded VIX-only rows. Do not fill closed-market stock prices or use
 VIX's zero volume as a measure of tradable activity. Cboe's own file confirms
 the 2026-05-25 value as a genuine holiday publication (see below). VIX for the
-master comes from Cboe rather than this Yahoo file. No cleaning has been applied.
+master comes from Cboe rather than this Yahoo file. Raw files remain uncleaned;
+the derived files are described under processing provenance below.
 
 ## Fields and preservation policy
 
@@ -71,8 +72,8 @@ source records, not the original HTTP response bytes.
 
 `auto_adjust=False` preserves both Close and Adj Close; it does not undo any
 split adjustment Yahoo already applies to Close. Preserve both series and
-corporate actions so the analytical adjustment policy can be chosen explicitly
-before returns, cointegration, and P&L are calculated. The data are an acquisition-
+corporate actions. The adopted Close policy is recorded in methodology before
+returns, cointegration, and P&L calculations. The data are an acquisition-
 time snapshot, not a guaranteed point-in-time historical archive. Later
 downloads may revise earlier prices or adjustment factors.
 
@@ -139,6 +140,52 @@ IBKR account and data subscriptions and can regenerate the snapshot with
 [Phase 1 source analysis](phase_planning/phase_1_analysis.md) are my own
 results.
 
+## Phase 1 processing provenance
+
+The master build on 25 October 2026 uses the Yahoo snapshot
+`20261017T112037944190Z` for the six stocks and S&P 500, and the Cboe snapshot
+`20261024T163804809102Z` for VIX. No IBKR records enter the build. Raw files
+remain unchanged. Snapshot IDs, selected input hashes, build-file hashes,
+settings, and Python/pandas versions are recorded in
+`data/processed/master_manifest.json`.
+
+The aligned checkpoints retain the source price fields and corporate actions.
+Each stock must match the S&P 500 dates exactly; Cboe must provide VIX on every
+date. The 27 historical and five unseen Cboe-only dates are listed in
+`data/interim/excluded_rows.csv`. Rows outside each formal period are outside
+the build's scope. No prices are filled, interpolated, clipped, or patched.
+
+The historical master contains 2,011 dates from 2018-01-02 to 2025-12-31, and
+the unseen master contains 145 dates from 2026-01-02 to 2026-07-31. Both have
+49 columns including Date. The historical file has seven missing values:
+the first stock and benchmark returns. The first unseen returns use the
+last historical close and are present. Returns use Close; AdjClose is retained
+for reference. The field definitions are in [the data dictionary](data_dictionary.md).
+
+The build saves 64 passing quality checks in
+`outputs/metrics/phase1_quality_summary.csv`. Three independently calculated
+returns, including a split date and the first unseen date, are saved in
+`outputs/metrics/phase1_return_checks.csv`. Their largest absolute difference
+from the build is below 0.0000000001 percentage points. Repeat builds reproduce
+all eight generated CSV hashes and the manifest bytes in the local environment.
+The executed `notebooks/01_master_data.ipynb` records these checks and findings.
+
+The Docker build was also verified on 25 October 2026. It starts without
+prebuilt interim/processed files and regenerates all eight CSVs from the
+permitted raw snapshots. Their hashes match Windows exactly; all 64 data
+checks and 13 offline tests pass. The container runs as UID 10001 and exits
+with code 0. `outputs/metrics/phase1_docker_validation.json` records the image,
+container, versions, and matching hashes. The manifest itself is byte-identical
+on Windows and in Docker, including the hash of the build module.
+
+The historical large-move table contains 14 stock observations with absolute
+daily returns above 15%. They are retained, with event notes and source URLs
+from `configs/phase1_large_move_notes.json`; earnings releases and Federal
+Reserve announcements provide the event context, and Reuters provides the
+DeepSeek and tariff-pause reporting. The notes do not establish that any event
+was the sole cause of a move. Unseen flags are saved without event investigation.
+The source limitations in the Phase 1 source analysis still apply.
+
 ## Sources and permitted use
 
 - [yfinance documentation](https://ranaroussi.github.io/yfinance/): independent
@@ -160,5 +207,5 @@ results.
 
 Public display or redistribution through the eventual app requires checking
 the applicable provider permissions. This acquisition does not establish
-redistribution rights. Sentiment data have not been acquired; their source,
-coverage, and role remain a separate decision.
+redistribution rights. Sentiment data have not been acquired. Their source
+and role are recorded in methodology; actual coverage remains unverified.

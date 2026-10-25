@@ -1,0 +1,23 @@
+{
+  "sources": {
+    "yahoo": "data/raw/yahoo_finance/20261017T112037944190Z",
+    "cboe": "data/raw/cboe/20261024T163804809102Z"
+  },
+  "stocks": ["MSFT", "GOOGL", "NVDA", "AAPL", "AMZN", "META"],
+  "periods": {
+    "historical": {"start": "2018-01-01", "end": "2025-12-31", "first_session": "2018-01-02", "last_session": "2025-12-31", "rows": 2011},
+    "unseen": {"start": "2026-01-01", "end": "2026-07-31", "first_session": "2026-01-02", "last_session": "2026-07-31", "rows": 145}
+  },
+  "outputs": {
+    "interim": "data/interim",
+    "processed": "data/processed",
+    "metrics": "outputs/metrics"
+  },
+  "large_move_threshold_percent": 15,
+  "large_move_notes": "configs/phase1_large_move_notes.json",
+  "return_checks": [
+    {"period": "historical", "symbol": "MSFT", "date": "2018-01-03"},
+    {"period": "historical", "symbol": "AAPL", "date": "2020-08-31"},
+    {"period": "unseen", "symbol": "GSPC", "date": "2026-01-02"}
+  ]
+}

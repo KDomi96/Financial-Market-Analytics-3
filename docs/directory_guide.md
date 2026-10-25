@@ -1,8 +1,8 @@
 # Project directory guide
 
 The project root is the existing `Final Project` folder. The approved directory
-scaffold is present. Market-data acquisition is implemented; later analytical
-components remain planned. Implemented acquisition files are listed below.
+scaffold is present. Market-data acquisition and the Phase 1 master build are
+implemented; later analytical components remain planned.
 
 ## Root files
 
@@ -10,12 +10,12 @@ components remain planned. Implemented acquisition files are listed below.
 | --- | --- | --- |
 | `README.md` | Human entry point: scope, status, and eventually installation and end-to-end run instructions. | Created. |
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
-| `.gitattributes` | Preserves raw source-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/. |
+| `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/, data/interim/, data/processed/, and for outputs/metrics/phase1_*.csv. |
 | `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
 | `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance and pandas; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
-| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Created; default command checks the package import. |
+| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Phase 1 build and offline tests verified in Docker. |
 | `.dockerignore` | Excludes local environments, tooling, credentials, and caches from the build context. | Created. |
 
 The uv-managed `.venv/` environment is configured. Local uv tooling in `.tools/`
@@ -30,9 +30,11 @@ is ignored and is not part of the submission.
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
 | `docs/methodology.md` | Analytical and engineering decisions, their status, and rationale. |
 | `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
+| `docs/data_dictionary.md` | Every master column, its unit and type, and allowed missing values. |
 | `docs/phase_planning/` | Phase-specific implementation roadmaps for later reference; decisions and completion evidence remain in their existing documents. |
 | `docs/phase_planning/phase_1_plan.md` | Phase 1 roadmap covering the master schema, cleaning, calculations, planned files, and verification. |
 | `docs/phase_planning/phase_1_analysis.md` | Check of the Yahoo data against IBKR and Cboe, and why VIX comes from Cboe. |
+| `docs/experiment_log.md` | Planned; created with the first logged run in Phase 3. Append-only record of each run's settings, date windows, and results, with links to saved outputs. |
 | `docs/deployment.md` | Future operational guide. |
 
 ## Data and the meaning of interim
@@ -80,8 +82,8 @@ data folders.
 | `app/` | User-facing web interface that calls the API. |
 
 The root package has an `__init__.py` so it can be installed and imported.
-The data subpackage implements Yahoo acquisition; other functional subdirectories
-remain placeholders. Current acquisition files are:
+The data subpackage implements acquisition, source comparison, and the master
+build; other functional subdirectories remain placeholders. Acquisition files are:
 
 | Location | Purpose |
 | --- | --- |
@@ -97,8 +99,25 @@ remain placeholders. Current acquisition files are:
 | `src/market_analytics/data/source_comparison.py`, `scripts/compare_sources.py` | Yahoo/IBKR/Cboe comparison; tables in `outputs/metrics/source_comparison/`. |
 
 Raw CSVs preserve the records returned by yfinance, including missing values.
-They are not byte-for-byte Yahoo HTTP responses. No interim or processed market
-datasets have been created yet.
+They are not byte-for-byte Yahoo HTTP responses.
+
+Phase 1 files are:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/master_data.json` | Pinned input snapshots, formal periods, output paths, and return-check samples. |
+| `configs/phase1_large_move_notes.json` | Historical event notes with source URLs; no unseen event investigation. |
+| `src/market_analytics/data/master.py`, `scripts/build_master.py` | Reusable build and thin command-line entry point. |
+| `notebooks/01_master_data.ipynb` | Executed explanation, historical findings, quality checks, and repeat-build checks. |
+| `tests/test_master.py` | Small examples for date alignment, invalid inputs, return units, hashes, and historical isolation. |
+| `data/interim/aligned_historical.csv`, `aligned_unseen.csv` | Aligned source fields, including corporate actions, before return/calendar calculations. |
+| `data/interim/excluded_rows.csv` | Cboe-only observations inside the formal periods, with exclusion reasons. |
+| `data/processed/master_historical.csv`, `master_unseen.csv` | Separate masters with the same 49-column schema including Date. |
+| `data/processed/master_manifest.json` | Settings, versions, build/input hashes, and output hashes for the latest build. |
+| `outputs/metrics/phase1_quality_summary.csv` | Each successful input and master-data check, with counts. |
+| `outputs/metrics/phase1_large_moves.csv` | Returns exceeding 15%, with source notes for historical observations. |
+| `outputs/metrics/phase1_return_checks.csv` | Independent calculations of three returns from raw Close strings. |
+| `outputs/metrics/phase1_docker_validation.json` | Docker image/container identifiers, runtime versions, successful checks, and hashes matching Windows. |
 
 ## Fitted artifacts, generated results, and final reporting
 

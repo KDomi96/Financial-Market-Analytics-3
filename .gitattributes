@@ -1,2 +1,5 @@
-# Preserve acquired source records so manifest hashes survive every checkout.
+# Preserve data-file bytes so manifest hashes survive every checkout.
 data/raw/** -text
+data/interim/** -text
+data/processed/** -text
+outputs/metrics/phase1_*.csv -text

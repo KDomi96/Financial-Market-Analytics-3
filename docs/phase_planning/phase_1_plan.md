@@ -17,10 +17,12 @@ the files, and the checks.
 | VIX | `data/raw/cboe/20261024T163804809102Z/` |
 
 Both snapshots are named in `configs/master_data.json`, so a rebuild never
-picks up a newer download by accident. Before reading anything, the build
-checks that each manifest has `status: complete` and that every file matches
-its recorded SHA-256. The expected sizes are 2,011 historical and 145 unseen
-trading days.
+picks up a newer download by accident. Before parsing the selected records,
+the build checks that each manifest has `status: complete` and that each
+selected file matches its recorded SHA-256. A historical-only run checks only
+the historical Yahoo inputs. The shared Cboe history is hashed in full, then
+restricted to the requested period before price validation and alignment.
+The expected sizes are 2,011 historical and 145 unseen trading days.
 
 ## Master columns
 
@@ -59,7 +61,7 @@ aligned data are saved as interim checkpoints, still including `Adj Close`,
 **3. Calculate.** Daily returns are `100 * (Close_t / Close_{t-1} - 1)` for
 the six stocks and the S&P 500, so 1.5 means 1.5%. The first historical return
 (2018-01-02) has no earlier close and stays empty. The unseen build takes a
-`prior_close` row, read from the aligned historical checkpoint for 2025-12-31,
+`prior_close` row from the aligned historical checkpoint for 2025-12-31,
 to calculate its first return. The historical build never reads the unseen
 files. `Year`, `Quarter`, and `Month` come from the date as integers.
 
@@ -77,6 +79,7 @@ threshold are listed but not investigated.
 | File | Contents |
 | --- | --- |
 | `configs/master_data.json` | Input snapshot IDs and output paths |
+| `configs/phase1_large_move_notes.json` | Historical event notes and source URLs for flagged moves |
 | `src/market_analytics/data/master.py` | Validation, alignment, calculations, and assembly |
 | `scripts/build_master.py` | Thin command that runs the build |
 | `notebooks/01_master_data.ipynb` | The same steps explained, with the checks and findings |
@@ -88,6 +91,7 @@ threshold are listed but not investigated.
 | `data/processed/master_manifest.json` | Input snapshots and hashes, output hashes, settings, library versions |
 | `outputs/metrics/phase1_quality_summary.csv` | Result of every check, with counts |
 | `outputs/metrics/phase1_large_moves.csv` | Returns above 15% with their causes |
+| `outputs/metrics/phase1_return_checks.csv` | Three independent Decimal calculations from raw Close strings |
 
 The notebook explores first. The logic then moves into `master.py`, so that
 the notebook and the command run the same code.
@@ -96,6 +100,7 @@ All CSVs are written with `\n` line endings. pandas would otherwise write
 `\r\n` on Windows and `\n` in Docker, and the same data would get different
 hashes. For the same reason `.gitattributes` gets `data/interim/** -text` and
 `data/processed/** -text`, next to the existing rule for `data/raw/`.
+The Phase 1 metric CSVs are also protected because their hashes are in the manifest.
 
 ## Checks
 

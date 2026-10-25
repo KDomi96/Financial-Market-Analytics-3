@@ -18,5 +18,4 @@ USER appuser
 COPY --chown=appuser:appuser . .
 RUN uv sync --locked --no-dev --no-editable
 
-# The application and pipeline entry points will be added with implementation.
-CMD ["python", "-c", "import market_analytics; print('Project environment ready; the pipeline and application are not implemented yet.')"]
+CMD ["python", "scripts/build_master.py"]

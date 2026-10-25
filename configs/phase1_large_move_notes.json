@@ -1,0 +1,58 @@
+{
+  "2018-07-26/META": {
+    "note": "First session after Facebook's Q2 2018 results; retained as an earnings-related market move.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2018/Facebook-Reports-Second-Quarter-2018-Results/default.aspx"
+  },
+  "2018-11-16/NVDA": {
+    "note": "First session after NVIDIA's Q3 FY2019 results and weaker outlook following excess channel inventory.",
+    "source": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2019"
+  },
+  "2020-03-16/NVDA": {
+    "note": "COVID-19 market disruption after the Federal Reserve's emergency action on 15 March; market context, not proof of a single cause.",
+    "source": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a.htm"
+  },
+  "2020-03-24/NVDA": {
+    "note": "COVID-19 market rebound following the Federal Reserve's 23 March support measures; market context, not proof of a single cause.",
+    "source": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20200323b.htm"
+  },
+  "2022-02-03/META": {
+    "note": "First session after Meta's Q4 2021 results and Q1 2022 outlook; retained as an earnings-related market move.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2022/Meta-Reports-Fourth-Quarter-and-Full-Year-2021-Results/default.aspx"
+  },
+  "2022-04-28/META": {
+    "note": "First session after Meta's Q1 2022 results; retained as an earnings-related market move.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2022/Meta-Reports-First-Quarter-2022-Results/default.aspx"
+  },
+  "2022-10-27/META": {
+    "note": "First session after Meta's Q3 2022 results and expense outlook; retained as an earnings-related market move.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2022/Meta-Reports-Third-Quarter-2022-Results/default.aspx"
+  },
+  "2023-02-02/META": {
+    "note": "First session after Meta's Q4 2022 results and additional share repurchase announcement.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2023/Meta-Reports-Fourth-Quarter-and-Full-Year-2022-Results/default.aspx"
+  },
+  "2023-05-25/NVDA": {
+    "note": "First session after NVIDIA's Q1 FY2024 results and higher Q2 revenue outlook amid AI demand.",
+    "source": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-first-quarter-fiscal-2024"
+  },
+  "2024-02-02/META": {
+    "note": "First session after Meta's Q4 2023 results, first dividend, and additional share repurchase announcement.",
+    "source": "https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Fourth-Quarter-and-Full-Year-2023-Results-Initiates-Quarterly-Dividend/default.aspx"
+  },
+  "2024-02-22/NVDA": {
+    "note": "First session after NVIDIA's Q4 FY2024 results reporting growth in AI and Data Center revenue.",
+    "source": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2024"
+  },
+  "2025-01-27/NVDA": {
+    "note": "AI stock sell-off associated with DeepSeek's lower-cost model, as reported by Reuters.",
+    "source": "https://finance.yahoo.com/news/chinas-deepseek-sets-off-ai-071458415.html"
+  },
+  "2025-04-09/AAPL": {
+    "note": "Broad market rally after the announcement of a 90-day tariff pause, as reported by Reuters.",
+    "source": "https://finance.yahoo.com/news/stocks-rally-trump-tariff-pause-180759203.html"
+  },
+  "2025-04-09/NVDA": {
+    "note": "Broad market rally after the announcement of a 90-day tariff pause, as reported by Reuters.",
+    "source": "https://finance.yahoo.com/news/stocks-rally-trump-tariff-pause-180759203.html"
+  }
+}

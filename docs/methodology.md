@@ -21,6 +21,7 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-10-25 | Build reproducibility | Verify only selected Yahoo periods; slice shared Cboe history before price checks; omit wall-clock time from the build manifest | Adopted |
 | 2026-10-24 | Data sources | VIX close from Cboe; stocks and S&P 500 from Yahoo; IBKR used only to check Yahoo | Adopted |
 | 2026-10-24 | Master layout | Column set, hard stops instead of filling, 15% move flag, `\n` line endings | Adopted |
 | 2026-10-18 | Prices | Close drives returns, spreads, and P&L; dividends are omitted and documented | Adopted |
@@ -137,6 +138,15 @@ written with `\n` line endings so the same data give the same file hash on
 Windows and in Docker. A data dictionary, an exclusion log, and a manifest of
 input and output hashes accompany the files. File names and the order of work
 are in the [Phase 1 plan](phase_planning/phase_1_plan.md).
+
+The historical-only command checks only the selected historical Yahoo files.
+The Cboe snapshot is one shared history file, so its hash covers the whole
+file, but its prices are restricted to the requested period before validation
+or alignment. The unseen return receives the last aligned historical row in
+memory, the same row saved in the historical checkpoint. These implementation
+details preserve the historical build's independence from Yahoo's unseen files.
+The build manifest omits a wall-clock run time so repeating an unchanged build
+also reproduces the manifest bytes; acquisition times remain in the raw manifests.
 
 ## Phase 2: Exploratory analysis
 
