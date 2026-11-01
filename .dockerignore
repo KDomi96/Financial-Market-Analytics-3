@@ -39,3 +39,4 @@ data/raw/ibkr
 data/interim
 data/processed
 outputs
+artifacts/statistical/phase3_v1

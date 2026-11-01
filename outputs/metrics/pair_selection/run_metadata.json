@@ -1,0 +1,382 @@
+{
+  "status": "complete",
+  "input": {
+    "file": "data/processed/master_historical.csv",
+    "sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "manifest": "data/processed/master_manifest.json",
+    "rows": 2011,
+    "first_date": "2018-01-02",
+    "last_date": "2025-12-31"
+  },
+  "settings": {
+    "file": "configs/pair_selection.json",
+    "sha256": "422b2e608365b3f86b522c91cc583bcab7528078757ce9ab10e80887ff3f55eb",
+    "values": {
+      "input": "data/processed/master_historical.csv",
+      "manifest": "data/processed/master_manifest.json",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2025-12-31",
+        "first_session": "2018-01-02",
+        "last_session": "2025-12-31",
+        "rows": 2011
+      },
+      "stocks": [
+        "MSFT",
+        "GOOGL",
+        "NVDA",
+        "AAPL",
+        "AMZN",
+        "META"
+      ],
+      "alpha": 0.05,
+      "adf": {
+        "level_regression": "ct",
+        "difference_regression": "c",
+        "residual_regression": "n",
+        "autolag": "AIC",
+        "maxlag_multiplier": 12,
+        "maxlag_divisor": 100,
+        "maxlag_power": 0.25
+      },
+      "engle_granger": {
+        "trend": "c",
+        "method": "aeg"
+      },
+      "johansen": {
+        "det_order": 0,
+        "var_trend": "c",
+        "max_levels_lag": 10,
+        "min_levels_lag": 1,
+        "criterion": "bic",
+        "confidence_levels": [
+          90,
+          95,
+          99
+        ]
+      },
+      "multiplicity": {
+        "direction_multiplier": 2,
+        "method": "holm",
+        "family_size": 15
+      },
+      "ranking": [
+        "method_agreement",
+        "eg_pvalue",
+        "pair_order"
+      ],
+      "shortlist_size": 2,
+      "stability_periods": [
+        {
+          "name": "2018_2021",
+          "start": "2018-01-01",
+          "end": "2021-12-31"
+        },
+        {
+          "name": "2022_2025",
+          "start": "2022-01-01",
+          "end": "2025-12-31"
+        }
+      ],
+      "model_version": "phase3_v1",
+      "tolerance": {
+        "rtol": 1e-07,
+        "atol": 1e-09
+      },
+      "outputs": {
+        "metrics": "outputs/metrics/pair_selection",
+        "figures": "outputs/figures/pair_selection",
+        "spreads": "data/processed/pair_spreads_historical.csv",
+        "artifacts": "artifacts/statistical/phase3_v1"
+      }
+    }
+  },
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  },
+  "validation": [
+    {
+      "check": "historical_dates_and_coverage",
+      "status": "pass",
+      "count": 2011,
+      "details": ""
+    },
+    {
+      "check": "six_positive_finite_close_columns",
+      "status": "pass",
+      "count": 12066,
+      "details": ""
+    },
+    {
+      "check": "integration_tests_rows",
+      "status": "pass",
+      "count": 12,
+      "details": ""
+    },
+    {
+      "check": "directional_tests_rows",
+      "status": "pass",
+      "count": 30,
+      "details": ""
+    },
+    {
+      "check": "lag_selection_rows",
+      "status": "pass",
+      "count": 165,
+      "details": ""
+    },
+    {
+      "check": "johansen_tests_rows",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "pair_ranking_rows",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "shortlist_rows",
+      "status": "pass",
+      "count": 2,
+      "details": ""
+    },
+    {
+      "check": "half_life_rows",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "hedge_stability_rows",
+      "status": "pass",
+      "count": 30,
+      "details": ""
+    },
+    {
+      "check": "independent_ols_coefficients",
+      "status": "pass",
+      "count": 30,
+      "details": ""
+    },
+    {
+      "check": "residual_adf_matches_engle_granger",
+      "status": "pass",
+      "count": 30,
+      "details": ""
+    },
+    {
+      "check": "spread_reconstruction",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "historical_spread_grid",
+      "status": "pass",
+      "count": 30165,
+      "details": ""
+    },
+    {
+      "check": "reloaded_parameters_reproduce_spreads",
+      "status": "pass",
+      "count": 15,
+      "details": ""
+    },
+    {
+      "check": "input_unchanged_after_run",
+      "status": "pass",
+      "count": 1,
+      "details": ""
+    }
+  ],
+  "warnings": [
+    {
+      "pair_id": "MSFT_GOOGL",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "MSFT_NVDA",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "MSFT_AAPL",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "MSFT_AMZN",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "MSFT_META",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "GOOGL_NVDA",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "GOOGL_AAPL",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "GOOGL_AMZN",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "GOOGL_META",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "NVDA_AAPL",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "NVDA_AMZN",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "NVDA_META",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "AAPL_AMZN",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "AAPL_META",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    },
+    {
+      "pair_id": "AMZN_META",
+      "kind": "real_eigenvalues_in_complex_dtype",
+      "count": 4,
+      "message": "Casting complex values to real discards the imaginary part"
+    }
+  ],
+  "code": {
+    "src/market_analytics/cointegration/selection.py": "bc681cfe7036a2d133dd1d8965766ef057ad1043f1c9aa4d43748427993f545c",
+    "src/market_analytics/cointegration/plots.py": "ece7349bfce8d6e565d970410b5f83f92d393f4c7c0f1bf1903082b48f77f120",
+    "scripts/run_pair_selection.py": "325d8d111820d52374fc4aef45a7aa3305cabbb467c4db03f493d8bbd35de721"
+  },
+  "lock_sha256": "61abf9a553ba523fbcfce8a80a429529758485645e348e2c58826f0aeac02594",
+  "outputs": {
+    "outputs/metrics/pair_selection/integration_tests.csv": "cd81c509e57d36b288d7cfc78cf846c0b349af60d230550545bf0800f25338ec",
+    "outputs/metrics/pair_selection/directional_tests.csv": "631c4b522fd2c18a46d64356cf870bbc67823d6a9c0726ad6feb882ac5862f0a",
+    "outputs/metrics/pair_selection/lag_selection.csv": "20f9026c2bf30127d0d2da3bc7e464ae1e7b7107a865bec23453e2ca37718a4a",
+    "outputs/metrics/pair_selection/johansen_tests.csv": "e94fa063650bf9412aae4be35c41b14645cc4ac14031e78d499216808156e604",
+    "outputs/metrics/pair_selection/pair_ranking.csv": "72c02111d9f43f3c6a7f0a93d05a1a0a2423fa69b2af90c966376cc7a6d77414",
+    "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+    "outputs/metrics/pair_selection/half_life.csv": "5a25f6c84143de7e8efb823878967af7fc912ae84e558265315cdcc7e7a9ddd9",
+    "outputs/metrics/pair_selection/hedge_stability.csv": "e479b63b3933f6d1ad593e10862964d85f644dbd142e97ebfc4af73226b15b53",
+    "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+    "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+    "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+    "artifacts/statistical/phase3_v1/GOOGL_AMZN/ols_20180102_20251231.json": "631c8ad1a9fe3426be07490fa896e9863530576053567e0f26fe971fba4858a4",
+    "artifacts/statistical/phase3_v1/MSFT_AAPL/ols_20180102_20251231.json": "ddb4867e331d374441061e0c808647531e048843da420cbd69c75db7e695dbed",
+    "artifacts/statistical/phase3_v1/MSFT_NVDA/ols_20180102_20251231.json": "fac5cb5e47a935e2d6ce0a0fafc7ded3097f7ad290270da6d050120607053183",
+    "artifacts/statistical/phase3_v1/AAPL_AMZN/ols_20180102_20251231.json": "c19fe7ba6c25ea7b12bfa0b4b969cd1bba54cd6b70c7f942d364895e0632d4bb",
+    "artifacts/statistical/phase3_v1/MSFT_AMZN/ols_20180102_20251231.json": "138e622da053424cf084c8928be1733d2cc4867be9ecb8aa4a3aeff69446c304",
+    "artifacts/statistical/phase3_v1/MSFT_META/ols_20180102_20251231.json": "a92631c71afbda6cf4ba60233cf41e70e3bf4a9155a7ed748723c25c8b7282f9",
+    "artifacts/statistical/phase3_v1/NVDA_META/ols_20180102_20251231.json": "70f1286e936900e9098ec27e3a92a93e79bfc8221f5f9845f00eb8121cc582e7",
+    "artifacts/statistical/phase3_v1/GOOGL_NVDA/ols_20180102_20251231.json": "b864cd8116c1ed423ed971dc7ce487a2663b8a7119123ab533540826ee984d08",
+    "artifacts/statistical/phase3_v1/NVDA_AAPL/ols_20180102_20251231.json": "0cb13c43b6932baf71e8ca04466e6cfd113f4ae530ac495f35999d3404e8b084",
+    "artifacts/statistical/phase3_v1/AAPL_META/ols_20180102_20251231.json": "e01b6ea172efd90b3b2858e17334b74019814eae69b248c29d0f0985338bbd39",
+    "artifacts/statistical/phase3_v1/GOOGL_AAPL/ols_20180102_20251231.json": "c640c8b3be6ad510e51da8d79746155cf63ae927bad102df898c5e30383fb145",
+    "artifacts/statistical/phase3_v1/GOOGL_META/ols_20180102_20251231.json": "d0e4ee74961b4efa2af2d172beabdc5dec31462bbe6c96cf8fe692330bb70f27",
+    "artifacts/statistical/phase3_v1/MSFT_GOOGL/ols_20180102_20251231.json": "87b94ab2d70a68a22190532a5ec9c1ff098180a775216018824b76003c18405f"
+  },
+  "figures": [
+    "outputs/figures/pair_selection/pair_fits.png",
+    "outputs/figures/pair_selection/residual_histories.png",
+    "outputs/figures/pair_selection/method_comparison.png",
+    "outputs/figures/pair_selection/hedge_stability.png"
+  ],
+  "leakage_audit": [
+    {
+      "object": "integration and lag choices",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "historical test specifications",
+      "verdict": "historical only"
+    },
+    {
+      "object": "pair and direction selection",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "shortlist for later evaluation",
+      "verdict": "no 2026 input; later LSTM validation is conditional on this shortlist"
+    },
+    {
+      "object": "full-history OLS coefficients",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "in-sample residuals and the future Phase 4 handoff",
+      "verdict": "in-sample residuals are not out-of-sample evidence"
+    },
+    {
+      "object": "hedge stability fits",
+      "fit_window": [
+        {
+          "period": "2018_2021",
+          "fit_start": "2018-01-02",
+          "fit_end": "2021-12-31"
+        },
+        {
+          "period": "2022_2025",
+          "fit_start": "2022-01-03",
+          "fit_end": "2025-12-31"
+        }
+      ],
+      "applied_to": "historical diagnostics only",
+      "verdict": "does not change fitted trading coefficients"
+    }
+  ],
+  "conventions": {
+    "multiplicity": "min(1, 2 * min(directional EG p)); Holm over 15 pairs",
+    "ranking": "both methods, one, neither; raw selected EG p; canonical pair order",
+    "pvalue_rule": "p <= alpha; Johansen statistic > critical value",
+    "normalization": "not estimated in Phase 3",
+    "random_seed": null
+  }
+}

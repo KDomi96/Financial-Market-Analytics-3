@@ -1,0 +1,17 @@
+{
+  "input": "data/processed/master_historical.csv",
+  "manifest": "data/processed/master_manifest.json",
+  "period": {"start": "2018-01-01", "end": "2025-12-31", "first_session": "2018-01-02", "last_session": "2025-12-31", "rows": 2011},
+  "stocks": ["MSFT", "GOOGL", "NVDA", "AAPL", "AMZN", "META"],
+  "alpha": 0.05,
+  "adf": {"level_regression": "ct", "difference_regression": "c", "residual_regression": "n", "autolag": "AIC", "maxlag_multiplier": 12, "maxlag_divisor": 100, "maxlag_power": 0.25},
+  "engle_granger": {"trend": "c", "method": "aeg"},
+  "johansen": {"det_order": 0, "var_trend": "c", "max_levels_lag": 10, "min_levels_lag": 1, "criterion": "bic", "confidence_levels": [90, 95, 99]},
+  "multiplicity": {"direction_multiplier": 2, "method": "holm", "family_size": 15},
+  "ranking": ["method_agreement", "eg_pvalue", "pair_order"],
+  "shortlist_size": 2,
+  "stability_periods": [{"name": "2018_2021", "start": "2018-01-01", "end": "2021-12-31"}, {"name": "2022_2025", "start": "2022-01-01", "end": "2025-12-31"}],
+  "model_version": "phase3_v1",
+  "tolerance": {"rtol": 1e-7, "atol": 1e-9},
+  "outputs": {"metrics": "outputs/metrics/pair_selection", "figures": "outputs/figures/pair_selection", "spreads": "data/processed/pair_spreads_historical.csv", "artifacts": "artifacts/statistical/phase3_v1"}
+}

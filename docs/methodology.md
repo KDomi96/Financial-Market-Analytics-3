@@ -21,6 +21,7 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-11-01 | Phase 3 design | ADF lags by AIC and Johansen VAR order by BIC; direction by the smaller Engle-Granger p-value; Holm over 15 pair-level p-values; rank by method agreement, then Engle-Granger p-value; stop on any failed fit; shortlist of two | Adopted |
 | 2026-10-25 | Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
 | 2026-10-25 | Phase 2 methods | Pearson return and log-price correlations, return/risk definitions, OLS beta with intercept, 60-session rolling window, VIX terciles | Adopted |
 | 2026-10-25 | Docker runtime | One image; ordered batch pipeline as the default command; API and app as two containers from that image | Adopted |
@@ -308,41 +309,153 @@ carried into later phases and labelled exploratory throughout. They are not
 described as established cointegrated pairs. Given the divergence of these
 stocks over 2018-2025, weak results are a realistic outcome.
 
-### Test design (Proposed)
+### Test design (Adopted 2026-11-01)
 
-The following settings are fixed before results are examined:
+These settings were fixed before any Phase 3 result was calculated. The
+[Phase 3 plan](phase_planning/phase_3_plan.md) gives the work order and files.
 
-- **Integration check:** ADF on each log-price series (with a trend term) and
-  on its first differences, to assess whether each is plausibly I(1). A series
-  that appears trend-stationary weakens cointegration conclusions for its pairs.
-- **Regressions:** `log(A) = intercept + beta * log(B) + residual` over the
-  historical period, in both directions for all 15 pairs (30 regressions). All
-  results are kept, not only the selected ones.
-- **Engle-Granger:** `statsmodels.tsa.stattools.coint` with a constant is the
-  main residual-based test. A plain ADF p-value on fitted OLS residuals is not
-  used for inference: OLS chooses the coefficients that make the residuals look
-  most stationary, so standard Dickey-Fuller critical values are too lenient.
-  `coint` uses MacKinnon critical values appropriate for this case. The
-  direction with the lower p-value is selected.
-- **Johansen:** `coint_johansen` with `det_order=0`, consistent with the
-  constant in the Engle-Granger regressions. Lag order comes from a VAR
-  information criterion. Trace and maximum-eigenvalue statistics are reported
-  against the 90%, 95%, and 99% critical values with the inferred rank. The
-  implementation does not supply p-values and none are invented.
-- **Significance level:** 5%.
-- **Ranking:** primary order by the selected-direction Engle-Granger p-value,
-  with the Johansen trace test at 95% as confirmation. Pairs are grouped as
-  supported by both methods, by one method, or by neither.
-- **Shortlist:** two to three pairs, with the reason for each.
-- **Supporting diagnostics:** half-life of mean reversion and stability of the
-  hedge ratio between 2018-2021 and 2022-2025. These inform interpretation, not
-  the ranking.
+Use natural logs of the six stocks' Close prices over 2018-2025. All 15 pairs
+continue regardless of EDA correlation. The fixed stock and pair order is the
+same as Phase 2. The significance threshold is 5%; p-values at or below 0.05
+reject, while a statistic exactly equal to a Johansen critical value does not.
 
-With 15 pairs tested at 5%, about 0.75 false positives are expected even if no
-pair is truly cointegrated. The report discusses this multiple-testing effect.
+**Integration checks.** Run `adfuller` on each log-price series with
+`regression="ct"` (constant and linear trend) and on its first difference with
+`regression="c"`. Use `autolag="AIC"` and an explicit maximum lag of
+`ceil(12 * (n / 100) ** 0.25)`, capped at `n // 2 - d - 1`, where n is the
+input length and d is the number of deterministic regressors: 2 for `ct`,
+1 for `c`, and 0 for a residual test with `regression="n"`. This is the
+library's default rule, written out so a change of default cannot change the
+results. AIC chooses the lags because too few lags leave autocorrelation in
+the test regression and make the test reject too often, and AIC tends to keep
+more lags than BIC.
 
-The selected spread is saved with its orientation and coefficients so later
-phases can reconstruct it as `log(price A) - intercept - beta * log(price B)`.
+Failure to reject a unit root in levels, together with rejection in first
+differences, is labelled consistent with I(1). It does not prove I(1).
+Rejection in levels or failure to reject in differences gives an assumption
+warning. Keep every pair in the comparison, but label its interpretation
+exploratory if either stock has that warning. ADF has limited power and these
+checks are a diagnostic, not another search for whichever specification passes.
+
+**Directional fits and Engle-Granger.** Fit
+`log(A) = intercept + beta * log(B) + residual` in both directions for all
+15 pairs. Use `coint(log_A, log_B, trend="c", method="aeg", autolag="AIC",
+maxlag=...)`, with the lag rule above and d=0 for its residual ADF step.
+The spread has an intercept but no time trend: later phases study deviations
+around a fixed fitted relationship, rather than around a moving trend.
+
+Save both directions and choose the one with the smaller raw Engle-Granger
+p-value. An exact tie selects the direction with the earlier stock in the
+fixed display order as dependent.
+
+The inferential p-value and 1%, 5%, and 10% critical values come from `coint`.
+A matching `adfuller(residual, regression="n", ...)` supplies the selected lag
+and effective sample count, which `coint` does not expose. Its statistic must
+match the Engle-Granger statistic within the recorded tolerance. An ordinary
+residual ADF p-value is not exported as cointegration evidence: it does not
+account for estimating the relationship first.
+
+Rejection is decided by the p-value. `coint` takes its p-value from
+MacKinnon's asymptotic table but its critical values from the finite-sample
+table, so with 2,011 observations the two can disagree only for a statistic
+between -3.339 and -3.336.
+
+Any failed regression, non-finite statistic, or collinearity warning stops
+the run with an error. This includes the negative-infinite statistic and zero
+p-value that `coint` returns for near-collinear inputs. With six large-cap
+stocks over 2,011 sessions this guards against a broken input, not a
+statistical outcome, so failed fits are not carried through the ranking.
+
+**Johansen.** Run `coint_johansen` for every pair with `det_order=0`, the
+library's constant-term convention, without searching other deterministic
+settings. This is a separate system test; its deterministic specification is
+not claimed to be identical to the single-equation Engle-Granger model.
+
+Choose lag order using the BIC curve returned by
+`VAR(log_prices).select_order(maxlags=10, trend="c")`. Compare levels orders
+1-10 on the equal-length samples used by that routine; select the minimum BIC,
+breaking an exact tie in favour of the smaller order. Keep order zero in the
+saved curve but exclude it from selection, because the planned Johansen model
+needs a levels order of at least one. Pass `k_ar_diff = p - 1`, where p is
+the selected levels order. Record a warning if p reaches the upper bound;
+do not expand the search after seeing the cointegration result. BIC is used
+here, rather than the AIC used for ADF, because unnecessary short-run lags cost
+the Johansen test power, and BIC settles on the true order as the sample grows
+while AIC tends to overshoot.
+
+Save trace and maximum-eigenvalue statistics for rank hypotheses 0 and 1,
+their 90%, 95%, and 99% critical values, and a sequential rank for each method
+at each level. Start at rank zero and stop at the first non-rejection. At 95%,
+trace rank 1 means rejecting rank zero but not rank at most one. Rank 2 in a
+two-series system is full rank, which conflicts with the intended two-I(1)
+interpretation; it is not confirmation of one cointegrating relationship.
+Trace rank 1 supplies the main Johansen comparison flag. Maximum-eigenvalue
+disagreement remains visible. The implementation supplies no p-values, so
+none are inferred from the critical-value tables.
+
+### Comparison and shortlist (Adopted 2026-11-01)
+
+The two directions of a pair test the same hypothesis, that the two stocks are
+not cointegrated, so the multiple-testing family has 15 members rather than
+30. Each pair gets one p-value: twice the smaller of its two directional
+Engle-Granger p-values, capped at 1. The doubling accounts for choosing the
+better direction. `multipletests(..., alpha=0.05, method="holm")` is applied
+to these 15 values. Its first step needs a directional p-value at or below
+0.05/30, the same bar as an adjustment over all 30 directions, but each
+adjusted result now refers to a pair rather than to one direction of it. The
+30 raw directional p-values stay in the saved results. The adjustment checks
+conclusions that rest on the smallest of many tests; it does not correct
+model misspecification. Johansen's results are not adjusted and are not an
+independent replication, because both methods use the same historical prices.
+
+Pairs are ranked first by whether the two methods agree at the 5% level:
+both, one of them, or neither. Engle-Granger counts when the selected
+direction has p at or below 0.05; Johansen counts when the trace test gives
+rank exactly 1 at 95%. Two tests rejecting together is stronger evidence than
+a slightly smaller p-value from one test. Within each group, pairs are ordered
+by the selected direction's raw Engle-Granger p-value, and the fixed pair
+order breaks an exact tie. The raw, doubled, and Holm-adjusted p-values give
+the same order within a group, so the adjustment affects the label below but
+not the ranking.
+
+A shortlisted pair is labelled supported only when both stocks' diagnostics
+are consistent with I(1), its Holm-adjusted pair p-value is at or below 0.05,
+and its Johansen trace rank at 95% is exactly 1. Otherwise it is exploratory.
+Supported means evidence under these specifications, not proof of a permanent
+relationship or a profitable trade. The individual flags are kept even when
+they disagree with the overall label.
+
+The shortlist is the first two pairs in the ranking. Fixing the number before
+any result exists keeps the later baseline and LSTM comparison manageable and
+avoids choosing the count after seeing the results. If one or both lack the
+evidence above, they are carried forward with exploratory labels and an
+explanation, following the adopted weak-evidence policy. The specification is
+not changed to produce qualifying results.
+
+### Supporting diagnostics (Adopted 2026-11-01)
+
+Fit `spread_t = a + phi * spread_(t-1) + error_t` to each selected-direction
+historical spread. For 0 < phi < 1, report the discrete AR(1) half-life
+`-log(2) / log(phi)` in trading sessions. Other coefficients have no
+conventional half-life. Unlike a failed fit, a spread that does not revert is
+a possible result, so it is saved with a status instead of stopping the run.
+This is an in-sample approximation, not a second stationarity test or a
+forecast of a future holding period.
+
+Refit each selected direction separately over 2018-2021 and 2022-2025, with
+the same intercept convention. Save both intercepts, betas, counts, and actual
+dates. Show the absolute beta change and sign change without a new pass/fail
+threshold. The two fits describe historical variation; they do not replace
+the full-period relationship or alter its rank. Neither diagnostic selects
+a window, a direction, or a trading rule.
+
+Save each selected spread with its orientation and full-period coefficients
+so later phases can reconstruct
+`log(price A) - intercept - beta * log(price B)`. Spread columns are named
+`<dependent>_on_<independent>`, for example `AAPL_on_NVDA`, because the pair
+identifier alone does not say which stock is dependent. Phase 3 does not fit its
+2025 normalization. The planned Phase 4 parameters and the adopted Phase 5
+refitting windows remain as recorded below.
 
 ## Phase 4: Statistical baseline
 
@@ -567,6 +680,12 @@ versions when implementing.
   cointegration inference, integration assumptions, and regression/lag settings.
 - [Statsmodels Johansen test](https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.vecm.coint_johansen.html):
   deterministic terms, lag specification, test statistics, and critical values.
+- [Statsmodels ADF test](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html):
+  integration diagnostics, deterministic terms, maximum lags, and autolag.
+- [Statsmodels VAR lag selection](https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.select_order.html):
+  information-criterion curves for the Johansen lag choice.
+- [Statsmodels multiple-testing correction](https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html):
+  Holm-adjusted p-values alongside the nominal directional tests.
 - [Scikit-learn common pitfalls](https://scikit-learn.org/stable/common_pitfalls.html):
   fitting preprocessing on training data and preventing evaluation leakage.
 - [FinBERT model card](https://huggingface.co/ProsusAI/finbert): model

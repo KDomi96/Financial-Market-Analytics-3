@@ -1,0 +1,95 @@
+{
+  "status": "complete",
+  "verified_date": "2026-11-01",
+  "image": "financial-market-analytics-3:phase3-20261101-tidy",
+  "image_id": "sha256:b45fffeacfdf3487a5242117e0ef3e33665e9024c139e84f7a0f4848acd1bd8d",
+  "container": "financial-market-analytics-3-phase3-20261101-tidy",
+  "exit_code": 0,
+  "docker_engine": "29.8.2",
+  "commands": [
+    "docker build -t financial-market-analytics-3:phase3-20261101-tidy .",
+    "docker run --name financial-market-analytics-3-phase3-20261101-tidy financial-market-analytics-3:phase3-20261101-tidy python scripts/run_pipeline.py --historical-only",
+    "docker run --rm financial-market-analytics-3:phase3-20261101-tidy python -m unittest discover -s tests -v",
+    "docker cp financial-market-analytics-3-phase3-20261101-tidy:/workspace/outputs/metrics/pair_selection/. .tools/phase3/docker-tidy/metrics/",
+    "docker cp financial-market-analytics-3-phase3-20261101-tidy:/workspace/data/processed/. .tools/phase3/docker-tidy/processed/",
+    "docker cp financial-market-analytics-3-phase3-20261101-tidy:/workspace/artifacts/statistical/phase3_v1/. .tools/phase3/docker-tidy/artifacts/"
+  ],
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  },
+  "historical_input_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+  "source_hashes_match": true,
+  "source_hash_comparison": "Canonical module suffixes; Windows imports editable src files and Docker imports the same bytes installed under .venv/site-packages",
+  "processed_files": [
+    "master_historical.csv",
+    "master_manifest.json",
+    "pair_spreads_historical.csv"
+  ],
+  "unseen_master_present": false,
+  "tests_passed": 43,
+  "run_checks_passed": 16,
+  "tables": [
+    {
+      "file": "directional_tests.csv",
+      "rows": 30,
+      "byte_identical": false,
+      "largest_absolute_difference": 3.9745984281580604e-14
+    },
+    {
+      "file": "half_life.csv",
+      "rows": 15,
+      "byte_identical": false,
+      "largest_absolute_difference": 8.623146641184576e-11
+    },
+    {
+      "file": "hedge_stability.csv",
+      "rows": 30,
+      "byte_identical": false,
+      "largest_absolute_difference": 7.771561172376096e-15
+    },
+    {
+      "file": "integration_tests.csv",
+      "rows": 12,
+      "byte_identical": false,
+      "largest_absolute_difference": 5.656808355070098e-12
+    },
+    {
+      "file": "johansen_tests.csv",
+      "rows": 15,
+      "byte_identical": false,
+      "largest_absolute_difference": 2.255973186038318e-13
+    },
+    {
+      "file": "lag_selection.csv",
+      "rows": 165,
+      "byte_identical": false,
+      "largest_absolute_difference": 1.7763568394002505e-14
+    },
+    {
+      "file": "pair_ranking.csv",
+      "rows": 15,
+      "byte_identical": false,
+      "largest_absolute_difference": 8.623146641184576e-11
+    },
+    {
+      "file": "shortlist.csv",
+      "rows": 2,
+      "byte_identical": false,
+      "largest_absolute_difference": 8.739675649849232e-12
+    }
+  ],
+  "largest_table_absolute_difference": 8.623146641184576e-11,
+  "spread_largest_absolute_difference": 5.398459457239824e-15,
+  "fitted_artifacts_compared": 15,
+  "decisions_and_labels_match_exactly": true,
+  "tolerance": {
+    "rtol": 1e-07,
+    "atol": 1e-09
+  },
+  "figure_byte_equality_required": false,
+  "copied_run_metadata_sha256": "740c1ada004746e2eef387c8a0bea5ec3a672da8f40fe30783c63a6335a148e4"
+}

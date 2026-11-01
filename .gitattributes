@@ -4,3 +4,5 @@ data/interim/** -text
 data/processed/** -text
 outputs/metrics/phase1_*.csv -text
 outputs/metrics/eda/*.csv -text
+outputs/metrics/pair_selection/*.csv -text
+artifacts/statistical/** -text

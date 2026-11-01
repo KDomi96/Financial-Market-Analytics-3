@@ -1,0 +1,102 @@
+{
+  "status": "complete",
+  "verified_date": "2026-11-01",
+  "experiment": "EXP-003",
+  "input": {
+    "file": "data/processed/master_historical.csv",
+    "sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "manifest": "data/processed/master_manifest.json",
+    "rows": 2011,
+    "first_date": "2018-01-02",
+    "last_date": "2025-12-31"
+  },
+  "code": {
+    "src/market_analytics/cointegration/selection.py": "bc681cfe7036a2d133dd1d8965766ef057ad1043f1c9aa4d43748427993f545c",
+    "src/market_analytics/cointegration/plots.py": "ece7349bfce8d6e565d970410b5f83f92d393f4c7c0f1bf1903082b48f77f120",
+    "scripts/run_pair_selection.py": "325d8d111820d52374fc4aef45a7aa3305cabbb467c4db03f493d8bbd35de721"
+  },
+  "settings_sha256": "422b2e608365b3f86b522c91cc583bcab7528078757ce9ab10e80887ff3f55eb",
+  "tests_passed": 43,
+  "phase3_tests_passed": 12,
+  "run_checks_passed": 16,
+  "notebook": {
+    "file": "notebooks/03_pair_selection.ipynb",
+    "sha256": "3142e9202b4f13360f7efc49f8178dca974abcdf0fa204d23aae646f709837ab",
+    "executed_code_cells": 5,
+    "error_outputs": 0
+  },
+  "repeat_output_hashes_identical": true,
+  "verified_output_hashes": 24,
+  "independent_checks": {
+    "ols_directions": 30,
+    "ols_largest_coefficient_difference": 4.440892098500626e-14,
+    "residual_statistics_and_mackinnon_pvalues": 30,
+    "residual_largest_statistic_difference": 1.0835776720341528e-13,
+    "selected_spreads": 15,
+    "manual_pair_holm_values": 15,
+    "sequential_johansen_ranks": 90,
+    "var_lag_decisions": 15,
+    "subperiod_betas_and_dates": 30,
+    "ranking_and_shortlist": true,
+    "method": "Centered sums for OLS; fixed-lag residual ADF and MacKinnon N=2 p-values; manual doubled-minimum and step-down Holm; sequential rank comparisons; subperiod centered-sum slopes"
+  },
+  "figures_visually_reviewed": [
+    "outputs/figures/pair_selection/pair_fits.png",
+    "outputs/figures/pair_selection/residual_histories.png",
+    "outputs/figures/pair_selection/method_comparison.png",
+    "outputs/figures/pair_selection/hedge_stability.png"
+  ],
+  "leakage_audit": [
+    {
+      "object": "integration and lag choices",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "historical test specifications",
+      "verdict": "historical only"
+    },
+    {
+      "object": "pair and direction selection",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "shortlist for later evaluation",
+      "verdict": "no 2026 input; later LSTM validation is conditional on this shortlist"
+    },
+    {
+      "object": "full-history OLS coefficients",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "in-sample residuals and the future Phase 4 handoff",
+      "verdict": "in-sample residuals are not out-of-sample evidence"
+    },
+    {
+      "object": "hedge stability fits",
+      "fit_window": [
+        {
+          "period": "2018_2021",
+          "fit_start": "2018-01-02",
+          "fit_end": "2021-12-31"
+        },
+        {
+          "period": "2022_2025",
+          "fit_start": "2022-01-03",
+          "fit_end": "2025-12-31"
+        }
+      ],
+      "applied_to": "historical diagnostics only",
+      "verdict": "does not change fitted trading coefficients"
+    }
+  ],
+  "docker_validation": "outputs/metrics/phase3_docker_validation.json",
+  "all_pairs_exploratory": true,
+  "implementation_review": {
+    "status": "no actionable findings",
+    "scope": "Corrected plan, shared calculations, tests, executed notebook, saved results, artifacts, pipeline, and documentation",
+    "mode": "Read-only inspection; the numerical and execution checks are recorded separately above"
+  }
+}

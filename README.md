@@ -7,7 +7,10 @@ A postgraduate technology-stock analytics project.
 Phase 1 produces validated historical and unseen master datasets from the
 pinned Yahoo and Cboe snapshots. Phase 2 describes the historical master:
 return and risk, all 15 stock pairs, S&P 500 sensitivity, stability over time,
-and VIX context. Pair selection, models, API, and web interface remain.
+and VIX context. Phase 3 compares all pairs, saves their fitted spreads, and
+carries AMZN_META and NVDA_AMZN forward as exploratory candidates. No pair
+meets all the adopted support conditions. The statistical backtest, LSTM,
+sentiment, API, and web interface remain.
 The Python 3.12.13 environment is managed with uv. Docker configuration is
 provided for the environment.
 
@@ -173,7 +176,7 @@ input hash, columns, dates, or missing values are not as expected. The
 table columns, and the [Phase 2 analysis](docs/phase_planning/phase_2_analysis.md)
 reports the findings.
 
-To run the master build and the EDA in one step, as the Docker image does:
+To run the master build, EDA, and pair selection in one step, as the Docker image does:
 
 ```powershell
 uv run --locked python scripts/run_pipeline.py
@@ -182,6 +185,32 @@ uv run --locked python scripts/run_pipeline.py --historical-only
 
 `--historical-only` is passed to the master build, so no Yahoo unseen file is
 opened, and it leaves the historical-only manifest described above.
+
+## Run Phase 3 pair selection
+
+Phase 3 reads the historical master and its manifest entry only. Its adopted
+settings are in `configs/pair_selection.json`:
+
+```powershell
+uv run --locked python scripts/run_pair_selection.py
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked jupyter nbconvert --to notebook --execute --inplace notebooks/03_pair_selection.ipynb
+```
+
+Use the workstation uv/cache substitutions and Jupyter variables above.
+`--no-figures` saves the numeric outputs without drawing plots. The script
+fits 30 OLS directions, runs 15 Johansen tests, applies the pair-level
+multiple-testing correction, and saves eight metric tables, 15 fitted JSONs,
+one historical spread file, and four figures. It stops on invalid input,
+failed fits, collinearity warnings, or non-finite statistics. All calculation
+and artifact checks must pass before run metadata reports completion.
+
+See the [Phase 3 analysis](docs/phase_planning/phase_3_analysis.md) for the
+exploratory shortlist and the
+[data dictionary](docs/data_dictionary.md#phase-3-pair-selection-tables-and-spreads)
+for column definitions. These outputs contain no unseen evaluation, Z-scores,
+or trading results. The batch pipeline now runs Phase 3 after EDA;
+`--historical-only` also keeps the preceding master build out of unseen data.
 
 ## Docker environment
 
@@ -204,7 +233,7 @@ docker run --rm financial-market-analytics-3
 The image creates its own Linux environment from `pyproject.toml` and `uv.lock`;
 the Windows `.venv/` is excluded. It runs as an unprivileged user. The default
 command is `scripts/run_pipeline.py`: it builds the masters from the copied
-snapshots, then runs the EDA, and writes all outputs inside the container.
+snapshots, then runs EDA and pair selection, and writes all outputs inside the container.
 This is a batch command: exit code 0 means every phase finished. No web server
 is implemented yet. A single phase can be run by passing its script, for
 example `docker run --rm financial-market-analytics-3 python scripts/build_master.py`. `--rm` removes that
@@ -232,6 +261,24 @@ reruns its build. Outputs stay in the container; the local masters are not
 overwritten. The image excludes local agent files, supplied assignment
 material, IBKR data, and previously generated datasets and outputs. It must
 therefore build the masters from the permitted raw snapshots.
+
+Phase 3 was verified on 1 November 2026 with these commands:
+
+```powershell
+docker build -t financial-market-analytics-3:phase3-20261101-tidy .
+docker run --name financial-market-analytics-3-phase3-20261101-tidy financial-market-analytics-3:phase3-20261101-tidy python scripts/run_pipeline.py --historical-only
+docker run --rm financial-market-analytics-3:phase3-20261101-tidy python -m unittest discover -s tests -v
+```
+
+The pipeline exited with code 0 and all 43 tests passed in the image. The
+image excludes previously fitted Phase 3 parameters as well as derived data
+and outputs, so the run produces its own files. The eight new metric tables,
+15 fitted JSONs, and historical spread grid match the local run within
+`rtol=1e-7`, `atol=1e-9`; decisions and labels match exactly. Copy and
+comparison details are in `outputs/metrics/phase3_docker_validation.json`.
+Its processed directory contains only the historical master, manifest, and
+historical spreads. Local review and independent calculation evidence is in
+`outputs/metrics/phase3_review_validation.json`.
 
 To open a Python session instead:
 

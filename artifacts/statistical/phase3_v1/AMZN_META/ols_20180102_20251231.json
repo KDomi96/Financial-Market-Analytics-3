@@ -1,0 +1,25 @@
+{
+  "pair_id": "AMZN_META",
+  "dependent": "AMZN",
+  "independent": "META",
+  "spread_column": "AMZN_on_META",
+  "intercept": 1.517679076139281,
+  "beta": 0.5994280949834124,
+  "fit_start": "2018-01-02",
+  "fit_end": "2025-12-31",
+  "nobs": 2011,
+  "evidence_label": "exploratory",
+  "shortlisted": true,
+  "model_version": "phase3_v1",
+  "transformation": "natural log of Yahoo Close; dividends excluded",
+  "spread_formula": "log(dependent_Close) - intercept - beta * log(independent_Close)",
+  "input_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+  "settings_sha256": "422b2e608365b3f86b522c91cc583bcab7528078757ce9ab10e80887ff3f55eb",
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  }
+}

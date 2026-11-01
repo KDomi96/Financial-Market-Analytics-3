@@ -1,4 +1,4 @@
-"""Run the batch phases in order: master build, then EDA.
+"""Run the master build, EDA, and pair selection in order.
 
 Run with: uv run --locked python scripts/run_pipeline.py [--historical-only]
 """
@@ -9,6 +9,7 @@ from pathlib import Path
 import matplotlib
 
 from market_analytics.analysis.eda import run_eda
+from market_analytics.cointegration.selection import run_pair_selection
 from market_analytics.data.master import build_master
 
 
@@ -24,6 +25,9 @@ def main() -> None:
     metadata = run_eda(Path("configs/eda.json"))
     print(f"EDA: {len(metadata['validation'])} checks passed, {len(metadata['outputs'])} tables, "
           f"{len(metadata['figures'])} figures")
+    metadata = run_pair_selection(Path("configs/pair_selection.json"))
+    print(f"Pair selection: {len(metadata['validation'])} checks passed, "
+          f"{len(metadata['outputs'])} tables/data/artifacts, {len(metadata['figures'])} figures")
 
 
 if __name__ == "__main__":

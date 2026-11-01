@@ -2,7 +2,7 @@
 
 The project root is the existing `Final Project` folder. The approved directory
 scaffold is present. Market-data acquisition, the Phase 1 master build, and the
-Phase 2 exploratory analysis are implemented; later analytical components
+Phase 2 exploratory analysis and Phase 3 pair selection are implemented; later analytical components
 remain planned.
 
 ## Root files
@@ -11,12 +11,12 @@ remain planned.
 | --- | --- | --- |
 | `README.md` | Human entry point: scope, status, and eventually installation and end-to-end run instructions. | Created. |
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
-| `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Disables line-ending conversion under data/raw/, data/interim/, data/processed/, and for outputs/metrics/phase1_*.csv and outputs/metrics/eda/*.csv. |
+| `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Covers raw/interim/processed data, phase metric CSVs, and statistical artifacts. |
 | `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
 | `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, and statsmodels; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
-| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs the batch pipeline (master build, then EDA); Phase 1 and Phase 2 runs verified in Docker. |
+| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs the master build, EDA, and pair selection; verified through Phase 3 in Docker. |
 | `.dockerignore` | Excludes local environments, tooling, credentials, and caches from the build context. | Created. |
 
 The uv-managed `.venv/` environment is configured. Local uv tooling in `.tools/`
@@ -31,12 +31,14 @@ is ignored and is not part of the submission.
 | `docs/submission_requirements.md` | General submission obligations and final checklist. |
 | `docs/methodology.md` | Analytical and engineering decisions, their status, and rationale. |
 | `docs/data_sources.md` | Implemented acquisition provenance, coverage, caveats, and citations. |
-| `docs/data_dictionary.md` | Every master and EDA table column, its unit and type, and allowed missing values or statuses. |
+| `docs/data_dictionary.md` | Master, EDA, and pair-selection columns, units, types, and allowed missing values or statuses. |
 | `docs/phase_planning/` | Phase-specific implementation roadmaps for later reference; decisions and completion evidence remain in their existing documents. |
 | `docs/phase_planning/phase_1_plan.md` | Phase 1 roadmap covering the master schema, cleaning, calculations, planned files, and verification. |
 | `docs/phase_planning/phase_1_analysis.md` | Check of the Yahoo data against IBKR and Cboe, and why VIX comes from Cboe. |
 | `docs/phase_planning/phase_2_plan.md` | EDA roadmap covering return/risk comparisons, all stock pairs, benchmark sensitivity, stability, VIX context, and verification. |
 | `docs/phase_planning/phase_2_analysis.md` | EDA findings and limitations, with numbers traced to the saved tables and figures. |
+| `docs/phase_planning/phase_3_plan.md` | Pair-selection roadmap covering all 30 OLS directions, 15 Johansen tests, ranking, fitted spreads, shortlist, and verification. |
+| `docs/phase_planning/phase_3_analysis.md` | Pair-selection findings, exploratory shortlist, diagnostics, and limitations traced to saved outputs. |
 | `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
 | `docs/deployment.md` | Future operational guide. |
 
@@ -86,7 +88,8 @@ data folders.
 
 The root package has an `__init__.py` so it can be installed and imported.
 The data subpackage implements acquisition, source comparison, and the master
-build; other functional subdirectories remain placeholders. Acquisition files are:
+build. Analysis and cointegration implement Phases 2 and 3; the other functional
+subdirectories remain placeholders. Acquisition files are:
 
 | Location | Purpose |
 | --- | --- |
@@ -129,7 +132,7 @@ Phase 2 files are:
 | `configs/eda.json` | Historical input and manifest paths, stock order, adopted calculation settings, and output directories. |
 | `src/market_analytics/analysis/eda.py`, `scripts/run_eda.py` | Input checks, summaries, pair correlations, benchmark regressions, rolling and VIX tables, metadata; thin entry point. |
 | `src/market_analytics/analysis/eda_plots.py` | The nine EDA figures, drawn from the saved tables. |
-| `scripts/run_pipeline.py` | Runs the master build and then the EDA; the Docker default command. |
+| `scripts/run_pipeline.py` | Runs the master build, EDA, and pair selection; the Docker default command. |
 | `notebooks/02_eda.ipynb` | Executed walk-through of the EDA tables and figures with short explanations. |
 | `tests/test_eda.py` | Small examples for compounding, drawdowns, pairs, regressions, rolling windows, VIX groups, and historical isolation. |
 | `outputs/metrics/eda/` | Ten EDA tables and `run_metadata.json` (input/settings hashes, VIX boundaries, versions, checks, table hashes). |
@@ -138,6 +141,22 @@ Phase 2 files are:
 | `outputs/metrics/phase2_review_validation.json` | Regression-test results, independent numerical checks, notebook execution, unchanged table hashes, and the Phase 2 leakage audit. |
 
 ## Fitted artifacts, generated results, and final reporting
+
+Phase 3 files are:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/pair_selection.json` | Adopted historical input, statistical settings, ranking rule, and output paths. |
+| `src/market_analytics/cointegration/selection.py`, `scripts/run_pair_selection.py` | Input validation, tests, pair-level correction, ranking, diagnostics, fitted-parameter export, and thin entry point. |
+| `src/market_analytics/cointegration/plots.py` | Four figure groups covering all 15 pairs. |
+| `notebooks/03_pair_selection.ipynb` | Executed historical analysis using the shared package, with output-hash and artifact checks. |
+| `tests/test_pair_selection.py` | Direction, pair correction, agreement ranking, lag/rank logic, numerical failure, and historical isolation checks. |
+| `outputs/metrics/pair_selection/` | Eight tables and run metadata, including all directional tests, all Johansen results, and the justified shortlist. |
+| `data/processed/pair_spreads_historical.csv` | Unnormalized, explicitly oriented residuals for all 15 pairs. |
+| `artifacts/statistical/phase3_v1/<PAIR_ID>/` | Selected-direction full-history OLS coefficients and reconstruction metadata. |
+| `outputs/figures/pair_selection/` | Fitted prices, residual histories, evidence comparison, and subperiod hedge ratios. |
+| `outputs/metrics/phase3_docker_validation.json` | Historical-only Docker reproduction, numeric differences, and matching discrete decisions. |
+| `outputs/metrics/phase3_review_validation.json` | Tests, notebook execution, repeat hashes, independent calculations, and the leakage audit. |
 
 | Location | Purpose |
 | --- | --- |
