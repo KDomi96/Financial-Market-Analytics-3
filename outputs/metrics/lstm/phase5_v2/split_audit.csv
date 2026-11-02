@@ -1,0 +1,15 @@
+pair_id,stage,object,fit_start,fit_end,nobs,applied_to,resting_z
+AMZN_META,selection,ols,2018-01-02,2023-12-29,1509,2024-2025 conditional validation,1.0663475200096355
+AMZN_META,selection,normalization,2023-01-03,2023-12-29,250,2024-2025 conditional validation,1.0663475200096355
+AMZN_META,selection,feature_scaler,2018-01-30,2023-12-21,1485,2024-2025 conditional validation,1.0663475200096355
+NVDA_AMZN,selection,ols,2018-01-02,2023-12-29,1509,2024-2025 conditional validation,2.7843423739556701
+NVDA_AMZN,selection,normalization,2023-01-03,2023-12-29,250,2024-2025 conditional validation,2.7843423739556701
+NVDA_AMZN,selection,feature_scaler,2018-01-30,2023-12-21,1485,2024-2025 conditional validation,2.7843423739556701
+AMZN_META,final,ols,2018-01-02,2025-12-31,2011,2026 fixed application,0.57375077936696728
+AMZN_META,final,normalization,2025-01-02,2025-12-31,250,2026 fixed application,0.57375077936696728
+AMZN_META,final,feature_scaler,2018-01-30,2025-12-23,1987,2026 fixed application,0.57375077936696728
+NVDA_AMZN,final,ols,2018-01-02,2025-12-31,2011,2026 fixed application,-0.46668633496896933
+NVDA_AMZN,final,normalization,2025-01-02,2025-12-31,250,2026 fixed application,-0.46668633496896933
+NVDA_AMZN,final,feature_scaler,2018-01-30,2025-12-23,1987,2026 fixed application,-0.46668633496896933
+AMZN_META,selection,shortlist_and_direction,2018-01-02,2025-12-31,2011,fixed shortlist; validation is conditional,
+NVDA_AMZN,selection,shortlist_and_direction,2018-01-02,2025-12-31,2011,fixed shortlist; validation is conditional,

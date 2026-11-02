@@ -1,0 +1,259 @@
+{
+  "signature": {
+    "inputs": {
+      "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+      "outputs/metrics/pair_selection/run_metadata.json": "731ea091abb7f994e3a93f47bb3084bbe2ae3189f64ed3b385036ad885ad02fb",
+      "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+      "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+      "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+      "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+      "configs/statistical_baseline.json": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+      "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": "a9712d4cc7f7baefae61269ef5df1fefe8cfeb81ae01585bef67c1fadaea5378",
+      "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+      "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1"
+    },
+    "settings": {
+      "model_version": "phase5_v2",
+      "baseline_config": "configs/statistical_baseline.json",
+      "feature_order": [
+        "z",
+        "lag1",
+        "lag2",
+        "lag3",
+        "rolling_std"
+      ],
+      "rolling_window": 20,
+      "lookback": 20,
+      "horizon": 5,
+      "target": "change_from_origin_z",
+      "selection_end": "2023-12-31",
+      "validation_start": "2024-01-01",
+      "historical_end": "2025-12-31",
+      "unseen_start": "2026-01-01",
+      "unseen_end": "2026-07-31",
+      "candidates": [
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.0003
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.0003
+        }
+      ],
+      "training": {
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 200,
+        "patience": 20,
+        "min_delta": 1e-06,
+        "gradient_clip": 1.0,
+        "shuffle": true
+      },
+      "sensitivity_seeds": [
+        7,
+        2026
+      ],
+      "selection_metric": "pooled_validation_rmse",
+      "selection_tolerance": 1e-06,
+      "filter": {
+        "horizon": 5,
+        "margin": 0.0,
+        "exits": "observed_z",
+        "entry_calendar": "complete_five_day_targets_inside_period"
+      },
+      "expected": {
+        "selection_train": 1466,
+        "validation": 498,
+        "final_train": 1968,
+        "unseen": 141,
+        "selection_scaler": 1485,
+        "final_scaler": 1987
+      },
+      "runtime": {
+        "device": "cpu",
+        "intra_op_threads": 1,
+        "inter_op_threads": 1,
+        "workers": 0,
+        "deterministic": true
+      },
+      "tolerance": {
+        "rtol": 1e-07,
+        "atol": 1e-09
+      },
+      "inference_tolerance": {
+        "rtol": 1e-05,
+        "atol": 1e-06
+      }
+    },
+    "lock_sha256": "1caccc4c9413c24f02d9f730ab31e6c665a6629742b56ae44aaa018e75bec83f",
+    "code": {
+      "src/market_analytics/models/forecasting.py": "c7d60532bc712789a2f5533bf354d49ae1349d08902aff9674d36846ba6072cd",
+      "src/market_analytics/models/lstm.py": "53888a1e7f0e6803e9c6c988be49bd25e90a5ee8b85b35592dc7dcd1233d6349",
+      "src/market_analytics/models/plots.py": "e99871f598e9f75eaa05fe0c77c8fffa8b4ad458222d8e45a2df97e6aafc7a52",
+      "src/market_analytics/features/sequences.py": "b8cf10ec13f8cadb6c1df086f94877bc5747f37e299082b800ffe54c73575f1e",
+      "src/market_analytics/trading/forecast_filter.py": "b211713d7f8f94de90378378c6cced4b05d099e7d6e5050d8ef82b86e0b18a40",
+      "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+      "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+      "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+      "src/market_analytics/data/master.py": "2680ae7e2541f75b9c6e85835ced689d205f92a88349601d4dea93c97d924c6d",
+      "scripts/run_lstm_forecast.py": "41b5b26a367ba8b0c62a6198ba23dd48e7017958dde734caf65813ad261df592"
+    },
+    "versions": {
+      "python": "3.12.13",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "matplotlib": "3.11.2",
+      "torch": "2.15.0+cpu",
+      "device": "cpu",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1,
+      "workers": 0,
+      "deterministic": true
+    }
+  },
+  "selected": {
+    "AMZN_META": {
+      "seed": 42,
+      "batch_size": 64,
+      "max_epochs": 200,
+      "patience": 20,
+      "min_delta": 1e-06,
+      "gradient_clip": 1.0,
+      "shuffle": true,
+      "hidden_size": 32,
+      "learning_rate": 0.001,
+      "pair_id": "AMZN_META",
+      "trial_id": "h32_lr0.001_s42",
+      "rmse": 0.4060936651244986,
+      "best_epoch": 22,
+      "epochs_run": 42,
+      "role": "candidate"
+    },
+    "NVDA_AMZN": {
+      "seed": 42,
+      "batch_size": 64,
+      "max_epochs": 200,
+      "patience": 20,
+      "min_delta": 1e-06,
+      "gradient_clip": 1.0,
+      "shuffle": true,
+      "hidden_size": 32,
+      "learning_rate": 0.001,
+      "pair_id": "NVDA_AMZN",
+      "trial_id": "h32_lr0.001_s42",
+      "rmse": 0.3303221369162047,
+      "best_epoch": 29,
+      "epochs_run": 49,
+      "role": "candidate"
+    }
+  },
+  "reconciliation": [
+    {
+      "pair_id": "AMZN_META",
+      "period": "validation",
+      "strategy": "baseline_matched",
+      "status": "pass",
+      "sessions": 502,
+      "max_equity_difference": 3.637978807091713e-12,
+      "beta": 0.7265234776298514
+    },
+    {
+      "pair_id": "AMZN_META",
+      "period": "validation",
+      "strategy": "lstm_filtered",
+      "status": "pass",
+      "sessions": 502,
+      "max_equity_difference": 3.637978807091713e-12,
+      "beta": 0.7265234776298514
+    },
+    {
+      "pair_id": "NVDA_AMZN",
+      "period": "validation",
+      "strategy": "baseline_matched",
+      "status": "pass",
+      "sessions": 502,
+      "max_equity_difference": 0.0,
+      "beta": 0.25226756417872037
+    },
+    {
+      "pair_id": "NVDA_AMZN",
+      "period": "validation",
+      "strategy": "lstm_filtered",
+      "status": "pass",
+      "sessions": 502,
+      "max_equity_difference": 0.0,
+      "beta": 0.25226756417872037
+    }
+  ],
+  "outputs": {
+    "artifacts/statistical/phase5_v2/selection/AMZN_META/ols_20180102_20231229.json": "5f6643f54558ffd0024784fde4a6483aab8c702f37ab0980fa92812a0c06c532",
+    "artifacts/statistical/phase5_v2/selection/AMZN_META/normalization_2023.json": "51336d349516e849e06baf1512c3ce4e75f85d99ca8711844cdd709e52a5120b",
+    "artifacts/preprocessing/phase5_v2/selection/AMZN_META/scaler.json": "63bd0e88ad1b18def68e20a72b3951e010ab8dc1543a54eed5472a4cd4d8e584",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h16_lr0.001_s42/model.pt": "a42324d5094541b66ce82ece93b4ea6b2b58d439e737644119485c782712da28",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h16_lr0.001_s42/metadata.json": "63baecadae7ea52b6656548b487f547a3bd1023e930a50b3f093e5aba5b57f29",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h16_lr0.0003_s42/model.pt": "d592fdcdebdfa309d7f518ae8d66424fc7910fe0fae6c3bae4f2d56c3cd93d58",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h16_lr0.0003_s42/metadata.json": "6ad812db019d2e41d0ed7ce9296774932dc640bb7dcabd1f50425841520c87ee",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s42/model.pt": "43db3215b38d618f2b3b65a68e29b99a0e1149a62ee052dde4a5d8afbe1f7a38",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s42/metadata.json": "4cc2d82bbc22b287438b71cdf1bc1d4ca747c17345e82eb38094ac842aa510d5",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.0003_s42/model.pt": "831b9a54608b7e5f45fb2c699bde4f22a568fcef52d6c87e1322309f46356124",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.0003_s42/metadata.json": "cf48fd7fd55c43dcf3bbd9b6c3cc06b84cc098f76e28fccf9b832891247acd63",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s7/model.pt": "242be67553e1fa391c7cb99be8f26da27571da3ccdec90f1d16d74fec11cffae",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s7/metadata.json": "0dedbfe504aba9180a21b87d064ae75a201a597f036a44afe0fcd65b2ce65328",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s2026/model.pt": "233aebf8ae605496ab0d6c838569b337fb53ed23db569999bf9f7b270cb3e5b9",
+    "artifacts/lstm/phase5_v2/AMZN_META/selection/h32_lr0.001_s2026/metadata.json": "d906a15d629d22cb914dc8b04fea54168d8f4d02fe52ad235c5ac9141f7b01b2",
+    "outputs/figures/lstm/phase5_v2/validation/AMZN_META_errors.png": "aa0b3f3d813213b9f46bc560c21b64a3360dfaa974ac238e9286f9ea0d9cc73a",
+    "outputs/figures/lstm/phase5_v2/validation/AMZN_META_forecasts.png": "10279622fb0ce165ebfc74ba1d918be1cf570d2c34494a9e6424f520ad3cfba8",
+    "outputs/figures/lstm/phase5_v2/validation/AMZN_META_strategy.png": "f17b4551b5b470df53294376b147fe062f108db2b7e58b8cf6037f2460c40651",
+    "outputs/figures/lstm/phase5_v2/validation/AMZN_META_learning_curves.png": "caaed6e77ede71d0e4c44f89c12c13ba02c71879c0fd9e62d6d74000b8eda80c",
+    "artifacts/statistical/phase5_v2/selection/NVDA_AMZN/ols_20180102_20231229.json": "1258e9e73a7c0bbe77842d46d6ce3fc7b7d7490d91a1755f0fbb60603b1b5ebc",
+    "artifacts/statistical/phase5_v2/selection/NVDA_AMZN/normalization_2023.json": "0e8615db28566bad9c398dbbd7daecd2d8ad7a04cbe7a8f6e38c0a4192584d4a",
+    "artifacts/preprocessing/phase5_v2/selection/NVDA_AMZN/scaler.json": "7dc6f63730a54582dd6f28055d08d11fa2f40498e3f7d4b7e84a2bc90d4ecfe1",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h16_lr0.001_s42/model.pt": "623f594f9de44dcc0351ce6e808c6d3746d9626cc18fcb682a41e1ffcb880a86",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h16_lr0.001_s42/metadata.json": "3796ee86370d597dbcb3af3d96c2895463e2f09c4d985624e1305662a96857a2",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h16_lr0.0003_s42/model.pt": "112adda1c093f076942577154372c073664974ff9307f9bb82907f3be51ccb96",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h16_lr0.0003_s42/metadata.json": "03d4edaef93f275f444b2b3eeddc4b9ce9deb07097c368e5838e52941086cb26",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s42/model.pt": "4de9cb21ae1395563a64d8f77e4c910611907f50e2ab3cf9a81af33b5bd300f1",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s42/metadata.json": "29966ff27070e05cdf4b706190d1ac2f2502f9e68684577fc422883095fabb1b",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.0003_s42/model.pt": "c33da81f4a98d0d9931ddbda653df63862cea834664f8dda34c49ea0ea07bad7",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.0003_s42/metadata.json": "e677ccd439d0ba70a5b2fa11979429d3864bf1f12d85ee22b0145233b8499f2c",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s7/model.pt": "2e1a22ebb4bb4df8c4ffdbc91d42b7f1ad35199a5526e6a0c40d0200c9730b6d",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s7/metadata.json": "dc23fd2ae0c68ccfaf11ef8c7709d8cb165dbf884d158d299a531fb77040ad9a",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s2026/model.pt": "c7247e04ef27492a36d10435809fad2ee8d37fd10609cb59bf26937d5b62f0bb",
+    "artifacts/lstm/phase5_v2/NVDA_AMZN/selection/h32_lr0.001_s2026/metadata.json": "dedf3b51cc94c0b41b27c6b05fa02085acea4d5c1ffd21e931448275d0c595e6",
+    "outputs/figures/lstm/phase5_v2/validation/NVDA_AMZN_errors.png": "ac7d5c26546671f8b0ed257d2c9930a85c72454ad5be3d69f7454d3958b9b5e9",
+    "outputs/figures/lstm/phase5_v2/validation/NVDA_AMZN_forecasts.png": "8431f8e33f0099813d07fece2265c6c78df9f0a49599ab0af5577f059041f0c0",
+    "outputs/figures/lstm/phase5_v2/validation/NVDA_AMZN_strategy.png": "41b97bc4aa43b3db353db6ba04efbd6963a1562db8f24000f0954c32b97b6821",
+    "outputs/figures/lstm/phase5_v2/validation/NVDA_AMZN_learning_curves.png": "2facc40bf42d7e6ecc4a64238ae3a34ac0c001d85d538fdb38ff32b7bb2eefff",
+    "data/processed/lstm/phase5_v2/selection/features.csv": "b495ac8ed4cc1811adbbbc8a05165a6a4e5903a3062e7672030435f711089132",
+    "data/processed/lstm/phase5_v2/selection/sample_index.csv": "03077b83c2e13045cc666f084bb29073fadff4d32ceab10b319337530f804ce3",
+    "data/processed/lstm/phase5_v2/selection/excluded_samples.csv": "b43ec50083113e9e5ed30004939b6dcbeba499e0ab81612dd46f300f702624b2",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/signals.csv": "009b44bc4e277fac42f40c5527328d1f50e2c2fd8f8dbb545cd60f6eee8ff522",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/executions.csv": "e1911de8b75f6de556fbb8dc1976b96d4ce9e560f5acd159aca91a458e5367e2",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/trades.csv": "7cc9104a09b0c0263a98f6040a2b64b998a689e8966c089c38fbc1a0c57217bb",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/daily_account.csv": "0a232597ad6c8d35ebc5713f48f14207517a034d86fb5a5942c69ec6d2e13ddf",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/summary.csv": "6cfe19e02ea87f0ddbe1fe1aa29be4e157e11b9717e863af35fffa29e14fe0dd",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/signals.csv": "e72f1b46a89df274078560a144ca7abce9475a2cfafd3cfd53eb605e1717d6e5",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/executions.csv": "7827bb545b2867b315f4dee36433f7a7821116a355dfb8b4f699252364e34958",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/trades.csv": "3230b2f1b94c8dc8241d38a0036d6212156277114a070c2265675c5d46bcd3c1",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/daily_account.csv": "8765538a2bc22a27f4d7a4c9947c4d90986b91e52af20b61fd6e7ec529cf0ceb",
+    "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/summary.csv": "52b474c8a9d9743aa447c5d55a35c3969e4813aee9813b74b4e237d244f0441a",
+    "outputs/metrics/lstm/phase5_v2/trials.csv": "72ac2cbb9ae81019172ca76b3949a4d3e8b3a557ba8ff77722e180f1bed2fd48",
+    "outputs/metrics/lstm/phase5_v2/epoch_history.csv": "504685d05a32940b6d5fb72f5467bbc34c596eb95d82571c67c24202ce68b253",
+    "outputs/metrics/lstm/phase5_v2/forecast_metrics.csv": "920f32d1cfc4b6b510c1dbeb5152ab65095bae242b84b7e168129f739181d2a2",
+    "outputs/metrics/lstm/phase5_v2/strategy_comparison.csv": "d1a638ff2eeb777a44a37052422710e8bd4b2f6d552e2c1dad020ef3eed3a262",
+    "outputs/metrics/lstm/phase5_v2/direction_diagnostics.csv": "042ddcb29e7d0ed3f14dcf7defcd57de275d53bdf6fbb212772b0928ed185ec9",
+    "outputs/metrics/lstm/phase5_v2/seed_agreement.csv": "79418a3255fb3316d514bb402a7998c76733f31ea4704c4f3017bae04df6b1df",
+    "outputs/metrics/lstm/phase5_v2/filter_decisions.csv": "67cb3e434eb66e082e4ecfb7116ff147128d126bbfb3844762ce9004db017742",
+    "outputs/predictions/lstm/phase5_v2/validation/forecasts.csv": "1137fde35d0aeb47167bf97aaf9eb67a67988b68548af12ec7c67448d2959ba1",
+    "outputs/metrics/lstm/phase5_v2/selection.json": "a53540db0763ff0d7d7aa0419ec2663f38aa1eace0eed2a769e37e2ac118840a"
+  }
+}

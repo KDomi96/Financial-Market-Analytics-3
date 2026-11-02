@@ -41,3 +41,10 @@ data/processed
 outputs
 artifacts/statistical/phase3_v1
 artifacts/statistical/phase4_v1
+artifacts/statistical/phase5_v1
+artifacts/preprocessing/phase5_v1
+artifacts/lstm/phase5_v1
+artifacts/statistical/phase5_v2
+artifacts/preprocessing/phase5_v2
+artifacts/lstm/phase5_v2
+docs/*.docx

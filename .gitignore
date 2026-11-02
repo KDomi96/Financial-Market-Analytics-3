@@ -7,6 +7,7 @@
 
 # Supplied assignment material and local assistant files; never commit.
 docs/assignment_brief.docx
+docs/*.docx
 CLAUDE.md
 AGENTS.md
 .claude/
@@ -49,3 +50,7 @@ Thumbs.db
 
 # Data, models, and results are deliberately not blanket-ignored.
 # Establish storage/versioning policy once providers and file sizes are known.
+
+# First evaluated Phase 5 run, superseded by phase5_v2 and kept locally only.
+**/phase5_v1/
+outputs/metrics/phase5_v1_*_validation.json

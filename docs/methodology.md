@@ -21,6 +21,9 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-11-02 | Phase 5 trading filter | Accept a fresh long/short entry only when the day-five forecast moves in the reversion direction; retain Phase 4's observed-Z exits | Adopted |
+| 2026-11-02 | Phase 5 targets and batch order | Train on five-session changes in Z and add them to the origin's Z for the forecast; shuffle training windows each epoch with a seeded generator | Adopted |
+| 2026-11-02 | Phase 5 implementation defaults | 20-session trailing volatility, training-only feature scaling, four compact LSTM candidates, persistence comparison, and matched entry calendars | Adopted |
 | 2026-11-01 | Phase 4 design | 2025 mean and `ddof=1` std; enter on ±2 crossings while flat, exit when Z reaches 0, exit takes priority, start flat; separate USD 10,000 accounts; beta-weighted fixed shares sized at the next open; 5 bps per leg; mark open trades at the final close | Adopted |
 | 2026-11-01 | Phase 3 design | ADF lags by AIC and Johansen VAR order by BIC; direction by the smaller Engle-Granger p-value; Holm over 15 pair-level p-values; rank by method agreement, then Engle-Granger p-value; stop on any failed fit; shortlist of two | Adopted |
 | 2026-10-25 | Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
@@ -635,17 +638,20 @@ normalization, on the training portion only. Validation therefore does not
 reuse a spread already fitted on the validation years. The pair shortlist was
 still chosen on 2018-2025, so validation is conditional on that shortlist and
 is not independent validation of pair selection. This limitation is disclosed.
+Validation backtests size trades with the 2018-2023 selection beta, not the
+full-history beta, which was fitted partly on the validation years.
 
 The final refit has no validation set. It trains for the epoch count selected
 in the selection stage. Its unseen Z-scores are identical to Phase 4's, so both
 strategies trade the same series and no scale conversion is needed.
 
-### Inputs and targets (Adopted structure; Proposed window)
+### Inputs and targets (Adopted; details 2026-11-02)
 
 - Features per day, in order: Z, Z lag 1, lag 2, lag 3, and trailing rolling
-  standard deviation of Z. The rolling window length is Proposed at 20 trading
-  days. The lags overlap with the 20-day sequence itself; they are included as
-  specified features and this redundancy is noted.
+  standard deviation of Z. The rolling window is 20 trading sessions,
+  with `ddof=1` and all 20 observations required. It includes the current close,
+  which is known at the after-close prediction origin. The explicit lag
+  columns overlap with information already in the sequence.
 - An origin after the close on day t uses the 20 trading days ending at t and
   predicts Z for t+1 through t+5.
 - Training samples whose target window crosses into a later split are dropped.
@@ -654,15 +660,74 @@ strategies trade the same series and no scale conversion is needed.
   five-day target. The origin count is reported.
 - Any feature scaler is fitted on the training portion only and saved.
 
-### Model (Adopted framework; Proposed design)
+The feature scaler subtracts each column's mean and divides by its
+population standard deviation (`ddof=0`). Fit it on the union of dates used
+in training input windows, once per date. Flattening overlapping windows
+would count middle observations repeatedly. A constant column gets scale 1
+and a recorded flag; missing or non-finite values fail. Targets are the
+five-session changes described below, in stage-specific Z units and not scaled
+further; adding the origin's Z gives the forecast. There is no clipping or refitting on validation or unseen
+values. These five means/scales can be saved as JSON and applied with NumPy;
+an additional preprocessing library is unnecessary.
+
+This input scaling serves the optimizer and is separate from spread
+normalization. The selection scaler uses the earlier-fit Z series; the final
+scaler is fitted again using the final-fit series. Never mix these objects.
+Twenty feature rows with a trailing 20-session statistic need 39 consecutive
+spread observations. Keep insufficient-context rows visible in the exclusion
+audit rather than padding them.
+
+### Model (Adopted; design 2026-11-02)
 
 PyTorch was chosen for explicit control over the training loop, early
 stopping, and the final-refit epoch rule. Models are saved as `.pt` files with
 metadata: pair, feature order, window lengths, split dates, seed, training
-device, and library versions. The starting design is one compact LSTM per selected pair (one layer,
-about 32 units, five outputs, MSE loss, Adam, early stopping on validation),
-with a small recorded set of experiments and fixed seeds. Unsuccessful trials
-are recorded.
+device, and library versions. Use a separate compact network for each pair:
+one unidirectional LSTM layer, followed by a linear head from its last hidden
+state to five outputs. Forecast all five horizons together, without feeding
+realized future Z values back into the model. Reset hidden/cell state for
+each sequence. The [PyTorch LSTM interface](https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
+supports this recurrent layer; the five-output linear head is a project
+choice. The settings are:
+
+| Setting | Value |
+| --- | --- |
+| Candidate grid | Hidden units 16 or 32, crossed with learning rates 0.001 or 0.0003: four configurations per pair |
+| Fixed architecture | Five inputs, one recurrent layer, five linear outputs, no dropout |
+| Training | Float32, MSE averaged across samples and horizons, Adam, zero weight decay, batch size 64, seeded shuffling (adopted, see below), gradient norm capped at 1 |
+| Selection budget | At most 200 epochs; stop after 20 epochs without validation MSE improving by more than `1e-6` |
+| Checkpoint | Save the first epoch and replace it on an improvement greater than `1e-6`; restore that checkpoint for scoring |
+| Configuration choice | Lowest pooled validation RMSE; within `1e-6`, prefer fewer hidden units, then the lower learning rate |
+| Seeds | Seed 42 for all four selection candidates and final refit; seeds 7 and 2026 for two additional validation checks of the selected design |
+| Final epoch count | Best saved epoch from the selected seed-42 trial, with no early stopping during final refit |
+
+The small grid tests capacity and learning rate without turning this dataset
+into a large search. Select by forecast error separately for each pair, not
+by trading returns. The two extra seeds describe sensitivity; they do not
+replace the selected checkpoint, change the epoch rule, or select a lucky
+seed. Record all trials and numerical failures. A non-finite loss or gradient
+stops the run for investigation. Poor forecasts do not justify silently
+adding more trials. Validation errors are selection evidence, not an unbiased
+estimate for the selected model.
+
+### Targets and batch order (Adopted 2026-11-02)
+
+The network predicts the five changes `Z(t+h) - Z(t)` for h = 1 to 5. The
+forecast for each horizon is `Z(t)` plus the predicted change, and errors and
+the filter use that forecast level. A model that predicts no change reproduces
+persistence, so its errors show what the LSTM adds beyond it. Final-stage
+levels range from about -9 to +8 while five-session changes have a standard
+deviation near 0.5, and level targets would spend most of the loss on a level
+persistence already gets right. Changes also depend less on each stage's
+resting level, which makes the selected epoch count safer to reuse in the
+final refit. The change is a different target, not extra information: the
+inputs and their dates are unchanged.
+
+Training windows are shuffled every epoch by a generator seeded with the
+trial's training seed. The date split already keeps validation targets out of
+training, so batch order is an optimization choice, not a leakage control.
+In date order, every epoch would end on the latest months of the training
+period. Validation, evaluation, and inference keep date order.
 
 ### Training device (Adopted 2026-10-25)
 
@@ -678,24 +743,126 @@ The device is saved in each model's metadata. If tuning on the validation
 years turns out to be slow, a GPU may be used for those trials only. Final
 models and reported metrics are always produced on CPU.
 
-### Evaluation (Proposed)
+For the implementation, fix Python, NumPy, and PyTorch seeds, use
+one intra-op and one inter-op CPU thread, no data-loader workers, and enable
+deterministic operations. Save the runtime settings. This reduces run-to-run
+variation but does not guarantee identical training between Windows and
+Linux; [PyTorch documents that limitation](https://docs.pytorch.org/docs/stable/notes/randomness.html).
+Test repeated training and artifact reload separately. Record platform
+differences instead of changing seeds until results agree.
 
-MAE and RMSE are reported for each horizon from 1 to 5, plus a defined
-aggregate, with sample counts. A persistence forecast that repeats the latest
-observed Z at every horizon is evaluated on the same origins and targets; an
-AR(1) forecast may be added. Z-scores are highly autocorrelated, so persistence
-is a demanding benchmark at short horizons. Forecast quality is assessed
-separately from trading results.
+### Evaluation (Adopted 2026-11-02)
 
-### LSTM-enhanced strategy (Proposed)
+Report MAE and RMSE for horizons 1-5 for each pair. For N complete origins,
+pooled MAE is the mean absolute error over all `5*N` origin/horizon cells;
+pooled RMSE is the square root of their mean squared error. It is not the
+average of the five horizon RMSEs. Report N, prediction count, and distinct
+target-date count. Overlapping horizons reuse target dates, so these cells
+are not independent observations; do not attach an independence-based
+significance claim to a small difference.
 
-The forecast filters statistical entries: a Phase 4 entry is taken only when
-the forecast indicates movement toward equilibrium (for a long, forecast Z at
-the chosen horizon above current Z). The horizon, aggregation, and any
-threshold are set on 2024-2025 validation. The strategy uses the Phase 4
-backtest function, execution timing, notional, costs, and metric definitions.
-Both strategies' rules are frozen before the 2026 comparison, and the
-baseline's 2026 results are not used to tune the LSTM strategy.
+Persistence repeats the origin's observed Z at all five horizons and uses
+the same target keys as the LSTM. Report the absolute errors and the relative
+RMSE improvement, `1 - RMSE_LSTM / RMSE_persistence`; this ratio is undefined
+when persistence error is zero. Keep the first implementation to this
+benchmark. An AR(1) comparison would be a separately recorded extension.
+Forecast quality is assessed separately from trading results.
+
+RMSE does not measure the one quantity the filter uses, the sign of the
+predicted day-five change. On validation, I also report how often that sign
+matches the realized five-session change, overall and at crossing origins,
+and how many crossing decisions the two extra seeds share with seed 42. In
+the selection training data, the mean five-session change after Z > 2 was
+-0.10 and -0.04 against a standard deviation of 0.60 and 0.48, so these
+decisions may be fragile. The diagnostics are reported only; they select
+nothing.
+
+### LSTM-enhanced strategy (Adopted 2026-11-02)
+
+Use a fixed day-five direction filter on fresh statistical entry crossings
+while that strategy is flat. Accept a long only if `forecast_z_h5 > Z_t`,
+and a short only if `forecast_z_h5 < Z_t`. Equality rejects the entry. There
+is no optimized margin, horizon search, or forecast-based exit. I chose
+this fixed rule on 2 November 2026 to keep the comparison simple
+and avoid another layer of strategy tuning.
+
+Observed-Z exits, exit priority, next-open execution, sizing, costs, and
+endpoint marking remain those of Phase 4. A rejected crossing expires;
+remaining outside the band does not create a later entry. Each strategy
+has its own holdings and evaluates crossings against its own current state.
+Do not filter an already executed baseline ledger.
+
+The signed forecast change tests movement in the reversion direction. It
+does not require the predicted endpoint's absolute Z to be smaller: a
+forecast can overshoot zero. Keep that distinction in the interpretation.
+The filter also cannot predict the next-open gap or guarantee profitable
+stock-leg P&L. Do not tighten the rule after examining unseen trades.
+
+Z = 0 is the last year's mean, not the level the spread has returned to over
+the regression window. OLS residuals average zero over their fit window, so
+that level sits at `-mean / std` in each stage's Z units. A planning check put
+it near 2.78 for NVDA_AMZN in the selection stage, above the +2 short
+threshold, and near -0.47 in the final stage. A model that learned to revert
+toward it would treat a validation short crossing as a move away from
+equilibrium. I save each stage's level and report it with the filter
+decisions instead of changing the rule.
+
+### Comparison calendar and reporting (Adopted 2026-11-02)
+
+Score forecasts from the final historical close through the last origin
+whose five target dates are all inside the evaluation period. For trading,
+start both accounts flat on the first evaluation session, use the last
+historical Z only as crossing context, and carry no order from the previous
+year. A preceding-year origin is therefore scored but cannot initiate an
+evaluation trade.
+
+Restrict new entries in both strategies to evaluation-period origins with
+complete five-day targets. This restriction uses the calendar only. Keep
+processing observed-Z exits, next-open fills, and close marks through the
+endpoint. Preserve the original full-period Phase 4 baseline alongside this
+matched baseline and the LSTM-filtered result, so the calendar restriction's
+effect remains visible. Apply the same convention to historical validation.
+
+Report raw crossings, entries eligible under position state, calendar
+exclusions, filter acceptances/rejections, submitted orders, executed entries,
+closed trades, and final open trades separately. State each denominator.
+Compare gross/net account return, net P&L, costs, drawdown, and closed-trade
+win rate using Phase 4's definitions. No closed trades means an undefined win
+rate, not zero. Keep leg P&L and net/gross exposure available; these pairs
+share AMZN and are separate accounts, not a diversified portfolio.
+
+Both strategies' rules and the final model artifacts are frozen before the
+Phase 5 evaluation. Phase 4's 2026 results have already been seen, so the
+period is held out from model fitting but is not a newly untouched test.
+Do not use those results to choose model settings, filters, or exclusions.
+Retain any corrected evaluated run and record why it changed.
+
+### Implementation and reproduction (Recorded 2026-11-02)
+
+Inference validates input
+sessions against the saved training calendar. Later dates require an
+independent supplied session calendar, so a missing price row cannot quietly
+shorten a lookback. The ordered pipeline validates and retains a handoff
+already frozen by Phase 4; a fresh Docker run still rebuilds it. This preserves
+the earlier lockfile provenance after torch is added.
+
+Reported Phase 5 artifacts use the Windows CPU runtime. The plan defined two
+separate reproduction checks. Inference with identical saved weights must meet
+the float32 tolerance, and it does on Linux. Retraining on another platform
+must reproduce dates, samples, the selected configuration and epoch, and every
+trading decision, and Linux retraining does. The plan did not apply the float32
+tolerance to retrained weights, which PyTorch does not promise to reproduce
+across platforms. The measured forecast difference after Linux retraining is
+recorded as a platform difference, not as a failed check. It does not prompt
+a new model, seed, or filter search.
+
+The first evaluated run, `phase5_v1`, was repeated as `phase5_v2` with
+identical settings after review. The rerun adds direction base rates and a
+dated filter-decision table, draws persistence on the learning curves, keeps
+`ignored_reason` in its Phase 4 meaning, and moves a pipeline helper into the
+package. None of these changes touches features, training, selection, the
+filter rule, or accounting, and the v1 files are kept unchanged. The rerun was
+needed because the evaluation contract fixes the code of an evaluated version.
 
 ## Sentiment
 

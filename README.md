@@ -11,7 +11,8 @@ and VIX context. Phase 3 compares all pairs, saves their fitted spreads, and
 carries AMZN_META and NVDA_AMZN forward as exploratory candidates. No pair
 meets all the adopted support conditions. Phase 4 applies fixed 2025
 normalization and saves baseline signals, stock-leg fills, trades, and daily
-accounts. LSTM, sentiment, API, and web interface remain.
+accounts. Phase 5 saves the fitted LSTMs, dated forecasts, persistence errors,
+and matched strategy comparisons. Sentiment, API, and web interface remain.
 The Python 3.12.13 environment is managed with uv. Docker configuration is
 provided for the environment.
 
@@ -253,6 +254,74 @@ uv run --locked python scripts/run_pipeline.py
 The historical replay is in sample, including its early years. The full run
 adds the fixed January-July 2026 evaluation. Neither command downloads data.
 
+## Run Phase 5 LSTM comparison
+
+Phase 5 uses the two exploratory pairs, with 2018-2023 fitting and 2024-2025
+validation. Each model predicts five changes from the current Z-score. The
+final refit uses the saved Phase 3 OLS and Phase 4 normalization through 2025.
+CPU-only torch is resolved through its explicit uv index; the earlier numeric
+library versions are retained.
+
+```powershell
+uv sync --locked
+uv run --locked python scripts/run_lstm_forecast.py --stage select
+uv run --locked python scripts/run_lstm_forecast.py --stage refit
+uv run --locked python scripts/run_lstm_forecast.py --stage evaluate
+```
+
+The standalone runner needs the existing masters and Phase 3/4 handoff. Its
+default runs all three stages. `--historical-only` runs selection and refit
+without opening unseen inputs; it cannot be combined with `--stage`.
+Evaluation loads frozen artifacts and does not train. An evaluated version
+rejects changed code, settings, inputs, or artifacts. Preserve a corrected
+run under a new version rather than removing that protection.
+
+```powershell
+uv run --locked python scripts/run_lstm_forecast.py --historical-only
+uv run --locked jupyter nbconvert --to notebook --execute --inplace notebooks/05_lstm_comparison.ipynb
+uv run --locked python -m unittest discover -s tests -v
+```
+
+Use the workstation uv/cache and Jupyter environment variables documented
+above. The version in `configs/lstm_forecast.json` names the output folders;
+the reported run is `phase5_v2`. Forecasts are in
+`outputs/predictions/lstm/phase5_v2/`; trial histories, metrics, direction
+base rates, filter decisions, and comparison tables are in
+`outputs/metrics/lstm/phase5_v2/`. Matched baseline and filtered account
+ledgers are under `outputs/backtests/lstm_comparison/phase5_v2/`. The original
+full-period Phase 4 baseline remains available in the comparison. The first
+evaluated run, `phase5_v1`, is kept unchanged in matching folders.
+
+Final bundles under `artifacts/lstm/phase5_v2/<PAIR_ID>/final_20180102_20251231/`
+contain weights, embedded fitted preprocessing, and a known reload example.
+`forecast_from_prices` loads a bundle without training. It checks consecutive
+sessions against the saved historical calendar. For later dates, supply an
+independent expected session calendar through `session_calendar`; deriving
+that calendar from the submitted price rows would hide missing sessions.
+The API and web interface remain separate work.
+
+The ordered pipeline validates and reuses the Phase 3 handoff when Phase 4
+has already frozen it. Regenerating its metadata after adding a dependency
+would change the recorded lockfile hash and invalidate the earlier evaluated
+run. Fresh Docker builds exclude those objects and reconstruct all five phases.
+
+To reproduce the batch run in Docker, build the image and run both pipeline
+modes and the tests. Give each container its own name:
+
+```powershell
+docker build -t financial-market-analytics-3 .
+docker run --name fma3-historical financial-market-analytics-3 python scripts/run_pipeline.py --historical-only
+docker run --name fma3-full financial-market-analytics-3
+docker run --rm financial-market-analytics-3 python -m unittest discover -s tests -v
+```
+
+Generated files stay inside the containers and can be copied out with
+`docker cp` for comparison without replacing local results. Retraining on
+Linux gives the same selected models, epochs, and trading decisions as
+Windows, but its forecasts differ slightly; reported results use the Windows
+CPU artifacts. Verification records are in
+`outputs/metrics/phase5_{review,docker}_validation.json`.
+
 ## Docker environment
 
 On Windows, Docker Desktop supplies the Linux container engine. If it is not
@@ -369,7 +438,7 @@ checks are recorded in `outputs/metrics/phase2_review_validation.json`.
 In the coding-agent sandbox, Docker's API and configuration file were
 inaccessible. Running Docker commands outside the sandbox resolved that
 restriction. Docker Desktop was already running; no restart was needed.
-Training, API, and web commands will be documented as those components are
+API and web commands will be documented as those components are
 implemented. Follow the official
 [uv Docker guide](https://docs.astral.sh/uv/guides/integration/docker/) when
 extending the environment.
@@ -381,8 +450,7 @@ extending the environment.
 - [Submission requirements](docs/submission_requirements.md): packaging,
   reproducibility, API, and deliverable requirements.
 
-Commands for later analytical components will be added after implementation
-and verification.
+Serving commands will be added after implementation and verification.
 
 ## Submission
 

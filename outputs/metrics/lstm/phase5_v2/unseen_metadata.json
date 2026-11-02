@@ -1,0 +1,192 @@
+{
+  "signature": {
+    "inputs": {
+      "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+      "outputs/metrics/pair_selection/run_metadata.json": "731ea091abb7f994e3a93f47bb3084bbe2ae3189f64ed3b385036ad885ad02fb",
+      "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+      "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+      "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+      "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+      "configs/statistical_baseline.json": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+      "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": "a9712d4cc7f7baefae61269ef5df1fefe8cfeb81ae01585bef67c1fadaea5378",
+      "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+      "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1"
+    },
+    "settings": {
+      "model_version": "phase5_v2",
+      "baseline_config": "configs/statistical_baseline.json",
+      "feature_order": [
+        "z",
+        "lag1",
+        "lag2",
+        "lag3",
+        "rolling_std"
+      ],
+      "rolling_window": 20,
+      "lookback": 20,
+      "horizon": 5,
+      "target": "change_from_origin_z",
+      "selection_end": "2023-12-31",
+      "validation_start": "2024-01-01",
+      "historical_end": "2025-12-31",
+      "unseen_start": "2026-01-01",
+      "unseen_end": "2026-07-31",
+      "candidates": [
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.0003
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.0003
+        }
+      ],
+      "training": {
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 200,
+        "patience": 20,
+        "min_delta": 1e-06,
+        "gradient_clip": 1.0,
+        "shuffle": true
+      },
+      "sensitivity_seeds": [
+        7,
+        2026
+      ],
+      "selection_metric": "pooled_validation_rmse",
+      "selection_tolerance": 1e-06,
+      "filter": {
+        "horizon": 5,
+        "margin": 0.0,
+        "exits": "observed_z",
+        "entry_calendar": "complete_five_day_targets_inside_period"
+      },
+      "expected": {
+        "selection_train": 1466,
+        "validation": 498,
+        "final_train": 1968,
+        "unseen": 141,
+        "selection_scaler": 1485,
+        "final_scaler": 1987
+      },
+      "runtime": {
+        "device": "cpu",
+        "intra_op_threads": 1,
+        "inter_op_threads": 1,
+        "workers": 0,
+        "deterministic": true
+      },
+      "tolerance": {
+        "rtol": 1e-07,
+        "atol": 1e-09
+      },
+      "inference_tolerance": {
+        "rtol": 1e-05,
+        "atol": 1e-06
+      }
+    },
+    "lock_sha256": "1caccc4c9413c24f02d9f730ab31e6c665a6629742b56ae44aaa018e75bec83f",
+    "code": {
+      "src/market_analytics/models/forecasting.py": "c7d60532bc712789a2f5533bf354d49ae1349d08902aff9674d36846ba6072cd",
+      "src/market_analytics/models/lstm.py": "53888a1e7f0e6803e9c6c988be49bd25e90a5ee8b85b35592dc7dcd1233d6349",
+      "src/market_analytics/models/plots.py": "e99871f598e9f75eaa05fe0c77c8fffa8b4ad458222d8e45a2df97e6aafc7a52",
+      "src/market_analytics/features/sequences.py": "b8cf10ec13f8cadb6c1df086f94877bc5747f37e299082b800ffe54c73575f1e",
+      "src/market_analytics/trading/forecast_filter.py": "b211713d7f8f94de90378378c6cced4b05d099e7d6e5050d8ef82b86e0b18a40",
+      "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+      "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+      "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+      "src/market_analytics/data/master.py": "2680ae7e2541f75b9c6e85835ced689d205f92a88349601d4dea93c97d924c6d",
+      "scripts/run_lstm_forecast.py": "41b5b26a367ba8b0c62a6198ba23dd48e7017958dde734caf65813ad261df592"
+    },
+    "versions": {
+      "python": "3.12.13",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "matplotlib": "3.11.2",
+      "torch": "2.15.0+cpu",
+      "device": "cpu",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1,
+      "workers": 0,
+      "deterministic": true
+    }
+  },
+  "outputs": {
+    "outputs/metrics/lstm/phase5_v2/evaluation_started.json": "5c0795adb00008f79ca1d46422304895012312f274ed4c281ecf7eb16ee3b37c",
+    "outputs/figures/lstm/phase5_v2/unseen/AMZN_META_errors.png": "ef7747cc045b53c138f47400662192117e4ec9cf4ee3b30358632ef6a246c8df",
+    "outputs/figures/lstm/phase5_v2/unseen/AMZN_META_forecasts.png": "886104d5b7a254b8865c39350c35719ef073b6f8e333513d862b09456e5abcf0",
+    "outputs/figures/lstm/phase5_v2/unseen/AMZN_META_strategy.png": "4428ab9282218e22302719c9a8a583db89cf9d2678368f9e96ef1e19c1c82d51",
+    "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_sample_index.csv": "f8aff268d80fdfc2321b12468a53c57205244ecbbb762fd63f8444b6dec64527",
+    "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_features.csv": "927aeeddb924b53ef018e8b1b5f789ab300c6315b763014a2844dae85d02ec29",
+    "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_excluded_samples.csv": "4a4560244a160cbb19d338e93062bfdc53fc681961cd6c41a7d210fa5c115811",
+    "outputs/figures/lstm/phase5_v2/unseen/NVDA_AMZN_errors.png": "7664ce502a2e28ced20a2909dea5764a442923a2abbe86d558acf60c67868b07",
+    "outputs/figures/lstm/phase5_v2/unseen/NVDA_AMZN_forecasts.png": "0cb7a800a56d416acc952ed069f99e7b9972aa82330516740ed5c843a55d6d68",
+    "outputs/figures/lstm/phase5_v2/unseen/NVDA_AMZN_strategy.png": "4ffb4275a6a80713d95aeb4ecb36393f4daa8c7658e0d4513f9b6e0640264520",
+    "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_sample_index.csv": "237130ebc0731b4ab5929f46fb0fb53f440f4377a78f578da7218dbc826549ec",
+    "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_features.csv": "7bd0de10d2d915a40270901a59e98c81f4bad11033265c2d5f3b3a980324dd88",
+    "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_excluded_samples.csv": "a297106511ca1cfa5e1321225d10885192440401e0419da1a9a47150f2f1136d",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/signals.csv": "6de779141968527e1a5df9f8b71a610f682a3244bb4416bed6cab1080ca8b7a3",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/executions.csv": "c62af3bc644ea1eb4a2693c60e2f4d6386c2a3ba6af432808dc9602522915bae",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/trades.csv": "f4f89995f827a71659344584d275d62c76c2fb967c90789ad2c1cb0d6f3427b0",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/daily_account.csv": "4723277003735ae7b4f2a15f32032328048c592673b4c01db607a0b978c244d4",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/summary.csv": "5191e778f88dc4dca135ea774a11a3a5204398375c122c266b1ed391d237d4f9",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/signals.csv": "a4fd5d184e22a8c362912ae9a1e79115efac3736027e2e8a82b8dbe2a17523cd",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/executions.csv": "7db77a36598be875c7ccda9e44e17c778568012341b02bbbc5273fb890edbbb5",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/trades.csv": "6156d058d00ac411381d4062821e0e978a0f1cc33212a8726fd1773dba638702",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/daily_account.csv": "da37568eab73781632e05b9334d5e619a677cedfad7956814d18693400445f7e",
+    "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/summary.csv": "08e07ba80ef29aec1d5681592d9e8fd47e55d71ef741fb6c4e867bd7cdf3aed3",
+    "outputs/predictions/lstm/phase5_v2/unseen/forecasts.csv": "0a3f8f826f553a8ee79b1bedeef485ad538f382a8acf38fde1bf09523154bebd",
+    "outputs/metrics/lstm/phase5_v2/unseen_forecast_metrics.csv": "851b30437eec1cec0b17c8b55711accfe241c53300e9b46daf958c62342ab0c0",
+    "outputs/metrics/lstm/phase5_v2/unseen_filter_decisions.csv": "efb24224dca2071bbf12f61f26aa8c90dac9cbc9d612555b440bb799d58a43c4",
+    "outputs/metrics/lstm/phase5_v2/unseen_strategy_comparison.csv": "45ec7b72526022017b0579aca9dd49a091f6fcca128156f355aa7cabf4928826"
+  },
+  "reconciliation": [
+    {
+      "pair_id": "AMZN_META",
+      "period": "unseen",
+      "strategy": "baseline_matched",
+      "status": "pass",
+      "sessions": 145,
+      "max_equity_difference": 0.0,
+      "beta": 0.5994280949834124
+    },
+    {
+      "pair_id": "AMZN_META",
+      "period": "unseen",
+      "strategy": "lstm_filtered",
+      "status": "pass",
+      "sessions": 145,
+      "max_equity_difference": 0.0,
+      "beta": 0.5994280949834124
+    },
+    {
+      "pair_id": "NVDA_AMZN",
+      "period": "unseen",
+      "strategy": "baseline_matched",
+      "status": "pass",
+      "sessions": 145,
+      "max_equity_difference": 3.637978807091713e-12,
+      "beta": 0.23963551583029633
+    },
+    {
+      "pair_id": "NVDA_AMZN",
+      "period": "unseen",
+      "strategy": "lstm_filtered",
+      "status": "pass",
+      "sessions": 145,
+      "max_equity_difference": 3.637978807091713e-12,
+      "beta": 0.23963551583029633
+    }
+  ],
+  "unseen_sha256": "c7d74612ca232262ad9d2627056c4eb3410d0a34ea914335e246634d091f171c",
+  "status": "complete"
+}

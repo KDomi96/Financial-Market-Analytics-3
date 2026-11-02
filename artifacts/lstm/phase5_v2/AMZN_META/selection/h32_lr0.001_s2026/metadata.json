@@ -1,0 +1,17 @@
+{
+  "seed": 2026,
+  "batch_size": 64,
+  "max_epochs": 200,
+  "patience": 20,
+  "min_delta": 1e-06,
+  "gradient_clip": 1.0,
+  "shuffle": true,
+  "hidden_size": 32,
+  "learning_rate": 0.001,
+  "pair_id": "AMZN_META",
+  "trial_id": "h32_lr0.001_s2026",
+  "rmse": 0.4008332212625502,
+  "best_epoch": 35,
+  "epochs_run": 55,
+  "role": "sensitivity"
+}

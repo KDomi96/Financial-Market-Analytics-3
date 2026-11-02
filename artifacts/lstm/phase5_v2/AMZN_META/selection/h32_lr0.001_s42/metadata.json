@@ -1,0 +1,17 @@
+{
+  "seed": 42,
+  "batch_size": 64,
+  "max_epochs": 200,
+  "patience": 20,
+  "min_delta": 1e-06,
+  "gradient_clip": 1.0,
+  "shuffle": true,
+  "hidden_size": 32,
+  "learning_rate": 0.001,
+  "pair_id": "AMZN_META",
+  "trial_id": "h32_lr0.001_s42",
+  "rmse": 0.4060936651244986,
+  "best_epoch": 22,
+  "epochs_run": 42,
+  "role": "candidate"
+}

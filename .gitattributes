@@ -8,3 +8,8 @@ outputs/metrics/pair_selection/*.csv -text
 outputs/metrics/statistical_baseline/**/*.csv -text
 outputs/backtests/statistical_baseline/**/*.csv -text
 artifacts/statistical/** -text
+outputs/metrics/lstm/**/*.csv -text
+outputs/backtests/lstm_comparison/**/*.csv -text
+outputs/predictions/lstm/**/*.csv -text
+artifacts/lstm/** -text
+artifacts/preprocessing/** -text

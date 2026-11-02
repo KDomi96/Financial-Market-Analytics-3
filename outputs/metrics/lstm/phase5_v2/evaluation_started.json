@@ -1,0 +1,124 @@
+{
+  "signature": {
+    "inputs": {
+      "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+      "outputs/metrics/pair_selection/run_metadata.json": "731ea091abb7f994e3a93f47bb3084bbe2ae3189f64ed3b385036ad885ad02fb",
+      "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+      "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+      "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+      "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+      "configs/statistical_baseline.json": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+      "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": "a9712d4cc7f7baefae61269ef5df1fefe8cfeb81ae01585bef67c1fadaea5378",
+      "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+      "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1"
+    },
+    "settings": {
+      "model_version": "phase5_v2",
+      "baseline_config": "configs/statistical_baseline.json",
+      "feature_order": [
+        "z",
+        "lag1",
+        "lag2",
+        "lag3",
+        "rolling_std"
+      ],
+      "rolling_window": 20,
+      "lookback": 20,
+      "horizon": 5,
+      "target": "change_from_origin_z",
+      "selection_end": "2023-12-31",
+      "validation_start": "2024-01-01",
+      "historical_end": "2025-12-31",
+      "unseen_start": "2026-01-01",
+      "unseen_end": "2026-07-31",
+      "candidates": [
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.0003
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.0003
+        }
+      ],
+      "training": {
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 200,
+        "patience": 20,
+        "min_delta": 1e-06,
+        "gradient_clip": 1.0,
+        "shuffle": true
+      },
+      "sensitivity_seeds": [
+        7,
+        2026
+      ],
+      "selection_metric": "pooled_validation_rmse",
+      "selection_tolerance": 1e-06,
+      "filter": {
+        "horizon": 5,
+        "margin": 0.0,
+        "exits": "observed_z",
+        "entry_calendar": "complete_five_day_targets_inside_period"
+      },
+      "expected": {
+        "selection_train": 1466,
+        "validation": 498,
+        "final_train": 1968,
+        "unseen": 141,
+        "selection_scaler": 1485,
+        "final_scaler": 1987
+      },
+      "runtime": {
+        "device": "cpu",
+        "intra_op_threads": 1,
+        "inter_op_threads": 1,
+        "workers": 0,
+        "deterministic": true
+      },
+      "tolerance": {
+        "rtol": 1e-07,
+        "atol": 1e-09
+      },
+      "inference_tolerance": {
+        "rtol": 1e-05,
+        "atol": 1e-06
+      }
+    },
+    "lock_sha256": "1caccc4c9413c24f02d9f730ab31e6c665a6629742b56ae44aaa018e75bec83f",
+    "code": {
+      "src/market_analytics/models/forecasting.py": "c7d60532bc712789a2f5533bf354d49ae1349d08902aff9674d36846ba6072cd",
+      "src/market_analytics/models/lstm.py": "53888a1e7f0e6803e9c6c988be49bd25e90a5ee8b85b35592dc7dcd1233d6349",
+      "src/market_analytics/models/plots.py": "e99871f598e9f75eaa05fe0c77c8fffa8b4ad458222d8e45a2df97e6aafc7a52",
+      "src/market_analytics/features/sequences.py": "b8cf10ec13f8cadb6c1df086f94877bc5747f37e299082b800ffe54c73575f1e",
+      "src/market_analytics/trading/forecast_filter.py": "b211713d7f8f94de90378378c6cced4b05d099e7d6e5050d8ef82b86e0b18a40",
+      "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+      "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+      "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+      "src/market_analytics/data/master.py": "2680ae7e2541f75b9c6e85835ced689d205f92a88349601d4dea93c97d924c6d",
+      "scripts/run_lstm_forecast.py": "41b5b26a367ba8b0c62a6198ba23dd48e7017958dde734caf65813ad261df592"
+    },
+    "versions": {
+      "python": "3.12.13",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "matplotlib": "3.11.2",
+      "torch": "2.15.0+cpu",
+      "device": "cpu",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1,
+      "workers": 0,
+      "deterministic": true
+    }
+  },
+  "unseen_sha256": "c7d74612ca232262ad9d2627056c4eb3410d0a34ea914335e246634d091f171c"
+}

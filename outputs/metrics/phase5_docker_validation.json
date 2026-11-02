@@ -1,0 +1,472 @@
+{
+  "verified_date": "2026-11-02",
+  "run": "phase5_v2",
+  "image": "financial-market-analytics-3:phase5-v2-20261102",
+  "image_id": "sha256:df5c4796407305aee9abe510c462842a705e8fdc2043f920dfe3344a62b62912",
+  "status": "pass",
+  "pipeline_exit_codes": {
+    "historical_only": 0,
+    "full": 0
+  },
+  "tests_passed": 77,
+  "historical_only_has_no_unseen_master": true,
+  "historical_only_has_no_unseen_phase5_outputs": true,
+  "retraining": {
+    "definition": "Plan: exact dates, samples, selected configuration and epoch, and trading decisions",
+    "files_compared": 72,
+    "all_discrete_exact": true,
+    "selected_configuration_and_epoch_match": true,
+    "max_forecast_difference": 0.017018437385560303,
+    "note": "Recorded platform difference; the float32 tolerance applies to inference with identical weights"
+  },
+  "saved_windows_weights_reload": {
+    "AMZN_META": 1.4901161193847656e-08,
+    "NVDA_AMZN": 7.450580596923828e-09,
+    "tolerance": {
+      "rtol": 1e-05,
+      "atol": 1e-06
+    },
+    "status": "pass"
+  },
+  "linux_modes_identical_common_csvs": 26,
+  "commands": [
+    "docker build -t financial-market-analytics-3:phase5-v2-20261102 .",
+    "docker run --name fma3-p5v2-historical financial-market-analytics-3:phase5-v2-20261102 python scripts/run_pipeline.py --historical-only",
+    "docker run --name fma3-p5v2-full financial-market-analytics-3:phase5-v2-20261102",
+    "docker run --rm financial-market-analytics-3:phase5-v2-20261102 python -m unittest discover -s tests -v"
+  ],
+  "comparisons": [
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/final/excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/final/features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 4.889144644693033e-13
+    },
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/final/sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.3322676295501878e-14
+    },
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/selection/excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/selection/features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.98507876802978e-13
+    },
+    {
+      "mode": "historical",
+      "file": "data/processed/lstm/phase5_v2/selection/sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.687538997430238e-14
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/predictions/lstm/phase5_v2/validation/forecasts.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/direction_diagnostics.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/epoch_history.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.007091835141182001
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/filter_decisions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.2099742891624743e-05
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/final_epoch_history.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0002319192498679845
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/forecast_metrics.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.695899399406121e-06
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/seed_agreement.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/split_audit.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.509903313490213e-14
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/strategy_comparison.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 7.275957614183426e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/metrics/lstm/phase5_v2/trials.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.5072289189530537e-07
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 9.094947017729282e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.7284841053187847e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.687538997430238e-14
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 7.275957614183426e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 8.185452315956354e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 9.094947017729282e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.7284841053187847e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "historical",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 4.547473508864641e-12
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/AMZN_META_unseen_sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 4.889144644693033e-13
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.227107387398064e-13
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/NVDA_AMZN_unseen_sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.3306690738754696e-15
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/final/sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.3322676295501878e-14
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/selection/excluded_samples.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/selection/features.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.98507876802978e-13
+    },
+    {
+      "mode": "full",
+      "file": "data/processed/lstm/phase5_v2/selection/sample_index.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.687538997430238e-14
+    },
+    {
+      "mode": "full",
+      "file": "outputs/predictions/lstm/phase5_v2/unseen/forecasts.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.017018437385560303
+    },
+    {
+      "mode": "full",
+      "file": "outputs/predictions/lstm/phase5_v2/validation/forecasts.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/direction_diagnostics.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/epoch_history.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.007091835141182001
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/filter_decisions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.2099742891624743e-05
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/final_epoch_history.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0002319192498679845
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/forecast_metrics.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.695899399406121e-06
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/seed_agreement.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/split_audit.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.509903313490213e-14
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/strategy_comparison.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 7.275957614183426e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/trials.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.5072289189530537e-07
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/unseen_filter_decisions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.006113469600677934
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/unseen_forecast_metrics.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.0005322147036232999
+    },
+    {
+      "mode": "full",
+      "file": "outputs/metrics/lstm/phase5_v2/unseen_strategy_comparison.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.8189894035458565e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.3306690738754696e-15
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.637978807091713e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/baseline_matched/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 4.547473508864641e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.1368683772161603e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.013996809720993098
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/unseen/lstm_filtered/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 3.637978807091713e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 9.094947017729282e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.7284841053187847e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 1.687538997430238e-14
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 7.275957614183426e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/baseline_matched/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 8.185452315956354e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/daily_account.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 9.094947017729282e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/executions.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 2.7284841053187847e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/signals.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 0.00012869015336403056
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/summary.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 5.4569682106375694e-12
+    },
+    {
+      "mode": "full",
+      "file": "outputs/backtests/lstm_comparison/phase5_v2/validation/lstm_filtered/trades.csv",
+      "discrete_exact": true,
+      "max_absolute_difference": 4.547473508864641e-12
+    }
+  ]
+}

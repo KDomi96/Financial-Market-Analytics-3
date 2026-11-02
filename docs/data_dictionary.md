@@ -287,3 +287,54 @@ hashes. The parent `evaluation_contract.json` protects the fitted objects and
 historical inputs/settings/code used by an evaluated version. The unseen
 master hash is retained and checked in its period's run metadata. No-trade
 runs have zero counts, costs, return, and drawdown, with missing trade averages.
+
+## Phase 5 LSTM forecasts and comparison
+
+Phase 5 rows identify `pair_id`, `dependent`, `independent`, `evidence_label`,
+and `stage`. Both pairs are exploratory. `selection` uses the earlier OLS and
+2023 scale; `final` uses the Phase 3 OLS and Phase 4 scale. `validation` and
+`unseen` identify evaluation periods. Join forecast rows by pair, trial,
+origin, and horizon, not target date alone. Forecasts from different origins
+can refer to the same target date.
+
+| Saved table or artifact | Fields and meaning |
+| --- | --- |
+| Processed `features.csv` | `Date`, `z`, `lag1/lag2/lag3`, and `rolling_std`: trailing 20-session sample standard deviation including Date. The first 19 rolling values are missing; lag warm-up values are missing. No warm-up row enters an input tensor. Values are in the stage's Z units. |
+| `sample_index.csv` | `split`, `input_start`, `input_end`, `origin`, `origin_z`, and `target_h1` through `target_h5`. Inputs contain 20 rows and targets are the five following sessions. The model target is `Z(target_h) - origin_z`. |
+| `excluded_samples.csv` | `origin` and `reason`: insufficient feature history, targets before the period, target crossing the end boundary, or incomplete future targets. Exclusions contain no fabricated targets. |
+| Earlier OLS and `normalization_2023.json` | Direction, intercept/beta, fit dates/counts; normalization `mean`, sample `std`, `ddof=1`, and `resting_z=-mean/std`. The same resting-level calculation applies to the final normalization. |
+| `scaler.json` | Ordered features, column `mean` and `scale`, `ddof=0`, distinct `fit_dates`, fit bounds/count, constant-column flags, pair/stage identity, and parent OLS/normalization. A constant column uses scale 1. |
+| `forecasts.csv` | `origin`, horizon 1-5, `target_date`, observed `origin_z`, `predicted_change`, reconstructed `forecast_z`, realized `actual_z`, `persistence_z=origin_z`, and `trial_id`. All values are finite Z units. |
+| `trials.csv`, `epoch_history.csv` | Architecture/rate/seed, candidate or sensitivity role, selected epoch and run length; training/validation MSE by epoch. Final epoch history has missing validation MSE because final fitting has no validation/stopping set. |
+| Forecast metrics | `model` is LSTM or persistence; `horizon` is 1-5 or pooled. MAE/RMSE are in Z units. `origins`, `predictions`, and `unique_target_dates` expose denominators. `rmse_improvement` is `1 - model RMSE / persistence RMSE`, missing when persistence RMSE is zero. |
+| Direction diagnostics | Day-five predicted change, observed change derived from `actual_z-origin_z`, `direction_correct`, raw `crossing`, `would_accept_crossing`, and stage `resting_z`. Sign equality defines correctness, including a zero-change tie. These fields do not select a model. |
+| `seed_agreement.csv` | Accuracy and agreement with seed 42, overall or at forecast-covered crossing origins. Fractions use the stated origin count; empty subsets have missing proportions. Base-rate columns (`phase5_v2` onward) give the accuracy of rules with no model on the same origins: `majority_sign_rate` (the more common realized sign), `toward_resting_rate` (sign of `resting_z - origin_z`), and `toward_zero_rate` (sign of `-origin_z`). `predicted_rise_share` is the share of origins with a positive predicted change. |
+| `filter_decisions.csv`, `unseen_filter_decisions.csv` | One row per state-eligible entry in the filtered account (`phase5_v2` onward): signal `Date`, `direction`, `zscore`, day-five forecast and predicted change, `resting_z`, calendar/acceptance flags, order status, and the realized `actual_z_h5` on `target_date_h5`. `direction_correct` compares the predicted and realized day-five signs and is missing when the origin has no scored forecast. Realized values were joined after the backtest finished. |
+| Final bundle | `model.pt` state dictionary; metadata with architecture, epoch rule, fit/target bounds, feature order, embedded OLS/normalization/scaler, historical session calendar, runtime, weights hash, and preprocessing digest. `known_inference.json` holds dated historical prices and five expected Z forecasts. |
+
+Comparison ledgers retain the Phase 4 units and accounting fields. The
+additional signal booleans are `entry_calendar_eligible`, `entry_accepted`,
+`calendar_excluded`, and `filter_rejected`. `eligible_long/short` still mean
+position-state eligibility before calendar/filter checks. `forecast_z_h5` and
+`predicted_change_h5` are missing for the unfiltered baseline and dates without
+a scored forecast. Exits still depend on observed Z.
+
+In `phase5_v2`, `ignored_reason` keeps its Phase 4 values (empty,
+`position_open`, or `exit_priority`), so `ignored_crossings` counts the same
+events as the Phase 4 summary. Calendar exclusions and forecast rejections
+appear only in their own flags and counts. In the retained `phase5_v1` files,
+`ignored_reason` can also be `calendar_excluded` or `forecast_rejected`, and
+`ignored_crossings` includes those entries.
+
+`strategy` is `baseline_matched`, `lstm_filtered`, or the saved reference
+`baseline_full_period`. Summary fields add `filter_rejections`,
+`calendar_exclusions`, `accepted_entries`, `submitted_orders`, and
+`entry_eligible_origins`. The full-period reference has missing values for
+these new fields. Win rate and other closed-trade averages are undefined
+when no trade closes. Account P&L still includes the marked open position.
+
+`selection_metadata.json`, `refit_metadata.json`, and `unseen_metadata.json`
+inventory hashes and checks. `split_audit.csv` lists actual fitted-object
+dates. `evaluation_contract.json` fixes code/settings/input/artifact hashes;
+`evaluation_started.json` also protects the evaluated unseen input hash,
+including a run interrupted before its final metadata is saved.

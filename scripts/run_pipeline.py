@@ -1,4 +1,4 @@
-"""Run the master build, EDA, pair selection, and statistical baseline in order.
+"""Run the master build, EDA, pair selection, baseline, and LSTM in order.
 
 Run with: uv run --locked python scripts/run_pipeline.py [--historical-only]
 """
@@ -9,8 +9,9 @@ from pathlib import Path
 import matplotlib
 
 from market_analytics.analysis.eda import run_eda
-from market_analytics.cointegration.selection import run_pair_selection
 from market_analytics.data.master import build_master
+from market_analytics.models.forecasting import run_lstm_forecast
+from market_analytics.pipeline import pair_selection_stage
 from market_analytics.trading.baseline import run_statistical_baseline
 
 
@@ -26,7 +27,7 @@ def main() -> None:
     metadata = run_eda(Path("configs/eda.json"))
     print(f"EDA: {len(metadata['validation'])} checks passed, {len(metadata['outputs'])} tables, "
           f"{len(metadata['figures'])} figures")
-    metadata = run_pair_selection(Path("configs/pair_selection.json"))
+    metadata = pair_selection_stage(Path("configs/pair_selection.json"),Path('configs/statistical_baseline.json'))
     print(f"Pair selection: {len(metadata['validation'])} checks passed, "
           f"{len(metadata['outputs'])} tables/data/artifacts, {len(metadata['figures'])} figures")
     for period, result in run_statistical_baseline(Path("configs/statistical_baseline.json"),
@@ -34,6 +35,8 @@ def main() -> None:
         print(f"Statistical baseline {period}: {result['status']}, {len(result['validation'])} checks")
         if result["status"] != "complete":
             raise RuntimeError("Incomplete baseline accounts")
+    metadata = run_lstm_forecast(Path('configs/lstm_forecast.json'), historical_only=args.historical_only)
+    print('LSTM stages: ' + ', '.join(metadata))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,45 @@
+{
+  "verified_date": "2026-11-02",
+  "run": "phase5_v2",
+  "reason": "Same-settings rerun of phase5_v1 after review: direction base rates, dated filter decisions, persistence on learning curves, ignored_reason restored to its Phase 4 meaning, pipeline helper moved into the package, notebook paths and text fixed.",
+  "comparison_with_v1": {
+    "common_files": 102,
+    "byte_identical": 84,
+    "changed": 18,
+    "changed_as_intended": [
+      "final metadata model_version",
+      "run metadata and contracts",
+      "seed_agreement base-rate columns",
+      "ignored_reason and ignored_crossings",
+      "two learning-curve figures"
+    ],
+    "new_files": [
+      "outputs/metrics/lstm/phase5_v2/filter_decisions.csv",
+      "outputs/metrics/lstm/phase5_v2/unseen_filter_decisions.csv"
+    ],
+    "weights_forecasts_ledgers_accounts_identical": true,
+    "independent_checks": "v1's independent OLS, normalization, metric, and equity checks apply unchanged because these files are byte-identical; see phase5_v1_review_validation.json"
+  },
+  "tests": {
+    "local": 77,
+    "command": "uv run --locked python -m unittest discover -s tests -v"
+  },
+  "notebook": {
+    "code_cells": 7,
+    "executed": 7,
+    "errors": 0,
+    "repeat_under_frozen_contract": "passed; any changed output byte would have stopped the run"
+  },
+  "local_pipeline_exit_codes": {
+    "historical_only": 0,
+    "full": 0
+  },
+  "hashes_after_pipelines": {
+    "phase5_v2_files": 104,
+    "phase5_v2_changed": 0,
+    "phase5_v1_files": 104,
+    "phase5_v1_changed": 0,
+    "tracked_phase2_to_4_outputs_changed": 0
+  },
+  "reported_runtime": "Windows, Python 3.12.13, torch 2.15.0+cpu, one CPU thread"
+}

@@ -2,8 +2,9 @@
 
 The project root is the existing `Final Project` folder. The approved directory
 scaffold is present. Market-data acquisition, the Phase 1 master build, and the
-Phase 2 exploratory analysis, Phase 3 pair selection, and Phase 4 statistical baseline are implemented; later analytical components
-remain planned.
+Phase 2 exploratory analysis, Phase 3 pair selection, Phase 4 statistical
+baseline, and Phase 5 LSTM comparison are implemented. Sentiment, the API,
+and the web interface remain planned.
 
 ## Root files
 
@@ -13,10 +14,10 @@ remain planned.
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
 | `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Covers raw/interim/processed data, phase metric CSVs, and statistical artifacts. |
 | `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
-| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, and statsmodels; versions resolved in uv.lock. |
+| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, statsmodels, and CPU-only torch; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
-| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs Phases 1-4; historical-only and full runs verified through Phase 4 in Docker. |
+| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs Phases 1-5; both modes execute successfully. Independent LSTM retraining differs numerically across Windows/Linux; saved-weight inference is verified. |
 | `.dockerignore` | Excludes local environments, tooling, credentials, and caches from the build context. | Created. |
 
 The uv-managed `.venv/` environment is configured. Local uv tooling in `.tools/`
@@ -41,6 +42,8 @@ is ignored and is not part of the submission.
 | `docs/phase_planning/phase_3_analysis.md` | Pair-selection findings, exploratory shortlist, diagnostics, and limitations traced to saved outputs. |
 | `docs/phase_planning/phase_4_plan.md` | Statistical-baseline roadmap: fixed normalization, signal rules, stock-leg accounting, output files, and verification. |
 | `docs/phase_planning/phase_4_analysis.md` | Historical/unseen findings, signal and trade counts, stock-leg P&L, exposures, and limitations traced to saved outputs. |
+| `docs/phase_planning/phase_5_plan.md` | LSTM roadmap: earlier-fit validation, dated features/sequences, model selection, final refit, forecast-filtered comparison, artifacts, and checks. |
+| `docs/phase_planning/phase_5_analysis.md` | Forecast and trading findings, seed sensitivity, fitted scales, and the Windows/Linux retraining limitation. |
 | `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
 | `docs/deployment.md` | Future operational guide. |
 
@@ -90,8 +93,9 @@ data folders.
 
 The root package has an `__init__.py` so it can be installed and imported.
 The data subpackage implements acquisition, source comparison, and the master
-build. Analysis, cointegration, and trading implement Phases 2-4; the other functional
-subdirectories remain placeholders. Acquisition files are:
+build. Analysis, cointegration, trading, features, and models implement
+Phases 2-5; sentiment and serving subdirectories remain placeholders.
+Acquisition files are:
 
 | Location | Purpose |
 | --- | --- |
@@ -183,6 +187,31 @@ Phase 3 files are:
 Artifacts answer "what was fitted and what does inference need?" Outputs answer
 "what did the analysis, forecasts, and evaluations produce?" Reports explain
 the findings using those results.
+
+Phase 5 is implemented, with saved results and an executed notebook. The
+reported run is `phase5_v2`. It repeats the `phase5_v1` settings after review
+fixes to diagnostics, figures, and summary counts; the v1 files are kept as the
+earlier evaluated record and are not cited by the findings. The
+[Phase 5 plan](phase_planning/phase_5_plan.md#files) gives the planned file map.
+Its main additions are:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/lstm_forecast.json`, `notebooks/05_lstm_comparison.ipynb` | Experiment settings and the phase's executable explanation. |
+| `src/market_analytics/features/sequences.py` | Earlier-fit spread parameters, trailing features, scaling, dated windows, and exclusion records. |
+| `src/market_analytics/models/{lstm,forecasting,plots}.py` | Network/training/inference, stage orchestration and metrics, and figures. |
+| `src/market_analytics/trading/forecast_filter.py` | Dated signal adapter and day-five entry filter using the existing accounting engine. |
+| `src/market_analytics/pipeline.py` | Ordered-pipeline helper that reuses the Phase 3 handoff once Phase 4 has frozen it. |
+| `scripts/run_lstm_forecast.py` | Offline selection, refit, evaluation, and historical-only entry point. |
+| `data/processed/lstm/phase5_v2/` | Selection/final features, sample date index, and excluded samples. |
+| `artifacts/statistical/phase5_v2/selection/` | Earlier OLS and 2023 normalization for conditional validation. |
+| `artifacts/preprocessing/phase5_v2/`, `artifacts/lstm/phase5_v2/` | Fitted input scaling, trial/final weights, metadata, and reload examples. |
+| `outputs/predictions/lstm/phase5_v2/`, `outputs/metrics/lstm/phase5_v2/` | Dated forecasts, experiments, errors, direction base rates, filter decisions, comparisons, and run contracts. |
+| `outputs/backtests/lstm_comparison/phase5_v2/`, `outputs/figures/lstm/phase5_v2/` | Matched baseline/filtered ledgers and the phase's figures. |
+| Matching `phase5_v1/` folders | The first evaluated run, retained unchanged. |
+| `tests/test_lstm_sequences.py`, `tests/test_lstm_forecast.py`, `tests/test_forecast_filter.py`, `tests/test_pipeline_freeze.py` | Chronology, artifact reload, selection, forecast metrics, filter decisions, accounting, and pipeline handoff checks. |
+| `docs/phase_planning/phase_5_analysis.md` | Findings from the saved evaluations and their limits. |
+| `outputs/metrics/phase5_review_validation.json`, `phase5_docker_validation.json` | Independent calculations, test results, repeated hashes, isolation checks, and Docker runs. |
 
 ## Placeholder files and packaging
 

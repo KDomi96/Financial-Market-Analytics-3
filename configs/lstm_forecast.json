@@ -1,0 +1,29 @@
+{
+  "model_version": "phase5_v2",
+  "baseline_config": "configs/statistical_baseline.json",
+  "feature_order": ["z", "lag1", "lag2", "lag3", "rolling_std"],
+  "rolling_window": 20,
+  "lookback": 20,
+  "horizon": 5,
+  "target": "change_from_origin_z",
+  "selection_end": "2023-12-31",
+  "validation_start": "2024-01-01",
+  "historical_end": "2025-12-31",
+  "unseen_start": "2026-01-01",
+  "unseen_end": "2026-07-31",
+  "candidates": [
+    {"hidden_size": 16, "learning_rate": 0.001},
+    {"hidden_size": 16, "learning_rate": 0.0003},
+    {"hidden_size": 32, "learning_rate": 0.001},
+    {"hidden_size": 32, "learning_rate": 0.0003}
+  ],
+  "training": {"seed": 42, "batch_size": 64, "max_epochs": 200, "patience": 20, "min_delta": 1e-6, "gradient_clip": 1.0, "shuffle": true},
+  "sensitivity_seeds": [7, 2026],
+  "selection_metric": "pooled_validation_rmse",
+  "selection_tolerance": 1e-6,
+  "filter": {"horizon": 5, "margin": 0.0, "exits": "observed_z", "entry_calendar": "complete_five_day_targets_inside_period"},
+  "expected": {"selection_train": 1466, "validation": 498, "final_train": 1968, "unseen": 141, "selection_scaler": 1485, "final_scaler": 1987},
+  "runtime": {"device": "cpu", "intra_op_threads": 1, "inter_op_threads": 1, "workers": 0, "deterministic": true},
+  "tolerance": {"rtol": 1e-7, "atol": 1e-9},
+  "inference_tolerance": {"rtol": 1e-5, "atol": 1e-6}
+}
