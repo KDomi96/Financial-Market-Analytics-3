@@ -13,8 +13,10 @@ and the web interface remain planned.
 | `README.md` | Human entry point: scope, status, and eventually installation and end-to-end run instructions. | Created. |
 | `.gitignore` | Excludes credentials, local environments, and caches from Git tracking. It does not filter submission ZIPs. | Created. |
 | `.gitattributes` | Preserves data-file bytes across Git checkouts so manifest checksums remain valid. | Covers raw/interim/processed data, phase metric CSVs, and statistical artifacts. |
-| `.env.example` | Documents environment variable names with blank values. | Created with comments; provider-specific names are pending. |
-| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, statsmodels, and CPU-only torch; versions resolved in uv.lock. |
+| `.env.example` | Documents environment variable names with blank values. | Lists `API_URL` for the Streamlit interface. |
+| `compose.yaml` | Starts the API and the interface from the project image with the saved files mounted read-only. | Verified with Docker Compose. |
+| `.streamlit/config.toml` | Streamlit settings for the interface: navy theme, viewer toolbar, no usage statistics. | Created. |
+| `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, statsmodels, CPU-only torch, the sentiment libraries, and FastAPI, Uvicorn, python-multipart, Streamlit, and httpx; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
 | `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs Phases 1-5; both modes execute successfully. Independent LSTM retraining differs numerically across Windows/Linux; saved-weight inference is verified. |
@@ -45,9 +47,10 @@ is ignored and is not part of the submission.
 | `docs/phase_planning/phase_5_plan.md` | LSTM roadmap: earlier-fit validation, dated features/sequences, model selection, final refit, forecast-filtered comparison, artifacts, and checks. |
 | `docs/phase_planning/phase_5_analysis.md` | Forecast and trading findings, seed sensitivity, fitted scales, and the Windows/Linux retraining limitation. |
 | `docs/phase_planning/phase_6_plan.md` | Web application roadmap: price input, single-pair test, signals, saved-model forecasts, Docker services, and checks. |
+| `docs/phase_planning/phase_6_analysis.md` | What the application reports for the 15 project pairs and how it reproduces Phases 3-5. |
 | `docs/phase_planning/sentiment_plan.md` | Sentiment roadmap: benchmark checks of FinBERT, the Google News pilot and collection, cleaning and timestamp rules, weekly description, storage, and checks. |
 | `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
-| `docs/deployment.md` | Future operational guide. |
+| `docs/deployment.md` | How to run the API and the interface locally and with Docker Compose, the routes, and the files they need. |
 
 ## Data and the meaning of interim
 
@@ -97,7 +100,7 @@ The root package has an `__init__.py` so it can be installed and imported.
 The data subpackage implements acquisition, source comparison, and the master
 build. Analysis, cointegration, trading, features, and models implement
 Phases 2-5. The sentiment package implements the separate news study and
-external evaluations. The serving subdirectories remain planned.
+external evaluations. The API package and `app/` implement Phase 6.
 Acquisition files are:
 
 | Location | Purpose |
@@ -218,6 +221,22 @@ Its main additions are:
 | `tests/test_lstm_sequences.py`, `tests/test_lstm_forecast.py`, `tests/test_forecast_filter.py`, `tests/test_pipeline_freeze.py` | Chronology, artifact reload, selection, forecast metrics, filter decisions, accounting, and pipeline handoff checks. |
 | `docs/phase_planning/phase_5_analysis.md` | Findings from the saved evaluations and their limits. |
 | `outputs/metrics/phase5_review_validation.json`, `phase5_docker_validation.json` | Independent calculations, test results, repeated hashes, isolation checks, and Docker runs. |
+
+Phase 6 adds the application:
+
+| Location | Purpose |
+| --- | --- |
+| `configs/api.json` | Input paths, the two LSTM bundle folders, upload and session limits, and the startup tolerance. |
+| `src/market_analytics/api/prices.py` | Parses and rejects uploaded price files. |
+| `src/market_analytics/api/analysis.py` | Single-pair test, fit-end normalization window, Z-scores, and Phase 4 signals. |
+| `src/market_analytics/api/forecast.py` | Bundle startup check and forecasts on the project calendar. |
+| `src/market_analytics/api/schemas.py`, `main.py` | Response models; the FastAPI app, routes, and error mapping. It is the only service module that reads files. |
+| `src/market_analytics/api/evidence.py`, `scripts/run_api_verdicts.py` | Runs the 15 project pairs through the routes and saves their verdicts. |
+| `app/streamlit_app.py` | The interface; it makes HTTP calls only. |
+| `tests/test_api_prices.py`, `test_api_analysis.py`, `test_api_routes.py`, `test_api_reproduction.py`, `test_app_interface.py` | Validation, synthetic verdicts and windows, every route and status code, agreement with Phases 3-5, and the page driven against a live API. |
+| `outputs/metrics/api/` | Single-pair verdicts for the 15 pairs and the lock comparison from adding the libraries. |
+| `outputs/figures/app/` | Interface screenshots for the report. |
+| `outputs/metrics/phase6_review_validation.json`, `phase6_docker_validation.json` | Reproduction differences, contract hashes, tests, interface checks, and Docker runs. |
 
 ## Sentiment study
 

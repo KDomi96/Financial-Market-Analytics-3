@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-02",
+  "phase": 6,
+  "tests": {
+    "local_command": "uv run --locked python -m unittest discover -s tests -v",
+    "local_ran": 136,
+    "local_result": "OK",
+    "local_skipped": 0
+  },
+  "startup_check": {
+    "status": "ok",
+    "bundles": [
+      {
+        "pair_id": "AMZN_META",
+        "status": "ok",
+        "model_version": "phase5_v2",
+        "max_abs_difference": 0.0,
+        "error": null
+      },
+      {
+        "pair_id": "NVDA_AMZN",
+        "status": "ok",
+        "model_version": "phase5_v2",
+        "max_abs_difference": 0.0,
+        "error": null
+      }
+    ]
+  },
+  "reproduction_fit_end_2025_12_31": {
+    "AMZN_META": {
+      "view": "cointegrated",
+      "cointegrated": true,
+      "eg_pair_pvalue": 0.028386429980366282,
+      "trace_stat_r0": 17.597205345001463,
+      "trace_critical_r0_95": 15.4943,
+      "kept_direction_matches_phase3": true,
+      "max_abs_diff_intercept_beta": 0.0,
+      "max_abs_diff_mean_std": 0.0,
+      "normalization_window": [
+        "2025-01-02",
+        "2025-12-31",
+        250
+      ],
+      "unseen_rows": 145,
+      "max_abs_diff_unseen_z": 8.881784197001252e-16,
+      "signal_columns_equal": true,
+      "signal_counts": {
+        "long_crossings": 0,
+        "short_crossings": 4,
+        "long_entries": 0,
+        "short_entries": 2,
+        "exits": 1
+      },
+      "forecast_origins_compared": 141,
+      "max_abs_diff_forecast_z": 8.881784197001252e-16
+    },
+    "NVDA_AMZN": {
+      "view": "exploratory",
+      "cointegrated": false,
+      "eg_pair_pvalue": 0.24214877915074484,
+      "trace_stat_r0": 4.840196679982402,
+      "trace_critical_r0_95": 15.4943,
+      "kept_direction_matches_phase3": true,
+      "max_abs_diff_intercept_beta": 0.0,
+      "max_abs_diff_mean_std": 0.0,
+      "normalization_window": [
+        "2025-01-02",
+        "2025-12-31",
+        250
+      ],
+      "unseen_rows": 145,
+      "max_abs_diff_unseen_z": 4.440892098500626e-16,
+      "signal_columns_equal": true,
+      "signal_counts": {
+        "long_crossings": 3,
+        "short_crossings": 4,
+        "long_entries": 1,
+        "short_entries": 2,
+        "exits": 2
+      },
+      "forecast_origins_compared": 141,
+      "max_abs_diff_forecast_z": 4.440892098500626e-16
+    }
+  },
+  "project_pair_verdicts": {
+    "file": "outputs/metrics/api/project_pair_verdicts.csv",
+    "pairs": 15,
+    "all_match_phase3": true,
+    "cointegrated": [
+      "AMZN_META"
+    ]
+  },
+  "lock_comparison": "outputs/metrics/api/phase6_lock_comparison.json",
+  "frozen_contracts": {
+    "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": {
+      "files_checked": 13,
+      "mismatched": [],
+      "not_found": [],
+      "recorded_lock_matches_current": null
+    },
+    "outputs/metrics/lstm/phase5_v2/evaluation_contract.json": {
+      "files_checked": 59,
+      "mismatched": [],
+      "not_found": [],
+      "recorded_lock_matches_current": false
+    }
+  },
+  "frozen_code_git_status": [],
+  "interface_checks": {
+    "automated": "tests/test_app_interface.py drives app/streamlit_app.py with Streamlit AppTest against a live uvicorn server and compares the shown p-value and signal counts with the API response",
+    "browser": "Headless Edge through the DevTools protocol: AMZN_META passing, NVDA_AMZN tests only, NVDA_AMZN exploratory, and an uploaded GOOGL_AMZN file (page p 0.3731 and Johansen rank 0; the API gave 0.3731 and 0 for the same file)",
+    "screenshots": [
+      "outputs/figures/app/amzn_meta_cointegrated.png",
+      "outputs/figures/app/nvda_amzn_exploratory.png",
+      "outputs/figures/app/nvda_amzn_tests_only.png",
+      "outputs/figures/app/upload_googl_amzn.png"
+    ]
+  }
+}

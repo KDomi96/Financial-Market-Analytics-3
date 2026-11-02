@@ -132,3 +132,14 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Status:** Completed. 103 tests pass locally. The notebook matched the reference exactly. Docker matches labels, counts, exclusions, and classification metrics exactly; maximum probability difference 1.9e-6, within 1e-5.
 - **Interpretation:** In [sentiment findings](phase_planning/sentiment_analysis.md). Conclusions are unchanged in direction; coverage counts are higher and the excluded capped weeks contain large Alphabet and NVIDIA moves.
 - **Next:** Phase 6 and submission packaging.
+
+## EXP-012 | Phase 6 single-pair verdicts and reproduction
+
+- **Question:** What does the application report for each of the 15 project pairs, and does it reproduce Phases 3-5 on the project's prices?
+- **Change from previous:** New FastAPI service and Streamlit page. No model is fitted or retrained; the service reuses the Phase 3 tests, the Phase 4 rules, and the saved `phase5_v2` bundles.
+- **Data:** `data/processed/master_historical.csv` and `master_unseen.csv` (2,156 sessions, 2018-01-02 to 2026-07-31), served through `/samples`. Fit end 2025-12-31: 2,011 fitting sessions, normalization on the 250 sessions of 2025, 145 later sessions.
+- **Settings:** `configs/api.json`, `configs/pair_selection.json`, `configs/statistical_baseline.json`. Command: `uv run --locked python scripts/run_api_verdicts.py`.
+- **Result:** Only AMZN_META passes as a single pair (direction-adjusted EG p 0.0284, trace 17.60 against 15.49, rank 1); the other 14 have Johansen rank 0 and adjusted p from 0.2421 to 1. Test values and ranks equal Phase 3's for all 15. For AMZN_META and NVDA_AMZN the regression and normalization equal the Phase 3/4 artifacts, unseen Z differs by at most 8.9e-16, signals match Phase 4 on every date, and 141 forecast origins per pair match `phase5_v2` within 8.9e-16. See `outputs/metrics/api/project_pair_verdicts.csv` and `outputs/metrics/phase6_review_validation.json`.
+- **Status:** Completed. 136 tests pass locally and in Docker.
+- **Interpretation:** In [Phase 6 analysis](phase_planning/phase_6_analysis.md). AMZN_META's single-pair pass sits beside its Phase 3 Holm-adjusted p of 0.426; the page states that the single test overstates the evidence for a pair picked from that ranking.
+- **Next:** Submission packaging.

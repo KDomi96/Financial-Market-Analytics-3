@@ -1,0 +1,32 @@
+# The API and the Streamlit interface, both started from the batch image with
+# different commands. They read the saved Phase 1, 3, and 5 files from read-only
+# mounts, so the served forecasts are the reported ones; the image itself still
+# leaves those files out and the batch pipeline rebuilds them.
+services:
+  api:
+    build: .
+    image: financial-market-analytics-3:phase6
+    command: ["uvicorn", "market_analytics.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/processed:/workspace/data/processed:ro
+      - ./outputs/metrics/pair_selection:/workspace/outputs/metrics/pair_selection:ro
+      - ./artifacts/lstm/phase5_v2:/workspace/artifacts/lstm/phase5_v2:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  app:
+    image: financial-market-analytics-3:phase6
+    command: ["streamlit", "run", "app/streamlit_app.py", "--server.address", "0.0.0.0",
+              "--server.port", "8501", "--server.headless", "true", "--browser.gatherUsageStats", "false"]
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy

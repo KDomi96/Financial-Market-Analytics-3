@@ -1296,6 +1296,23 @@ the batch image. The mounts need the project folder, which is present for
 local use and in the submission archive. A hosted deployment would need
 another way to supply these files.
 
+### Implementation notes
+
+Three details settled while building the service; none changes an adopted
+rule.
+
+- The 0.05 level is read from `configs/pair_selection.json` rather than
+  repeated in `configs/api.json`, so the application cannot drift from the
+  level Phase 3 used.
+- `/forecast` takes an optional `origin` date. The service then forecasts
+  from the rows up to that date. Without it, a forecast on the project's
+  prices would always start at 2026-07-31 and have no dated targets, and
+  cutting the file in the interface would break the rule that the interface
+  forwards uploads unchanged.
+- The interface reads its starting inputs from the page address, for example
+  `?pair=NVDA_AMZN&exploratory=1&run=1`. I used this to take the report
+  screenshots with a headless browser; the inputs stay editable.
+
 ### Sentiment in the application
 
 The interface has no sentiment page and the API no

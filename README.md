@@ -14,8 +14,11 @@ normalization and saves baseline signals, stock-leg fills, trades, and daily
 accounts. Phase 5 saves the fitted LSTMs, dated forecasts, persistence errors,
 and matched strategy comparisons. The separate sentiment study evaluates
 FinBERT on FiQA and FinEntity and describes 5,715 collected Google News
-headlines, with saved-input local and Docker reproduction. API and web
-interface work remain.
+headlines, with saved-input local and Docker reproduction. Phase 6 is a
+FastAPI service with a Streamlit page: it tests one pair on supplied prices,
+shows the spread, Z-scores, and Phase 4 signals when the pair passes, and
+serves the saved Phase 5 forecasts. See [Run the web application](#run-the-web-application).
+Submission packaging remains.
 The Python 3.12.13 environment is managed with uv. Docker configuration is
 provided for the environment.
 
@@ -453,6 +456,34 @@ Windows, but its forecasts differ slightly; reported results use the Windows
 CPU artifacts. Verification records are in
 `outputs/metrics/phase5_{review,docker}_validation.json`.
 
+## Run the web application
+
+The API reads the saved masters, the Phase 3 ranking, and the two `phase5_v2`
+LSTM bundles; it writes nothing. Start it and the page in two terminals from
+the project root:
+
+```powershell
+uv run --locked uvicorn market_analytics.api.main:app --port 8000
+uv run --locked streamlit run app/streamlit_app.py
+```
+
+The page is on `http://localhost:8501` and the API's route documentation on
+`http://localhost:8000/docs`. Choose one of the 15 pairs or upload a CSV with
+the header `Date,<TICKER_A>,<TICKER_B>`, set the fit end, and run the
+analysis. [Deployment](docs/deployment.md) lists the routes, the upload rules,
+and `curl` examples.
+
+To save the single-pair verdicts for the 15 project pairs at a 2025-12-31 fit
+end (`outputs/metrics/api/project_pair_verdicts.csv`):
+
+```powershell
+uv run --locked python scripts/run_api_verdicts.py
+```
+
+With Docker, `docker compose up` builds the image and starts both services
+with the saved files mounted read-only; see
+[Phase 6 in Docker](#phase-6-in-docker).
+
 ## Docker environment
 
 On Windows, Docker Desktop supplies the Linux container engine. If it is not
@@ -479,8 +510,8 @@ command is `scripts/run_pipeline.py`: it builds the masters from the copied
 snapshots, then runs EDA, pair selection, the statistical baseline, and the
 LSTM comparison, and
 writes all outputs inside the container.
-This is a batch command: exit code 0 means every phase finished. No web server
-is implemented yet. A single phase can be run by passing its script, for
+This is a batch command: exit code 0 means every phase finished. The web
+servers run from the same image through `compose.yaml`. A single phase can be run by passing its script, for
 example `docker run --rm financial-market-analytics-3 python scripts/build_master.py`. `--rm` removes that
 container after it exits; a named container can instead be retained for logs
 and inspection:
@@ -543,6 +574,29 @@ Windows within `rtol=1e-7`, `atol=1e-9`; signals, directions, trade dates,
 and statuses match exactly. Details are in
 `outputs/metrics/phase4_docker_validation.json`.
 
+### Phase 6 in Docker
+
+Phase 6 was verified with these commands:
+
+```powershell
+docker build -t financial-market-analytics-3:phase6 .
+docker run --name fma3-phase6-historical-final financial-market-analytics-3:phase6 python scripts/run_pipeline.py --historical-only
+docker run --name fma3-phase6-full-final financial-market-analytics-3:phase6 sh -c "python scripts/run_pipeline.py && python -m unittest discover -s tests"
+docker compose up -d
+```
+
+Both pipelines exited with code 0. The tests ran in the full-pipeline
+container after it had written its own Phase 1-5 outputs, so the reproduction
+tests compared the API with the container's files; all 136 passed. Compose
+then started the API and the page from the same image, with
+`data/processed/`, `artifacts/lstm/phase5_v2/`, and
+`outputs/metrics/pair_selection/` mounted read-only. Both saved models
+reloaded on Linux within 1.5e-8 of their example forecasts, and the app
+container reached the API at `http://api:8000`. The image was rebuilt once
+more after the interface colours changed, and Compose was rechecked with it.
+Details are in `outputs/metrics/phase6_docker_validation.json`. Stop the
+services with `docker compose down`.
+
 To open a Python session instead:
 
 ```powershell
@@ -572,8 +626,7 @@ checks are recorded in `outputs/metrics/phase2_review_validation.json`.
 In the coding-agent sandbox, Docker's API and configuration file were
 inaccessible. Running Docker commands outside the sandbox resolved that
 restriction. Docker Desktop was already running; no restart was needed.
-API and web commands will be documented as those components are
-implemented. Follow the official
+Follow the official
 [uv Docker guide](https://docs.astral.sh/uv/guides/integration/docker/) when
 extending the environment.
 
@@ -584,7 +637,8 @@ extending the environment.
 - [Submission requirements](docs/submission_requirements.md): packaging,
   reproducibility, API, and deliverable requirements.
 
-Serving commands will be added after implementation and verification.
+- [Deployment](docs/deployment.md): running the API and the page, locally and
+  with Docker Compose.
 
 ## Submission
 

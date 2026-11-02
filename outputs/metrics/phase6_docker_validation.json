@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-02",
+  "phase": 6,
+  "docker_engine": "29.8.2",
+  "image": "financial-market-analytics-3:phase6",
+  "image_id": "sha256:4b9ae2b42d41c201a74b625e457e600bdbe937da301c000ccd54614354e9afe1",
+  "build_exit": "0",
+  "historical_only": {
+    "container": "fma3-phase6-historical-final",
+    "command": "python scripts/run_pipeline.py --historical-only",
+    "exit": "0"
+  },
+  "full_pipeline_and_tests": {
+    "container": "fma3-phase6-full-final",
+    "command": "sh -c \"python scripts/run_pipeline.py && python -m unittest discover -s tests\"",
+    "exit": "0 2026-11-02T23:35:53.9227140+01:00",
+    "tests_ran": 136,
+    "note": "Tests run after the container's own Phases 1-5, so the reproduction tests compare the API with the container's outputs."
+  },
+  "compose": {
+    "up_exit": "0",
+    "api_health_status": "healthy",
+    "health": {
+      "status": "ok",
+      "bundles": [
+        {
+          "pair_id": "AMZN_META",
+          "status": "ok",
+          "model_version": "phase5_v2",
+          "max_abs_difference": 1.4901161193847656e-08,
+          "error": null
+        },
+        {
+          "pair_id": "NVDA_AMZN",
+          "status": "ok",
+          "model_version": "phase5_v2",
+          "max_abs_difference": 7.450580596923828e-09,
+          "error": null
+        }
+      ]
+    },
+    "app_health": "empty on the first check, made before Streamlit finished starting; ok on a recheck about a minute later",
+    "analyze_amzn_meta": "cointegrated 0.0284 {'long_crossings': 0, 'short_crossings': 4, 'long_entries': 0, 'short_entries': 2, 'exits': 1}",
+    "app_reaches_api": "http://api:8000 ok",
+    "api_mounts": "/workspace/data/processed:false /workspace/artifacts/lstm/phase5_v2:false /workspace/outputs/metrics/pair_selection:false",
+    "write_to_mount": "touch: cannot touch '/workspace/data/processed/x': Read-only file system read-only",
+    "image_id": "sha256:4b9ae2b42d41c201a74b625e457e600bdbe937da301c000ccd54614354e9afe1"
+  },
+  "styling_rebuild": {
+    "reason": "Navy theme in .streamlit/config.toml and chart colours in app/streamlit_app.py, changed after the runs above; API and pipeline code unchanged.",
+    "image_id": "sha256:60e725e7d574f3d590caf84b2dc6aeb3a1d3d0d0d24459a1ff0da3d479fb255b",
+    "build_exit": "0",
+    "compose_up_exit": "0",
+    "api_health_status": "healthy",
+    "app_health": "ok",
+    "health": {
+      "status": "ok",
+      "bundles": [
+        {
+          "pair_id": "AMZN_META",
+          "status": "ok",
+          "model_version": "phase5_v2",
+          "max_abs_difference": 1.4901161193847656e-08,
+          "error": null
+        },
+        {
+          "pair_id": "NVDA_AMZN",
+          "status": "ok",
+          "model_version": "phase5_v2",
+          "max_abs_difference": 7.450580596923828e-09,
+          "error": null
+        }
+      ]
+    },
+    "rendered_page": "AMZN_META from the app container at port 8501: p 0.0284, trace 17.60, 2 short entries, 1 exit"
+  }
+}

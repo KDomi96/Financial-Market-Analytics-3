@@ -1,0 +1,17 @@
+{
+  "pair_selection_config": "configs/pair_selection.json",
+  "statistical_baseline_config": "configs/statistical_baseline.json",
+  "historical": "data/processed/master_historical.csv",
+  "unseen": "data/processed/master_unseen.csv",
+  "manifest": "data/processed/master_manifest.json",
+  "pair_ranking": "outputs/metrics/pair_selection/pair_ranking.csv",
+  "bundles": {
+    "AMZN_META": "artifacts/lstm/phase5_v2/AMZN_META/final_20180102_20251231",
+    "NVDA_AMZN": "artifacts/lstm/phase5_v2/NVDA_AMZN/final_20180102_20251231"
+  },
+  "upload": {"max_bytes": 1048576, "max_rows": 10000},
+  "analysis": {"min_fit_sessions": 504, "min_later_sessions": 20, "normalization_years": 1,
+               "default_fit_end": "2025-12-31"},
+  "forecast": {"min_sessions": 39, "last_calendar_session": "2026-07-31"},
+  "startup_tolerance": 1e-6
+}
