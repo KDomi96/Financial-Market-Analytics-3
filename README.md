@@ -9,8 +9,9 @@ pinned Yahoo and Cboe snapshots. Phase 2 describes the historical master:
 return and risk, all 15 stock pairs, S&P 500 sensitivity, stability over time,
 and VIX context. Phase 3 compares all pairs, saves their fitted spreads, and
 carries AMZN_META and NVDA_AMZN forward as exploratory candidates. No pair
-meets all the adopted support conditions. The statistical backtest, LSTM,
-sentiment, API, and web interface remain.
+meets all the adopted support conditions. Phase 4 applies fixed 2025
+normalization and saves baseline signals, stock-leg fills, trades, and daily
+accounts. LSTM, sentiment, API, and web interface remain.
 The Python 3.12.13 environment is managed with uv. Docker configuration is
 provided for the environment.
 
@@ -212,6 +213,46 @@ for column definitions. These outputs contain no unseen evaluation, Z-scores,
 or trading results. The batch pipeline now runs Phase 3 after EDA;
 `--historical-only` also keeps the preceding master build out of unseen data.
 
+## Run Phase 4 statistical baseline
+
+Phase 4 loads the Phase 3 regressions and estimates normalization from 2025
+residuals only. Its settings are in `configs/statistical_baseline.json`:
+
+```powershell
+uv run --locked python scripts/run_statistical_baseline.py --historical-only
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked python scripts/run_statistical_baseline.py
+uv run --locked jupyter nbconvert --to notebook --execute --inplace notebooks/04_statistical_baseline.ipynb
+```
+
+Use the workstation uv/cache and Jupyter settings above. The standalone script
+needs existing masters and Phase 3 outputs. If the manifest currently covers
+only historical data, run `scripts/build_master.py` first to include the saved
+unseen snapshot. `--historical-only` never opens the unseen master.
+`--no-figures` skips plotting.
+
+The first run saves two normalization JSONs. Later runs load and validate them.
+Each period produces a spread/Z-score CSV, four backtest tables, three metric
+tables, metadata, and three figures. The notebook adds
+`unseen/market_exposure.csv`, a single-factor estimate of each unseen trade's
+market share. Once unseen outputs exist, changed code,
+settings, fitted objects, or unseen input are rejected under that output
+version. Preserve the earlier run and record a correction before using another
+version; do not remove the evaluation contract to replace a result.
+
+The [Phase 4 analysis](docs/phase_planning/phase_4_analysis.md) explains the
+results and limitations. [Column definitions](docs/data_dictionary.md#phase-4-statistical-baseline)
+cover the outputs. Returns use separate USD 10,000 accounts; both exploratory
+pairs share AMZN. The ordered pipeline now covers Phases 1-4:
+
+```powershell
+uv run --locked python scripts/run_pipeline.py --historical-only
+uv run --locked python scripts/run_pipeline.py
+```
+
+The historical replay is in sample, including its early years. The full run
+adds the fixed January-July 2026 evaluation. Neither command downloads data.
+
 ## Docker environment
 
 On Windows, Docker Desktop supplies the Linux container engine. If it is not
@@ -233,7 +274,8 @@ docker run --rm financial-market-analytics-3
 The image creates its own Linux environment from `pyproject.toml` and `uv.lock`;
 the Windows `.venv/` is excluded. It runs as an unprivileged user. The default
 command is `scripts/run_pipeline.py`: it builds the masters from the copied
-snapshots, then runs EDA and pair selection, and writes all outputs inside the container.
+snapshots, then runs EDA, pair selection, and the statistical baseline, and
+writes all outputs inside the container.
 This is a batch command: exit code 0 means every phase finished. No web server
 is implemented yet. A single phase can be run by passing its script, for
 example `docker run --rm financial-market-analytics-3 python scripts/build_master.py`. `--rm` removes that
@@ -279,6 +321,24 @@ comparison details are in `outputs/metrics/phase3_docker_validation.json`.
 Its processed directory contains only the historical master, manifest, and
 historical spreads. Local review and independent calculation evidence is in
 `outputs/metrics/phase3_review_validation.json`.
+
+Phase 4 was verified on 1 November 2026 with both pipeline modes:
+
+```powershell
+docker build -t financial-market-analytics-3:phase4-20261101 .
+docker run --name financial-market-analytics-3-phase4-historical-20261101 financial-market-analytics-3:phase4-20261101 python scripts/run_pipeline.py --historical-only
+docker run --name financial-market-analytics-3-phase4-full-20261101 financial-market-analytics-3:phase4-20261101
+docker run --rm financial-market-analytics-3:phase4-20261101 python -m unittest discover -s tests -v
+```
+
+Both pipelines exited with code 0 and all 55 tests passed. Derived data,
+outputs, and fitted Phase 3/4 artifacts are excluded from the image so the
+containers build their own. The historical-only container has no unseen
+master or Phase 4 unseen outputs. Copy results from a named container with
+`docker cp`, using a separate comparison folder. Numeric values agree with
+Windows within `rtol=1e-7`, `atol=1e-9`; signals, directions, trade dates,
+and statuses match exactly. Details are in
+`outputs/metrics/phase4_docker_validation.json`.
 
 To open a Python session instead:
 

@@ -1,0 +1,22 @@
+{
+  "config_sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+  "code": {
+    "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+    "src/market_analytics/trading/plots.py": "79b352aee380c9388bcc6cf5c47c3b9e0ffeeb0589a2eae90445fb2b1a975b9e",
+    "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+    "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+    "scripts/run_statistical_baseline.py": "388cc12b8b554f7f8d00abb73c75721bee1c14c14e4cee10482abf639dc5354b"
+  },
+  "historical_inputs": {
+    "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "outputs/metrics/pair_selection/run_metadata.json": "731ea091abb7f994e3a93f47bb3084bbe2ae3189f64ed3b385036ad885ad02fb",
+    "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+    "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+    "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+    "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494"
+  },
+  "normalization": {
+    "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+    "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1"
+  }
+}

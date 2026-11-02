@@ -1,0 +1,3 @@
+sessions,min_z,max_z,mean_z,long_outside_days,long_outside_proportion,long_longest_outside_run,short_outside_days,short_outside_proportion,short_longest_outside_run,pair_id,dependent,independent,spread_column,evidence_label,period,model_version,evaluation_label
+2011,-8.4676774729754811,7.8637644764428583,0.5737507793674772,268,0.13326703132769765,142,598,0.29736449527598208,238,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2011,-8.9795493591976498,6.7341928863888008,-0.46668633496891299,609,0.30283441074092493,282,466,0.23172550969666833,413,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample

@@ -1,0 +1,24 @@
+{
+  "mean": 0.024945424911733412,
+  "std": 0.05345222913671143,
+  "ddof": 1,
+  "fit_start": "2025-01-02",
+  "fit_end": "2025-12-31",
+  "nobs": 250,
+  "pair_id": "NVDA_AMZN",
+  "dependent": "AMZN",
+  "independent": "NVDA",
+  "spread_column": "AMZN_on_NVDA",
+  "evidence_label": "exploratory",
+  "ols_path": "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json",
+  "ols_sha256": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+  "model_version": "phase4_v1",
+  "historical_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+  "config_sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2"
+  }
+}

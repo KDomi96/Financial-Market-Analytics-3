@@ -2,7 +2,7 @@
 
 The project root is the existing `Final Project` folder. The approved directory
 scaffold is present. Market-data acquisition, the Phase 1 master build, and the
-Phase 2 exploratory analysis and Phase 3 pair selection are implemented; later analytical components
+Phase 2 exploratory analysis, Phase 3 pair selection, and Phase 4 statistical baseline are implemented; later analytical components
 remain planned.
 
 ## Root files
@@ -16,7 +16,7 @@ remain planned.
 | `pyproject.toml` | Defines the Python package, dependencies, supported Python versions, and selected tooling. | Includes yfinance, pandas, NumPy, matplotlib, and statsmodels; versions resolved in uv.lock. |
 | `uv.lock` | Records the resolved dependency versions for uv. | Created. |
 | `.python-version` | Selects the local Python patch version. | Python 3.12.13. |
-| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs the master build, EDA, and pair selection; verified through Phase 3 in Docker. |
+| `Dockerfile` | Builds the Linux runtime from the locked project dependencies. | Default command runs Phases 1-4; historical-only and full runs verified through Phase 4 in Docker. |
 | `.dockerignore` | Excludes local environments, tooling, credentials, and caches from the build context. | Created. |
 
 The uv-managed `.venv/` environment is configured. Local uv tooling in `.tools/`
@@ -39,6 +39,8 @@ is ignored and is not part of the submission.
 | `docs/phase_planning/phase_2_analysis.md` | EDA findings and limitations, with numbers traced to the saved tables and figures. |
 | `docs/phase_planning/phase_3_plan.md` | Pair-selection roadmap covering all 30 OLS directions, 15 Johansen tests, ranking, fitted spreads, shortlist, and verification. |
 | `docs/phase_planning/phase_3_analysis.md` | Pair-selection findings, exploratory shortlist, diagnostics, and limitations traced to saved outputs. |
+| `docs/phase_planning/phase_4_plan.md` | Statistical-baseline roadmap: fixed normalization, signal rules, stock-leg accounting, output files, and verification. |
+| `docs/phase_planning/phase_4_analysis.md` | Historical/unseen findings, signal and trade counts, stock-leg P&L, exposures, and limitations traced to saved outputs. |
 | `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
 | `docs/deployment.md` | Future operational guide. |
 
@@ -88,7 +90,7 @@ data folders.
 
 The root package has an `__init__.py` so it can be installed and imported.
 The data subpackage implements acquisition, source comparison, and the master
-build. Analysis and cointegration implement Phases 2 and 3; the other functional
+build. Analysis, cointegration, and trading implement Phases 2-4; the other functional
 subdirectories remain placeholders. Acquisition files are:
 
 | Location | Purpose |
@@ -132,7 +134,7 @@ Phase 2 files are:
 | `configs/eda.json` | Historical input and manifest paths, stock order, adopted calculation settings, and output directories. |
 | `src/market_analytics/analysis/eda.py`, `scripts/run_eda.py` | Input checks, summaries, pair correlations, benchmark regressions, rolling and VIX tables, metadata; thin entry point. |
 | `src/market_analytics/analysis/eda_plots.py` | The nine EDA figures, drawn from the saved tables. |
-| `scripts/run_pipeline.py` | Runs the master build, EDA, and pair selection; the Docker default command. |
+| `scripts/run_pipeline.py` | Runs Phases 1-4 in order; the Docker default command. |
 | `notebooks/02_eda.ipynb` | Executed walk-through of the EDA tables and figures with short explanations. |
 | `tests/test_eda.py` | Small examples for compounding, drawdowns, pairs, regressions, rolling windows, VIX groups, and historical isolation. |
 | `outputs/metrics/eda/` | Ten EDA tables and `run_metadata.json` (input/settings hashes, VIX boundaries, versions, checks, table hashes). |
@@ -160,6 +162,15 @@ Phase 3 files are:
 
 | Location | Purpose |
 | --- | --- |
+| `configs/statistical_baseline.json` | Adopted Phase 4 rules, periods, capital/costs, and output locations. |
+| `src/market_analytics/trading/`, `scripts/run_statistical_baseline.py` | Normalization, signals, next-open stock-leg accounting, plots, and thin entry point. |
+| `notebooks/04_statistical_baseline.ipynb`, `tests/test_statistical_baseline.py` | Executed walk-through and known-input normalization, timing, accounting, boundary, and preservation checks. |
+| `data/processed/statistical_baseline/` | Historical and unseen residual/Z-score datasets. |
+| `artifacts/statistical/phase4_v1/<PAIR_ID>/` | Fixed 2025 normalization, direction, lineage, and fit metadata. |
+| `outputs/backtests/statistical_baseline/phase4_v1/` | Separate historical/unseen signals, executions, trades, and daily accounts. |
+| `outputs/metrics/statistical_baseline/phase4_v1/` | Summaries, diagnostics, reversion events, metadata, and evaluation contract. |
+| `outputs/figures/statistical_baseline/phase4_v1/` | Z-score, equity, and drawdown figures for each period. |
+| `outputs/metrics/phase4_review_validation.json`, `phase4_docker_validation.json` | Independent checks, notebook/test results, leakage audit, and Docker comparison. |
 | `artifacts/statistical/` | Fitted statistical parameters required for inference. |
 | `artifacts/lstm/` | Trained networks and inference metadata. |
 | `artifacts/preprocessing/` | Fitted transformations used consistently at inference time. |

@@ -1,0 +1,299 @@
+{
+  "status": "complete",
+  "period": "unseen",
+  "evaluation_label": "unseen_fixed_parameters",
+  "settings": {
+    "sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+    "values": {
+      "historical": "data/processed/master_historical.csv",
+      "unseen": "data/processed/master_unseen.csv",
+      "manifest": "data/processed/master_manifest.json",
+      "phase3_metadata": "outputs/metrics/pair_selection/run_metadata.json",
+      "shortlist": "outputs/metrics/pair_selection/shortlist.csv",
+      "historical_spreads": "data/processed/pair_spreads_historical.csv",
+      "ols_directory": "artifacts/statistical/phase3_v1",
+      "pairs": [
+        {
+          "pair_id": "AMZN_META",
+          "dependent": "AMZN",
+          "independent": "META",
+          "spread_column": "AMZN_on_META",
+          "evidence_label": "exploratory"
+        },
+        {
+          "pair_id": "NVDA_AMZN",
+          "dependent": "AMZN",
+          "independent": "NVDA",
+          "spread_column": "AMZN_on_NVDA",
+          "evidence_label": "exploratory"
+        }
+      ],
+      "periods": {
+        "historical": {
+          "start": "2018-01-01",
+          "end": "2025-12-31",
+          "first_session": "2018-01-02",
+          "last_session": "2025-12-31",
+          "rows": 2011
+        },
+        "unseen": {
+          "start": "2026-01-01",
+          "end": "2026-07-31",
+          "first_session": "2026-01-02",
+          "last_session": "2026-07-31",
+          "rows": 145
+        }
+      },
+      "normalization": {
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "ddof": 1
+      },
+      "rules": {
+        "entry_threshold": 2.0,
+        "exit_threshold": 0.0,
+        "entry_policy": "crossing_while_flat",
+        "initial_state": "flat_no_pending_order",
+        "unseen_context": "last_historical_z_only",
+        "execution": "next_session_open",
+        "exit_priority": true,
+        "reversal": false,
+        "stop_loss": null,
+        "maximum_holding_sessions": null
+      },
+      "accounting": {
+        "initial_capital": 10000.0,
+        "cost_rate": 0.0005,
+        "sizing": "min_initial_capital_current_equity_reserve_entry_cost",
+        "holdings": "fixed_fractional_shares_beta_weighted_at_entry",
+        "end_policy": "mark_open_at_final_close",
+        "insolvency": "stop_incomplete",
+        "gross_comparison": "same_fills_and_quantities_add_back_costs",
+        "omitted": [
+          "borrow_fees",
+          "financing",
+          "cash_interest",
+          "dividends",
+          "broker_margin_rules"
+        ]
+      },
+      "model_version": "phase4_v1",
+      "tolerance": {
+        "rtol": 1e-07,
+        "atol": 1e-09
+      },
+      "outputs": {
+        "artifacts": "artifacts/statistical/phase4_v1",
+        "zscores": "data/processed/statistical_baseline",
+        "backtests": "outputs/backtests/statistical_baseline/phase4_v1",
+        "metrics": "outputs/metrics/statistical_baseline/phase4_v1",
+        "figures": "outputs/figures/statistical_baseline/phase4_v1"
+      }
+    }
+  },
+  "code": {
+    "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+    "src/market_analytics/trading/plots.py": "79b352aee380c9388bcc6cf5c47c3b9e0ffeeb0589a2eae90445fb2b1a975b9e",
+    "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+    "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+    "scripts/run_statistical_baseline.py": "388cc12b8b554f7f8d00abb73c75721bee1c14c14e4cee10482abf639dc5354b"
+  },
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2"
+  },
+  "inputs": {
+    "data/processed/master_historical.csv": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+    "outputs/metrics/pair_selection/run_metadata.json": "731ea091abb7f994e3a93f47bb3084bbe2ae3189f64ed3b385036ad885ad02fb",
+    "outputs/metrics/pair_selection/shortlist.csv": "89131c7edfa6a9a2d6297847dfd26e9b3264213e68c4915ec318a049152cba88",
+    "data/processed/pair_spreads_historical.csv": "8c505b7adde45939d5f5ccee979d113acfc785cc46bf5f0e5ef5a283b4de238b",
+    "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+    "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+    "data/processed/master_unseen.csv": "c7d74612ca232262ad9d2627056c4eb3410d0a34ea914335e246634d091f171c"
+  },
+  "rows_per_pair": 145,
+  "actual_window": [
+    "2026-01-02",
+    "2026-07-31"
+  ],
+  "normalization": {
+    "AMZN_META": {
+      "mean": -0.03490503228289353,
+      "std": 0.06083657493486122,
+      "ddof": 1,
+      "fit_start": "2025-01-02",
+      "fit_end": "2025-12-31",
+      "nobs": 250,
+      "pair_id": "AMZN_META",
+      "dependent": "AMZN",
+      "independent": "META",
+      "spread_column": "AMZN_on_META",
+      "evidence_label": "exploratory",
+      "ols_path": "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json",
+      "ols_sha256": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+      "model_version": "phase4_v1",
+      "historical_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+      "config_sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+      "versions": {
+        "python": "3.12.13",
+        "numpy": "2.5.4",
+        "pandas": "3.0.6",
+        "matplotlib": "3.11.2"
+      }
+    },
+    "NVDA_AMZN": {
+      "mean": 0.024945424911733412,
+      "std": 0.05345222913671143,
+      "ddof": 1,
+      "fit_start": "2025-01-02",
+      "fit_end": "2025-12-31",
+      "nobs": 250,
+      "pair_id": "NVDA_AMZN",
+      "dependent": "AMZN",
+      "independent": "NVDA",
+      "spread_column": "AMZN_on_NVDA",
+      "evidence_label": "exploratory",
+      "ols_path": "artifacts/statistical/phase3_v1/NVDA_AMZN/ols_20180102_20251231.json",
+      "ols_sha256": "c351ba087157d2dff0e58f4a591c47f5e03a1e0c084f9d8f3cdacaed79887494",
+      "model_version": "phase4_v1",
+      "historical_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+      "config_sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+      "versions": {
+        "python": "3.12.13",
+        "numpy": "2.5.4",
+        "pandas": "3.0.6",
+        "matplotlib": "3.11.2"
+      }
+    }
+  },
+  "validation": [
+    {
+      "check": "price_coverage_and_hash",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "ols_lineage_and_orientation",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "historical_spread_reconstruction",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "normalization_2025_only_and_reload",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "entry_closed_open_counts",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "ledger_to_daily_pnl",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "leg_pnl_to_gross",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "gross_net_cost_identity",
+      "pair_id": "AMZN_META",
+      "status": "pass"
+    },
+    {
+      "check": "price_coverage_and_hash",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "ols_lineage_and_orientation",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "historical_spread_reconstruction",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "normalization_2025_only_and_reload",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "entry_closed_open_counts",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "ledger_to_daily_pnl",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "leg_pnl_to_gross",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    },
+    {
+      "check": "gross_net_cost_identity",
+      "pair_id": "NVDA_AMZN",
+      "status": "pass"
+    }
+  ],
+  "warnings": [
+    "Exploratory pairs; shared AMZN leg; few trades cannot establish a stable return distribution"
+  ],
+  "leakage_audit": [
+    {
+      "object": "pair/direction selection and OLS",
+      "fit_window": [
+        "2018-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "unseen",
+      "verdict": "fixed before unseen"
+    },
+    {
+      "object": "normalization",
+      "fit_window": [
+        "2025-01-02",
+        "2025-12-31"
+      ],
+      "applied_to": "unseen",
+      "verdict": "fixed before unseen"
+    },
+    {
+      "object": "rules and accounting",
+      "fit_window": null,
+      "applied_to": "unseen",
+      "verdict": "adopted 2026-11-01 before evaluation; no tuning"
+    }
+  ],
+  "outputs": {
+    "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+    "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1",
+    "outputs/backtests/statistical_baseline/phase4_v1/unseen/signals.csv": "61f2e73f7349afa94aa35956ea38fb830d5842c6750e86b15512d80d46b04d18",
+    "outputs/backtests/statistical_baseline/phase4_v1/unseen/executions.csv": "b604ba962d5af3f1f2f130f04e75fe1d53927d9423feb2c96313568ae5a5801c",
+    "outputs/backtests/statistical_baseline/phase4_v1/unseen/trades.csv": "7199148189b07ed035f1b16cdf012ca57e5a6ad64b837e3cbf5a9bcc22af62e0",
+    "outputs/backtests/statistical_baseline/phase4_v1/unseen/daily_account.csv": "70779261c6cf67e128a6dce6093eee39d7a4ef859f8dc6ac88e6deeaf2fafe23",
+    "outputs/metrics/statistical_baseline/phase4_v1/unseen/summary.csv": "124d1e1e62d7b646d7ae5038c7177470ba1ddb17f5b510f88ea86a7b9a983d50",
+    "outputs/metrics/statistical_baseline/phase4_v1/unseen/spread_diagnostics.csv": "3854ce1c0157a2a20dd0827cee4867f340e13ea6c8047e530f0ae99d31c7a6a1",
+    "outputs/metrics/statistical_baseline/phase4_v1/unseen/reversion_events.csv": "661d7199077955272a3c19d4e9cc1e922f220a036163b578c3454c4352d34d73",
+    "data/processed/statistical_baseline/unseen_zscores.csv": "555cb49f8c67777163b0f8fc74816320ce11cf550871610d62a0b9f180b284de"
+  },
+  "figures": {
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/zscores.png": "51cac53f1532098c2ebfd085ee1b318ed9da5b92b3a8073b4d118366cd66f77d",
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/equity.png": "293987f15d3ca25806434b44933211417b8ea74215a653aec96fe7a02723e63e",
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/drawdown.png": "eaa37b7af9a1d378b980d92e159bacf4d1c37a0cd20cbec6eec927ebd4425d9d"
+  }
+}

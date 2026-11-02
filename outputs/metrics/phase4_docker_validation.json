@@ -1,0 +1,60 @@
+{
+  "status": "pass",
+  "comparisons": [
+    {
+      "mode": "historical",
+      "period": "historical",
+      "csv_files": 8,
+      "max_absolute_difference": 2.1827872842550278e-11,
+      "discrete_decisions": "exact",
+      "source_code_hashes": "exact",
+      "normalization": "within tolerance"
+    },
+    {
+      "mode": "full",
+      "period": "historical",
+      "csv_files": 8,
+      "max_absolute_difference": 2.1827872842550278e-11,
+      "discrete_decisions": "exact",
+      "source_code_hashes": "exact",
+      "normalization": "within tolerance"
+    },
+    {
+      "mode": "full",
+      "period": "unseen",
+      "csv_files": 8,
+      "max_absolute_difference": 5.4569682106375694e-12,
+      "discrete_decisions": "exact",
+      "source_code_hashes": "exact",
+      "normalization": "within tolerance"
+    }
+  ],
+  "historical_only_has_no_unseen_outputs": true,
+  "tolerance": {
+    "rtol": 1e-07,
+    "atol": 1e-09
+  },
+  "note": "Parent OLS and normalization artifact hashes may differ across platforms because fitted float bytes differ; values and lineage are checked within each run.",
+  "verified_date": "2026-11-01",
+  "image": "financial-market-analytics-3:phase4-20261101",
+  "image_id": "sha256:761cfb56342125316a633f37435428ed8520c12746aac9212796bf5495fbcf92",
+  "docker_engine": "29.8.2",
+  "tests_passed": 55,
+  "commands": [
+    "docker build -t financial-market-analytics-3:phase4-20261101 .",
+    "docker run --name financial-market-analytics-3-phase4-historical-20261101 financial-market-analytics-3:phase4-20261101 python scripts/run_pipeline.py --historical-only",
+    "docker run --name financial-market-analytics-3-phase4-full-20261101 financial-market-analytics-3:phase4-20261101",
+    "docker run --rm financial-market-analytics-3:phase4-20261101 python -m unittest discover -s tests -v"
+  ],
+  "copy_method": "docker cp from each named container: data/processed, artifacts/statistical, outputs/backtests/statistical_baseline, outputs/metrics/statistical_baseline into .tools/phase4/docker/<mode>/",
+  "container_exit_codes": {
+    "financial-market-analytics-3-phase4-historical-20261101": 0,
+    "financial-market-analytics-3-phase4-full-20261101": 0
+  },
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2"
+  }
+}

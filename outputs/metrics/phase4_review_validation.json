@@ -1,0 +1,174 @@
+{
+  "verified_date": "2026-11-01",
+  "status": "pass",
+  "tests": {
+    "command": "uv run --locked python -m unittest discover -s tests -v",
+    "passed": 55
+  },
+  "notebook": {
+    "path": "notebooks/04_statistical_baseline.ipynb",
+    "executed_code_cells": 8,
+    "errors": 0,
+    "post_review_addition": "2026-11-01: one cell estimates each unseen trade's market share from Phase 2 S&P 500 betas and writes outputs/metrics/statistical_baseline/phase4_v1/unseen/market_exposure.csv; package code unchanged, all run output hashes, figure hashes, and the evaluation contract unchanged on re-execution"
+  },
+  "repeat_execution": {
+    "notebook_assertion": "all output hashes match on repeat run",
+    "distinct_csv_artifact_hashes": 18,
+    "outputs": {
+      "artifacts/statistical/phase4_v1/AMZN_META/normalization_2025.json": "c9b96dc0ba2d71158a016ee2bba7657439a9cd6ed8ea1fe374a08619db799802",
+      "artifacts/statistical/phase4_v1/NVDA_AMZN/normalization_2025.json": "746ba27f089cb23683f3e4a865a4674e26cfb0deeb052049c4b15aab9d4c74e1",
+      "outputs/backtests/statistical_baseline/phase4_v1/historical/signals.csv": "d9ebdc55be6fb9d15f1239008b43892a4a215b39ee36a2604b0936f5e8005312",
+      "outputs/backtests/statistical_baseline/phase4_v1/historical/executions.csv": "6d88151d42ea59ca6b74093c2f773ef7a3ae8a1e475806bd3063840fcc2d0014",
+      "outputs/backtests/statistical_baseline/phase4_v1/historical/trades.csv": "f93cb53e25bcb02a2070560248c1ee77013d5f9575cf22ed291314e1898e8617",
+      "outputs/backtests/statistical_baseline/phase4_v1/historical/daily_account.csv": "d9fc8177667439221b15980874cc2a92982061752b0b84ea71500c1cf68baafc",
+      "outputs/metrics/statistical_baseline/phase4_v1/historical/summary.csv": "ec4626e301362e0b2718f4fc060a4633ba53e99c3cc06b7418c6b44653e82af6",
+      "outputs/metrics/statistical_baseline/phase4_v1/historical/spread_diagnostics.csv": "ccdbd151e1e403a79e45fc24b20d020ad158230cd705313988f6e966140d16ce",
+      "outputs/metrics/statistical_baseline/phase4_v1/historical/reversion_events.csv": "d6171aa8d9910726534d33873916eebfb54d3073fc520715bbcd82779e921912",
+      "data/processed/statistical_baseline/historical_zscores.csv": "f7959f6b30853a6fec3e2ff9eb3d93bc66ccdabffcd0e914c6c33ab390b8f70c",
+      "outputs/backtests/statistical_baseline/phase4_v1/unseen/signals.csv": "61f2e73f7349afa94aa35956ea38fb830d5842c6750e86b15512d80d46b04d18",
+      "outputs/backtests/statistical_baseline/phase4_v1/unseen/executions.csv": "b604ba962d5af3f1f2f130f04e75fe1d53927d9423feb2c96313568ae5a5801c",
+      "outputs/backtests/statistical_baseline/phase4_v1/unseen/trades.csv": "7199148189b07ed035f1b16cdf012ca57e5a6ad64b837e3cbf5a9bcc22af62e0",
+      "outputs/backtests/statistical_baseline/phase4_v1/unseen/daily_account.csv": "70779261c6cf67e128a6dce6093eee39d7a4ef859f8dc6ac88e6deeaf2fafe23",
+      "outputs/metrics/statistical_baseline/phase4_v1/unseen/summary.csv": "124d1e1e62d7b646d7ae5038c7177470ba1ddb17f5b510f88ea86a7b9a983d50",
+      "outputs/metrics/statistical_baseline/phase4_v1/unseen/spread_diagnostics.csv": "3854ce1c0157a2a20dd0827cee4867f340e13ea6c8047e530f0ae99d31c7a6a1",
+      "outputs/metrics/statistical_baseline/phase4_v1/unseen/reversion_events.csv": "661d7199077955272a3c19d4e9cc1e922f220a036163b578c3454c4352d34d73",
+      "data/processed/statistical_baseline/unseen_zscores.csv": "555cb49f8c67777163b0f8fc74816320ce11cf550871610d62a0b9f180b284de"
+    }
+  },
+  "run_checks_per_period": 16,
+  "independent_reconciliation": {
+    "status": "pass",
+    "independent_checks": [
+      {
+        "period": "historical",
+        "pair_id": "AMZN_META",
+        "sessions": 2011,
+        "trades": 5,
+        "normalization_and_reconstruction": "pass",
+        "fills_to_equity_and_leg_pnl": "pass",
+        "signals_and_ledger": "pass"
+      },
+      {
+        "period": "historical",
+        "pair_id": "NVDA_AMZN",
+        "sessions": 2011,
+        "trades": 10,
+        "normalization_and_reconstruction": "pass",
+        "fills_to_equity_and_leg_pnl": "pass",
+        "signals_and_ledger": "pass"
+      },
+      {
+        "period": "unseen",
+        "pair_id": "AMZN_META",
+        "sessions": 145,
+        "trades": 2,
+        "normalization_and_reconstruction": "pass",
+        "fills_to_equity_and_leg_pnl": "pass",
+        "signals_and_ledger": "pass"
+      },
+      {
+        "period": "unseen",
+        "pair_id": "NVDA_AMZN",
+        "sessions": 145,
+        "trades": 2,
+        "normalization_and_reconstruction": "pass",
+        "fills_to_equity_and_leg_pnl": "pass",
+        "signals_and_ledger": "pass"
+      }
+    ],
+    "max_absolute_difference": 1.8189894035458565e-11,
+    "tolerance": {
+      "rtol": 1e-07,
+      "atol": 1e-09
+    }
+  },
+  "figures_visually_inspected": [
+    "outputs/figures/statistical_baseline/phase4_v1/historical/zscores.png",
+    "outputs/figures/statistical_baseline/phase4_v1/historical/equity.png",
+    "outputs/figures/statistical_baseline/phase4_v1/historical/drawdown.png",
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/zscores.png",
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/equity.png",
+    "outputs/figures/statistical_baseline/phase4_v1/unseen/drawdown.png"
+  ],
+  "leakage_audit": {
+    "historical": [
+      {
+        "object": "pair/direction selection and OLS",
+        "fit_window": [
+          "2018-01-02",
+          "2025-12-31"
+        ],
+        "applied_to": "historical",
+        "verdict": "in-sample"
+      },
+      {
+        "object": "normalization",
+        "fit_window": [
+          "2025-01-02",
+          "2025-12-31"
+        ],
+        "applied_to": "historical",
+        "verdict": "in-sample"
+      },
+      {
+        "object": "rules and accounting",
+        "fit_window": null,
+        "applied_to": "historical",
+        "verdict": "adopted 2026-11-01 before evaluation; no tuning"
+      }
+    ],
+    "unseen": [
+      {
+        "object": "pair/direction selection and OLS",
+        "fit_window": [
+          "2018-01-02",
+          "2025-12-31"
+        ],
+        "applied_to": "unseen",
+        "verdict": "fixed before unseen"
+      },
+      {
+        "object": "normalization",
+        "fit_window": [
+          "2025-01-02",
+          "2025-12-31"
+        ],
+        "applied_to": "unseen",
+        "verdict": "fixed before unseen"
+      },
+      {
+        "object": "rules and accounting",
+        "fit_window": null,
+        "applied_to": "unseen",
+        "verdict": "adopted 2026-11-01 before evaluation; no tuning"
+      }
+    ]
+  },
+  "fresh_review": {
+    "scope": "Phase 4 modules/config/tests/pipeline",
+    "findings_before_unseen": [
+      "normalization was refitted instead of loaded",
+      "unseen hash was missing from overwrite guard"
+    ],
+    "resolution": "Both corrected before unseen evaluation; saved-load test failed before correction and passed afterwards; final full suite 55/55",
+    "remaining_actionable_findings": []
+  },
+  "execution_notes": [
+    "First local full pipeline failed writing unseen/equity.png while figures were being inspected; serial retry completed with no code/settings changes",
+    "No trading setting changed after unseen evaluation"
+  ],
+  "source_code": {
+    "src/market_analytics/trading/baseline.py": "08bfda3c8722b92cccb6668456cb8988357849f96650a6e9f5eefa818b20344b",
+    "src/market_analytics/trading/plots.py": "79b352aee380c9388bcc6cf5c47c3b9e0ffeeb0589a2eae90445fb2b1a975b9e",
+    "src/market_analytics/trading/signals.py": "70c153a8c6bb0cf298b3fa45a0f90dc4325d2b35256a30394dd2d5ab5200a75e",
+    "src/market_analytics/trading/backtest.py": "1615aaa09a84237573f3eee49a297a3f5851553dad78529aae3fcd502e1e4dbe",
+    "scripts/run_statistical_baseline.py": "388cc12b8b554f7f8d00abb73c75721bee1c14c14e4cee10482abf639dc5354b"
+  },
+  "uv_lock_sha256": "61abf9a553ba523fbcfce8a80a429529758485645e348e2c58826f0aeac02594",
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2"
+  }
+}

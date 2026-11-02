@@ -21,6 +21,7 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-11-01 | Phase 4 design | 2025 mean and `ddof=1` std; enter on ±2 crossings while flat, exit when Z reaches 0, exit takes priority, start flat; separate USD 10,000 accounts; beta-weighted fixed shares sized at the next open; 5 bps per leg; mark open trades at the final close | Adopted |
 | 2026-11-01 | Phase 3 design | ADF lags by AIC and Johansen VAR order by BIC; direction by the smaller Engle-Granger p-value; Holm over 15 pair-level p-values; rank by method agreement, then Engle-Granger p-value; stop on any failed fit; shortlist of two | Adopted |
 | 2026-10-25 | Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
 | 2026-10-25 | Phase 2 methods | Pearson return and log-price correlations, return/risk definitions, OLS beta with intercept, 60-session rolling window, VIX terciles | Adopted |
@@ -459,53 +460,164 @@ refitting windows remain as recorded below.
 
 ## Phase 4: Statistical baseline
 
-### Spread and normalization (Proposed)
+### Spread and normalization (Adopted 2026-11-01)
 
-The Phase 3 regression fitted on 2018-2025 defines the spread. Its residual
-mean and standard deviation are estimated over 2025 only. The unseen Z-score is
+The saved Phase 3 regression fitted on 2018-2025 defines the spread. Load its
+full-precision intercept, beta, and stock orientation rather than fitting it
+again. Carry AMZN_META (AMZN on META) and NVDA_AMZN (AMZN on NVDA) forward with
+their exploratory labels. Their residual means and standard deviations are
+estimated over 2025 only. The unseen Z-score is
 
 `Z(t) = (spread(t) - mean_2025) / std_2025`
 
-using the sample standard deviation (`ddof=1`). A zero or non-finite standard
-deviation stops the run with an error. Neither the regression nor the
-normalization parameters are refitted on 2026.
+using the sample standard deviation (`ddof=1`). Pass this argument explicitly:
+[NumPy defaults to `ddof=0`](https://numpy.org/doc/stable/reference/generated/numpy.std.html).
+Fewer than two observations, a zero or non-finite standard deviation, or a
+non-finite residual stops the run. Neither the regression nor the normalization
+parameters are refitted on 2026. Save the actual normalization dates, count,
+mean, standard deviation, and source artifact hashes.
 
-### Trading rules (Proposed)
+### Trading rules (Adopted 2026-11-01)
 
-- Long the spread when Z falls below -2; exit when Z reaches 0 or above.
-- Short the spread when Z rises above +2; exit when Z reaches 0 or below.
-- Thresholds are fixed in advance and are not tuned on unseen outcomes.
-- Entries trigger on a threshold crossing while flat. Repeated signals while a
-  position is open are ignored.
-- If an exit and an opposite entry occur on the same day, the exit is executed
-  and a new entry requires a fresh crossing on a later day.
+- Long entry crossing: `Z(t-1) >= -2` and `Z(t) < -2`.
+- Short entry crossing: `Z(t-1) <= 2` and `Z(t) > 2`.
+- An existing long exits when `Z(t) >= 0`; an existing short exits when
+  `Z(t) <= 0`. Equality triggers an exit but does not trigger an entry.
+- Enter only while flat, with at most one open position per pair. Crossings
+  during a position are recorded but ignored. There is no pyramiding.
+- An exit takes priority over an opposite crossing. Close the position at the
+  next open; a new entry needs a fresh crossing on a later signal date. There
+  is no reversal order or delayed entry from an ignored crossing.
+- Start the unseen run flat, with no pending order. The last 2025 Z-score is
+  comparison context for the first 2026 close only. No December signal is
+  executed in January. If the spread is already outside the band and remains
+  there, it produces no entry until a fresh crossing occurs.
+- Fix the thresholds before evaluation. No stop-loss, maximum holding period,
+  or threshold search is included in this first baseline. These omissions
+  allow prolonged losses and must remain visible in the findings.
 
-### Execution and accounting (Adopted timing; Proposed accounting)
+Crossings distinguish new excursions from repeated days outside the band.
+Daily conditions would permit an entry immediately after starting outside the
+band; that is a different strategy. Save counts of both outside-band days and
+raw crossings so this choice does not hide the observed spread behaviour.
+
+### Execution and accounting (Adopted: timing 2026-10-18, accounting 2026-11-01)
 
 - **Timing (Adopted):** signals are computed after the close on day t and
   executed at the open on day t+1. Exits follow the same rule. The equity curve
   is marked at each close. Overnight gaps between close and next open are part
-  of the result.
-- **Holdings:** share quantities are fixed at entry: notional N in the
-  dependent stock and beta times N in the other, converted to shares at the
-  execution prices. Cash P&L comes from shares and price changes. The log-price
-  coefficient is an elasticity, not a share ratio, and the change in a log
-  spread is not itself a cash profit.
-- **Return denominator:** gross notional at entry, N times (1 + |beta|).
-- **Costs:** 5 basis points per leg per transaction, with gross (zero-cost)
-  results also reported. Short-borrow fees, financing, and dividends are
-  omitted and listed as limitations.
-- **Open positions:** a position still open on 2026-07-31 is marked at that
-  close, flagged as open, included in returns, and excluded from win rate.
-- **Metrics:** long and short entry signals, executed trades, closed trades,
-  win rate (closed trades with positive net P&L), total and average trade
-  return, holding period, maximum drawdown, and gross versus net performance.
-  Signal counts are reported separately from executed trades.
-- **Historical run:** the strategy is also run on historical data to check the
-  accounting. Those results are labelled in-sample because the parameters were
-  fitted on the same period.
+  of the result. Here t+1 means the next available trading session, not the
+  next calendar day. A queued market order fills even if the next open gaps
+  beyond the signal level; it is not cancelled using later information.
 
-The 2025-only normalization centers Z on the most recent equilibrium. If the
+The accounting details were adopted on 1 November 2026:
+
+- **Accounts:** evaluate each pair in a separate USD 10,000 account. Both
+  spreads contain AMZN, so do not add their returns or describe the results as
+  an independently diversified portfolio. Capital is a reporting convention,
+  not an estimate of broker margin requirements.
+- **Sizing:** let C be initial capital, E the net account equity while flat,
+  and c the transaction-cost rate. At entry, set gross notional
+  `G = min(C, E) / (1 + c)` and `N = G / (1 + abs(beta))`. This reserves the
+  entry cost, reduces sizing after losses, and does not increase the budget
+  after gains. Position sizes are determined from the net account for both
+  gross and net reporting.
+- **Holdings:** with direction s equal to +1 for long spread and -1 for short,
+  use `q_dependent = s * N / open_dependent` and
+  `q_independent = -s * beta * N / open_independent`. Allow fractional shares
+  and hold these quantities until exit. The current shortlist has positive
+  betas; reject a nonpositive beta for review instead of silently creating a
+  different exposure. The log-price slope is an elasticity, not a share ratio.
+  The hedge is therefore not dollar-neutral. With USD 10,000, a long AMZN on
+  META spread holds about USD 6,250 of AMZN against USD 3,750 of META, and a
+  long AMZN on NVDA spread about USD 8,060 of AMZN against USD 1,930 of NVDA.
+  Because beta is below one, a move shared by both stocks also changes the
+  spread and the P&L: a 10% rise in both adds about USD 250 or USD 610 to a
+  long position. Save net exposure and each leg's P&L for every trade and day
+  so the findings can show this.
+- **Costs:** charge `0.0005 * sum(abs(shares_traded) * execution_price)` on
+  every entry and exit. This is an assumed combined allowance for commission
+  and slippage, not a measured broker quote. Record fills at the observed Open
+  and costs separately; do not also adjust prices for slippage. Assume complete
+  fills and short availability. Omit short-borrow fees, financing, cash interest,
+  dividends, and broker margin rules, and state these limitations.
+- **Cash:** start with C. For signed share changes dq, update cash by
+  `-sum(dq * execution_price) - cost`. At each close,
+  `equity = cash + sum(held_shares * Close)`. Short proceeds enter cash but do
+  not increase the sizing budget. Daily net P&L is the change in equity, with
+  C as the initial reference. The first entry day includes Open-to-Close P&L;
+  an exit day includes the previous Close-to-exit-Open move.
+- **Gross comparison:** use identical fills and quantities, adding cumulative
+  charged costs back to net equity. This isolates the cost drag; it is not a
+  separately resized zero-cost strategy.
+- **Boundaries:** mark any position still open on 2026-07-31 at that Close.
+  Include its unrealized P&L and entry cost in equity, flag it as open, and
+  exclude it from closed-trade averages and win rate. Do not assume a final
+  liquidation or deduct an exit fee that was not incurred. A last-day signal
+  remains in the signal table with `unfilled_end_of_period`; never read August
+  prices to fill it. Nonpositive equity stops the simulation with an explicit
+  incomplete status, rather than continuing as a solvent account.
+
+Cash P&L comes from both stock legs, not from changes in the log spread. The
+fixed holdings approximate the fitted log relationship at entry; their dollar
+weights drift afterwards. Record both legs' exposure through the trade.
+
+### Counts, returns, and diagnostics (Adopted 2026-11-01)
+
+Report long and short counts separately for outside-band days, raw crossings,
+eligible entry signals while flat, executed entries, and closed trades. The
+headline signal counts are the eligible entry signals; the other counts show
+how much that choice affects the picture. A trade is one paired entry
+followed by its exit, not two stock orders. Save ignored crossings with their
+reasons, exit signals, and final unfilled orders. Check
+`executed entries = closed trades + positions still open` per pair/run.
+
+For each closed trade, net return is net trade P&L divided by its own entry
+gross notional G. Report the mean closed-trade return, closed-trade cash P&L,
+open-trade P&L, and total account return `(final_equity - C) / C` separately.
+Do not sum trade percentages and call that account return. Win rate is the
+number of closed trades with strictly positive net P&L divided by the number
+of closed trades; break-even trades are not wins. With no closed trades, win
+rate and average closed-trade return are missing with an explanatory status.
+
+Maximum drawdown is the largest `1 - equity / running_peak_equity`, including
+C before the first session. Report gross and net versions. Holding time is
+the difference between entry and exit session indices; use the final session
+as the endpoint for an open position and flag it as incomplete. A no-trade run
+has zero account return and drawdown, zero counts, and missing trade averages.
+
+Describe unseen spread behaviour using the Z-score plot, counts and proportion
+of sessions above +2 and below -2, longest consecutive outside-band runs, and
+whether each eligible entry excursion later reaches its zero exit level.
+Measure the latter from the signal close to the first later qualifying close,
+in trading sessions. Excursions that have not returned by the endpoint are
+right-censored, not dropped or given an invented reversion time. These are
+descriptions of the evaluation period, not fresh pair-selection tests or
+proof of a stable equilibrium.
+
+The Phase 3 half-lives are 77.5 and 104.1 sessions against 145 unseen
+sessions, so each pair may produce only one or two unseen trades, or none.
+Trade-level metrics are then descriptive, and a single trade can decide the
+win rate. That is reported as found and is not a reason to change the
+thresholds.
+
+### Historical checks and evaluation order (Adopted 2026-11-01)
+
+First exercise the engine on small known examples. Then run it over
+2018-2025 with the saved full-history coefficients and fixed 2025 normalization,
+starting flat with no crossing available on the first historical row. Label
+the entire run in-sample: even early historical observations use later fitted
+information. It checks implementation and describes fitted-period behaviour;
+it is not independent validation or a basis for claiming achievable returns.
+
+Freeze these rules in config before the first unseen run. Record the config,
+code, input, and fitted-artifact hashes. Corrections after evaluation need a
+logged reason and preserved earlier results; do not quietly replace a losing
+run. Phase 5 must share the accounting and comparable evaluation dates, while
+its forecast and trading choices are selected using historical data only.
+The observed Phase 4 results must not become a tuning target for Phase 5.
+
+The 2025-only normalization centers Z on the recent residual mean. If the
 2025 spread was unusually quiet, a modest 2026 drift can keep |Z| above 2 for
 months and produce one long losing trade. That would be reported as found.
 

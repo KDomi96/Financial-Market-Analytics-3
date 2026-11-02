@@ -1,0 +1,16 @@
+signal_date,direction,zero_date,observation_end,sessions_observed,status,pair_id,dependent,independent,spread_column,evidence_label,period,model_version,evaluation_label
+2018-10-30,long,2018-12-03,2018-12-03,23,reverted,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2018-12-20,long,2020-03-17,2020-03-17,310,reverted,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2020-04-14,short,2023-02-07,2023-02-07,710,reverted,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2023-05-01,long,2023-06-06,2023-06-06,25,reverted,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2025-10-31,short,,2025-12-31,41,right_censored,AMZN_META,AMZN,META,AMZN_on_META,exploratory,historical,phase4_v1,in_sample
+2018-07-19,long,2019-04-23,2019-04-23,190,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2019-11-20,long,2020-01-31,2020-01-31,48,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2020-03-09,long,2020-04-13,2020-04-13,24,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2020-04-16,short,2022-02-03,2022-02-03,455,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2022-02-04,short,2022-03-08,2022-03-08,21,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2022-03-17,short,2022-04-29,2022-04-29,30,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2022-05-05,long,2022-07-29,2022-07-29,58,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2022-10-28,long,2024-12-03,2024-12-03,526,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2025-01-27,short,2025-03-06,2025-03-06,27,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample
+2025-04-04,long,2025-05-12,2025-05-12,25,reverted,NVDA_AMZN,AMZN,NVDA,AMZN_on_NVDA,exploratory,historical,phase4_v1,in_sample

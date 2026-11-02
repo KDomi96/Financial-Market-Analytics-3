@@ -1,0 +1,24 @@
+{
+  "mean": -0.03490503228289353,
+  "std": 0.06083657493486122,
+  "ddof": 1,
+  "fit_start": "2025-01-02",
+  "fit_end": "2025-12-31",
+  "nobs": 250,
+  "pair_id": "AMZN_META",
+  "dependent": "AMZN",
+  "independent": "META",
+  "spread_column": "AMZN_on_META",
+  "evidence_label": "exploratory",
+  "ols_path": "artifacts/statistical/phase3_v1/AMZN_META/ols_20180102_20251231.json",
+  "ols_sha256": "05f14387147871e31089b38033e78dec7eef0103a057183e9143523b1eb36733",
+  "model_version": "phase4_v1",
+  "historical_sha256": "99fdcd48163001af8bc35e7297451e6d9bc78510d5b267c292794677c1b8f0b4",
+  "config_sha256": "794498630fdbc949c6b0ed450a4664455dfcc68b79e84fdea1cfa8cab34f9612",
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2"
+  }
+}

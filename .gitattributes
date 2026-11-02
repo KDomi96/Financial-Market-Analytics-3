@@ -5,4 +5,6 @@ data/processed/** -text
 outputs/metrics/phase1_*.csv -text
 outputs/metrics/eda/*.csv -text
 outputs/metrics/pair_selection/*.csv -text
+outputs/metrics/statistical_baseline/**/*.csv -text
+outputs/backtests/statistical_baseline/**/*.csv -text
 artifacts/statistical/** -text

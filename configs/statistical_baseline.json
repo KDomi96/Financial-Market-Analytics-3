@@ -1,0 +1,41 @@
+{
+  "historical": "data/processed/master_historical.csv",
+  "unseen": "data/processed/master_unseen.csv",
+  "manifest": "data/processed/master_manifest.json",
+  "phase3_metadata": "outputs/metrics/pair_selection/run_metadata.json",
+  "shortlist": "outputs/metrics/pair_selection/shortlist.csv",
+  "historical_spreads": "data/processed/pair_spreads_historical.csv",
+  "ols_directory": "artifacts/statistical/phase3_v1",
+  "pairs": [
+    {"pair_id": "AMZN_META", "dependent": "AMZN", "independent": "META", "spread_column": "AMZN_on_META", "evidence_label": "exploratory"},
+    {"pair_id": "NVDA_AMZN", "dependent": "AMZN", "independent": "NVDA", "spread_column": "AMZN_on_NVDA", "evidence_label": "exploratory"}
+  ],
+  "periods": {
+    "historical": {"start": "2018-01-01", "end": "2025-12-31", "first_session": "2018-01-02", "last_session": "2025-12-31", "rows": 2011},
+    "unseen": {"start": "2026-01-01", "end": "2026-07-31", "first_session": "2026-01-02", "last_session": "2026-07-31", "rows": 145}
+  },
+  "normalization": {"start": "2025-01-01", "end": "2025-12-31", "ddof": 1},
+  "rules": {
+    "entry_threshold": 2.0, "exit_threshold": 0.0,
+    "entry_policy": "crossing_while_flat", "initial_state": "flat_no_pending_order",
+    "unseen_context": "last_historical_z_only", "execution": "next_session_open",
+    "exit_priority": true, "reversal": false, "stop_loss": null, "maximum_holding_sessions": null
+  },
+  "accounting": {
+    "initial_capital": 10000.0, "cost_rate": 0.0005,
+    "sizing": "min_initial_capital_current_equity_reserve_entry_cost",
+    "holdings": "fixed_fractional_shares_beta_weighted_at_entry",
+    "end_policy": "mark_open_at_final_close", "insolvency": "stop_incomplete",
+    "gross_comparison": "same_fills_and_quantities_add_back_costs",
+    "omitted": ["borrow_fees", "financing", "cash_interest", "dividends", "broker_margin_rules"]
+  },
+  "model_version": "phase4_v1",
+  "tolerance": {"rtol": 1e-7, "atol": 1e-9},
+  "outputs": {
+    "artifacts": "artifacts/statistical/phase4_v1",
+    "zscores": "data/processed/statistical_baseline",
+    "backtests": "outputs/backtests/statistical_baseline/phase4_v1",
+    "metrics": "outputs/metrics/statistical_baseline/phase4_v1",
+    "figures": "outputs/figures/statistical_baseline/phase4_v1"
+  }
+}

@@ -1,4 +1,4 @@
-"""Run the master build, EDA, and pair selection in order.
+"""Run the master build, EDA, pair selection, and statistical baseline in order.
 
 Run with: uv run --locked python scripts/run_pipeline.py [--historical-only]
 """
@@ -11,6 +11,7 @@ import matplotlib
 from market_analytics.analysis.eda import run_eda
 from market_analytics.cointegration.selection import run_pair_selection
 from market_analytics.data.master import build_master
+from market_analytics.trading.baseline import run_statistical_baseline
 
 
 def main() -> None:
@@ -28,6 +29,11 @@ def main() -> None:
     metadata = run_pair_selection(Path("configs/pair_selection.json"))
     print(f"Pair selection: {len(metadata['validation'])} checks passed, "
           f"{len(metadata['outputs'])} tables/data/artifacts, {len(metadata['figures'])} figures")
+    for period, result in run_statistical_baseline(Path("configs/statistical_baseline.json"),
+                                                  historical_only=args.historical_only).items():
+        print(f"Statistical baseline {period}: {result['status']}, {len(result['validation'])} checks")
+        if result["status"] != "complete":
+            raise RuntimeError("Incomplete baseline accounts")
 
 
 if __name__ == "__main__":

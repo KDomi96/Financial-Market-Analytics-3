@@ -229,3 +229,61 @@ or model for the 2024-2025 LSTM validation is fitted here.
 versions, run checks, warning records, and the actual fitting windows of the
 leakage audit. Casting warnings with exactly real Johansen eigenvalues are
 recorded; nonzero imaginary components or non-finite statistics are errors.
+
+## Phase 4 statistical baseline
+
+The tables use `pair_id`, `dependent`, `independent`, `spread_column`,
+`evidence_label`, `period`, `model_version`, and `evaluation_label` as common
+identifiers. `period` is historical or unseen; `evaluation_label` is
+`in_sample` or `unseen_fixed_parameters`. Both pairs remain `exploratory`.
+`trade_id` is unique within a pair and period, so join using all three keys.
+Dates are ISO daily trading dates. Cash, prices, exposures, and P&L are USD.
+Returns, proportions, win rates, and drawdowns are fractions, not percentages.
+
+`data/processed/statistical_baseline/{historical,unseen}_zscores.csv` has one
+row per pair/session: `Date`, unnormalized log-price `spread`, fixed `zscore`,
+and the common identifiers. Neither numeric field permits missing values.
+Normalization artifacts in `artifacts/statistical/phase4_v1/<PAIR_ID>/` store
+`mean`, `std`, `ddof=1`, actual `fit_start`, `fit_end`, `nobs`, orientation,
+OLS path/hash, historical/config hashes, version, and library versions.
+Normalization statistics are in log-residual units.
+
+Backtest tables live under
+`outputs/backtests/statistical_baseline/phase4_v1/{historical,unseen}/`:
+
+| Table | Columns and meaning |
+| --- | --- |
+| `signals.csv` | `Date`, `previous_z`, `zscore`, and `position` after that day's Open fill. `outside_long/short`, `long/short_crossing`, `eligible_long/short`, and `exit_signal` are booleans. `action` is `hold`, `enter_long`, `enter_short`, or `exit`. |
+| Signal order fields | `ignored_reason` is empty, `position_open`, or `exit_priority`. `order_status` is `none`, `filled`, `unfilled_end_of_period`, or `stopped_nonpositive_equity`. `execution_date` and `trade_id` link a filled order to its stock-leg fills. |
+| `executions.csv` | One row per stock leg/fill: `Date`, `signal_date`, `trade_id`, `action`, `leg` (dependent/independent), signed `shares_change`, observed Open `price`, absolute `turnover`, and charged `cost`. A buy increases shares; a sell reduces them. |
+| `trades.csv` | One row per paired entry. `direction` is +1 long spread or -1 short spread. Signal dates (`entry_signal_date`, `exit_signal_date`) are separate from fill dates (`entry_date`, `exit_date`); an open trade has empty exit dates. `status` is `closed` or `open`; `mark_date` is the exit date or final observed Close date. |
+| Trade holdings and prices | `q_dependent/independent` are fixed signed share quantities. `entry_dependent/independent` and `mark_dependent/independent` are prices. `entry_gross_notional` is the sum of absolute entry stock values. `entry_net_exposure` and `mark_net_exposure` are signed sums. |
+| Trade results | `dependent_pnl/independent_pnl` are gross stock-leg contributions. `gross_pnl` is their sum, `costs` contains only incurred charges, and `net_pnl` deducts them. `gross_return/net_return` divide by entry gross notional. `holding_sessions` is mark-session index minus entry-session index; an open trade's duration is incomplete. |
+| `daily_account.csv` | Close-time `q_dependent/independent`, `position` (-1/0/+1), active `trade_id`, and `fill_trade_id` for an entry/exit that morning. `cash` includes short proceeds and incurred charges. `dependent_exposure/independent_exposure` are signed Close stock values; `net_exposure` sums them and `gross_exposure` sums their absolute values. |
+| Daily results | `dependent_pnl/independent_pnl` include overnight and intraday moves on the quantities actually held. `net_pnl/gross_pnl` are changes in account equity, with initial capital before the first session. `cumulative_costs` reconciles `gross_equity - net_equity`. `net_drawdown/gross_drawdown` include initial capital in the running peak. |
+
+`previous_z` is missing on the first historical session. An unfilled or absent
+order has an empty execution date. Open trades have empty exit dates and exit
+signal dates. Flat days have no active trade ID. An exit day's `fill_trade_id`
+can remain populated when `trade_id` is empty. There are no missing numeric
+prices, holdings, or P&L values. Empty trade or execution tables retain headers.
+
+Metric tables live under
+`outputs/metrics/statistical_baseline/phase4_v1/{historical,unseen}/`:
+
+| Table | Columns and meaning |
+| --- | --- |
+| `summary.csv` counts | `long/short_outside_days`, `long/short_crossings`, `long/short_signals` (eligible entries), `long/short_executed_entries`, and `long/short_closed_trades`. Totals include `executed_entries`, `closed_trades`, `open_trades`, `exit_signals`, `ignored_crossings`, and `unfilled_orders`. |
+| Summary performance | `initial_capital`, `final_net_equity`, `final_gross_equity`, `net_return`, `gross_return`, `total_costs`, `closed_net_pnl`, `open_net_pnl`, each leg's P&L, `max_drawdown_net/gross`, `peak_gross_exposure`, and `peak_abs_net_exposure`. Account return uses initial capital. |
+| Trade averages | `win_rate` uses closed trades with strictly positive net P&L. `mean_closed_trade_return` and `mean_closed_holding_sessions` use closed trades only. These three fields are missing when none close, with `trade_metric_status=no_closed_trades`; otherwise it is `defined`. |
+| Run status | `status` is `complete` or `incomplete_nonpositive_equity`; `sessions` counts simulated account rows. An incomplete account stops at its last recorded mark and must not be reported as a completed evaluation. |
+| `spread_diagnostics.csv` | `sessions`, `min_z`, `max_z`, `mean_z`, `long/short_outside_days`, `long/short_outside_proportion`, and `long/short_longest_outside_run`. Long means below -2; short means above +2. Run lengths are trading sessions. |
+| `reversion_events.csv` | One row per eligible entry signal: `signal_date`, `direction` (long/short), first later qualifying `zero_date`, `observation_end`, and `sessions_observed` from signal close to zero close or the endpoint. `status` is `reverted` or `right_censored`; the latter has no zero date. |
+| `unseen/market_exposure.csv` | One row per unseen trade, written by notebook 04 after the run. Keys: `pair_id`, `trade_id`, `direction`, `status`, `dependent`, `independent`, `evidence_label`, `period`, and `model_version`, as in `trades.csv`. Values: `window_start`/`window_end` (entry and exit signal closes, or the final close for an open trade), `sp500_return` (decimal), `market_beta_exposure` (USD, signed shares times entry Open times each stock's 2018-2025 S&P 500 beta from Phase 2), `market_part` (USD, exposure times S&P 500 return), and `gross_pnl` (USD). A single-factor estimate, not an exact attribution. |
+
+`run_metadata.json` holds actual windows, input/config/code hashes, settings,
+normalization, versions, validation, warnings, leakage audit, and output/figure
+hashes. The parent `evaluation_contract.json` protects the fitted objects and
+historical inputs/settings/code used by an evaluated version. The unseen
+master hash is retained and checked in its period's run metadata. No-trade
+runs have zero counts, costs, return, and drawdown, with missing trade averages.
