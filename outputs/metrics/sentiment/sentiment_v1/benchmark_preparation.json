@@ -1,0 +1,49 @@
+{
+  "datasets": {
+    "fiqa": {
+      "counts": {
+        "source_rows": 438,
+        "multiple_annotations": 60,
+        "duplicate_text": 1,
+        "retained": 377,
+        "excluded": 61
+      },
+      "class_counts": {
+        "negative": 86,
+        "neutral": 165,
+        "positive": 126
+      },
+      "unlabeled_test_rows_excluded": 93
+    },
+    "finentity": {
+      "counts": {
+        "source_rows": 979,
+        "multiple_annotations": 589,
+        "span_value_mismatch": 9,
+        "duplicate_text": 3,
+        "phrasebank_overlap": 3,
+        "retained": 375,
+        "excluded": 604
+      },
+      "class_counts": {
+        "negative": 66,
+        "neutral": 248,
+        "positive": 61
+      }
+    }
+  },
+  "phrasebank_sentences": 4846,
+  "cross_benchmark_equal_texts": 0,
+  "normalization": "NFKC, casefold, Unicode word tokens joined by spaces; containment at token boundaries",
+  "source_hashes": {
+    "financial_phrasebank/FinancialPhraseBank-v1.0.zip": "0e1a06c4900fdae46091d031068601e3773ba067c7cecb5b0da1dcba5ce989a6",
+    "financial_phrasebank/dataset_card.md": "274523f90fee5ef947c24bd95388818a551dbd2c1d9ee55469446329cb6c82e0",
+    "fiqa/task1_headline_ABSA_train.json": "24bfd3dd662a22c95dbe2d2c86ac2ea75408dafb1027246ed27b53b5c7bad821",
+    "fiqa/task1_headline_ABSA_test.json": "a5ab90b9c6b5768a199bb1ffd377fa809af3e1418b2df6bf3f19123f10d7eb85",
+    "fiqa/mirror_README.md": "ea3cc99dbe25636706e985e064fdaea26c94528c04f2ccf572cee4ccb2007112",
+    "fiqa/organizer_page.html": "0851255692a562849fb3b1b63405b2728bd9712a05ae9633414b869308636957",
+    "finentity/FinEntity.json": "3208667de69383120b0380aebeaabe360669eda72269c33e1c8b09d63df55463",
+    "finentity/authors_README.md": "e910c284c16c41a44fb308979f544f63158f5c2ba121edd727037593df8d296d",
+    "finentity/dataset_card.md": "eca00186d6b0c8422908816c13726dd8981befbf5de4effbfa27bd2370edb875"
+  }
+}

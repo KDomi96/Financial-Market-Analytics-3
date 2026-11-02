@@ -1,0 +1,73 @@
+{
+  "output_directory": "data/raw/sentiment/benchmarks",
+  "datasets": {
+    "financial_phrasebank": {
+      "name": "Financial PhraseBank v1.0",
+      "original_source": "https://huggingface.co/datasets/takala/financial_phrasebank",
+      "download_source": "https://huggingface.co/datasets/takala/financial_phrasebank",
+      "revision": "8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964",
+      "terms": "CC BY-NC-SA 3.0 according to the dataset card. Used only to screen benchmark overlap, never scored. Source files remain local.",
+      "files": [
+        {
+          "name": "FinancialPhraseBank-v1.0.zip",
+          "url": "https://huggingface.co/datasets/takala/financial_phrasebank/resolve/8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964/data/FinancialPhraseBank-v1.0.zip",
+          "validation": "financial_phrasebank_zip"
+        },
+        {
+          "name": "dataset_card.md",
+          "url": "https://huggingface.co/datasets/takala/financial_phrasebank/resolve/8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964/README.md"
+        }
+      ]
+    },
+    "fiqa": {
+      "name": "FiQA 2018 Task 1 headline data",
+      "original_source": "https://sites.google.com/view/fiqa/home",
+      "download_source": "https://github.com/dayanfcosta/fiqa-2018-task1",
+      "revision": "acd0f4cfafa6421774bc8f009e8fa3e0ec441357",
+      "source_note": "FiQA challenge participant's mirror; the organizer's Google Drive links were unavailable. This is not a verified byte-for-byte copy of the unavailable organizer download.",
+      "terms": "The organizer page states non-commercial use. No separate dataset licence is supplied by this mirror; keep source files local and record the organizer's terms.",
+      "files": [
+        {
+          "name": "task1_headline_ABSA_train.json",
+          "url": "https://raw.githubusercontent.com/dayanfcosta/fiqa-2018-task1/acd0f4cfafa6421774bc8f009e8fa3e0ec441357/datasets/task1_headline_ABSA_train.json",
+          "validation": "fiqa_labeled"
+        },
+        {
+          "name": "task1_headline_ABSA_test.json",
+          "url": "https://raw.githubusercontent.com/dayanfcosta/fiqa-2018-task1/acd0f4cfafa6421774bc8f009e8fa3e0ec441357/datasets/task1_headline_ABSA_test.json",
+          "validation": "fiqa_unlabeled"
+        },
+        {
+          "name": "mirror_README.md",
+          "url": "https://raw.githubusercontent.com/dayanfcosta/fiqa-2018-task1/acd0f4cfafa6421774bc8f009e8fa3e0ec441357/README.md"
+        },
+        {
+          "name": "organizer_page.html",
+          "url": "https://sites.google.com/view/fiqa/home"
+        }
+      ]
+    },
+    "finentity": {
+      "name": "FinEntity",
+      "original_source": "https://github.com/yixuantt/FinEntity",
+      "download_source": "https://github.com/yixuantt/FinEntity",
+      "revision": "3b6cedc5485b669c2ed168f1d949f517636eb7b8",
+      "terms": "The authors' Hugging Face dataset card declares odc-by. Its card is saved at revision e86e5451a1fce4731fe07c710649a229d92e5cab; third-party news text is kept local.",
+      "files": [
+        {
+          "name": "FinEntity.json",
+          "url": "https://raw.githubusercontent.com/yixuantt/FinEntity/3b6cedc5485b669c2ed168f1d949f517636eb7b8/data/FinEntity.json",
+          "validation": "finentity"
+        },
+        {
+          "name": "authors_README.md",
+          "url": "https://raw.githubusercontent.com/yixuantt/FinEntity/3b6cedc5485b669c2ed168f1d949f517636eb7b8/readme.md"
+        },
+        {
+          "name": "dataset_card.md",
+          "url": "https://huggingface.co/datasets/yixuantt/FinEntity/resolve/e86e5451a1fce4731fe07c710649a229d92e5cab/README.md"
+        }
+      ]
+    }
+  }
+}

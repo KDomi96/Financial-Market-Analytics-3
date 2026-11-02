@@ -1,0 +1,866 @@
+ticker,publisher,count
+AAPL,24/7 Wall St.,29
+AAPL,9to5Mac,9
+AAPL,A.V. Club,1
+AAPL,"ABC News - Breaking News, Latest News and Videos",1
+AAPL,AI: Reset to Zero,1
+AAPL,AP News,2
+AAPL,AllHipHop,1
+AAPL,Apple,1
+AAPL,AppleInsider,8
+AAPL,AppleMagazine,4
+AAPL,Arizona State University (ASU),1
+AAPL,Ars Technica,1
+AAPL,Axios,2
+AAPL,BBC,1
+AAPL,BGR,1
+AAPL,BLABBERMOUTH.NET,1
+AAPL,BNN Bloomberg,1
+AAPL,Barchart.com,4
+AAPL,Barron's,15
+AAPL,Benzinga,7
+AAPL,BigGo Finance,1
+AAPL,Bitget,2
+AAPL,Blockonomi,2
+AAPL,Bloomberg,4
+AAPL,Bloomberg.com,9
+AAPL,Business Insider,3
+AAPL,Business Standard,1
+AAPL,Business Wire,1
+AAPL,CEPR,1
+AAPL,CNBC,17
+AAPL,Calhoun Journal,1
+AAPL,CoStar,1
+AAPL,CoinDCX,1
+AAPL,CoinDesk,1
+AAPL,CoinNess,1
+AAPL,Collider,1
+AAPL,Commonwealth Club World Affairs,1
+AAPL,Complex,2
+AAPL,Computer Weekly,1
+AAPL,Courthouse News,1
+AAPL,DJ Mag,1
+AAPL,Daily Mail,1
+AAPL,Deadline,1
+AAPL,Decider,1
+AAPL,Diario AS,1
+AAPL,Direxion,1
+AAPL,EBC Financial Group,1
+AAPL,EDMTunes,1
+AAPL,Euronews.com,1
+AAPL,FXStreet,1
+AAPL,Fast Company,2
+AAPL,Financial Times,2
+AAPL,Finbold,6
+AAPL,Flickering Myth,1
+AAPL,Forbes,2
+AAPL,Foreign Policy Journal,9
+AAPL,Fortune,5
+AAPL,Fruitnet,1
+AAPL,Gadget Review,2
+AAPL,Gulf News,1
+AAPL,GuruFocus,4
+AAPL,HELLO!,1
+AAPL,Herald.co.zw,1
+AAPL,Hindustan Times,1
+AAPL,HoopsHype,1
+AAPL,INDODAX,1
+AAPL,INDmoney,2
+AAPL,Inc.com,2
+AAPL,India Today,1
+AAPL,International Business Times Australia,2
+AAPL,Investing.com,7
+AAPL,Investopedia,9
+AAPL,Investor's Business Daily,4
+AAPL,Kansas City Public Schools,1
+AAPL,Kashmir Life,1
+AAPL,LI Press,1
+AAPL,Law.com,1
+AAPL,Law360,1
+AAPL,Livemint,3
+AAPL,Luxurylaunches,1
+AAPL,MacDailyNews,12
+AAPL,MacRumors,9
+AAPL,Macworld,2
+AAPL,MarketBeat,10
+AAPL,MarketWatch,7
+AAPL,MarketWise,2
+AAPL,Metal Injection,1
+AAPL,Mitrade,1
+AAPL,Mobilegamer.biz,1
+AAPL,Money magazine,1
+AAPL,MoneyLion,1
+AAPL,Moneycontrol.com,2
+AAPL,Moomoo,3
+AAPL,Morningstar,6
+AAPL,Morningstar Australia,1
+AAPL,My Mobile India,2
+AAPL,NBC Los Angeles,1
+AAPL,NerdWallet,1
+AAPL,New York Post,1
+AAPL,Newsweek,1
+AAPL,PCMag,1
+AAPL,Phandroid,1
+AAPL,PhoneArena,2
+AAPL,Quartz,1
+AAPL,Quiver Quantitative,8
+AAPL,RS Web Solutions,1
+AAPL,Radio Times,1
+AAPL,RailAdvent,1
+AAPL,RouteNote,1
+AAPL,ScreenRant,2
+AAPL,Seeking Alpha,29
+AAPL,Shacknews,1
+AAPL,SheKnows,1
+AAPL,SmartAsset.com,1
+AAPL,South China Morning Post,3
+AAPL,Sportskeeda Tech,1
+AAPL,Startup Fortune,1
+AAPL,Stereogum,1
+AAPL,Stock Titan,1
+AAPL,StockStory,1
+AAPL,Stocktwits,4
+AAPL,Stuff,1
+AAPL,SunStar Publishing Inc.,1
+AAPL,"THE ELEC, Korea Electronics Industry Media",1
+AAPL,TIKR.com,10
+AAPL,TKer by Sam Ro,1
+AAPL,TODAY.com,1
+AAPL,TechRadar,1
+AAPL,TechRepublic,1
+AAPL,The Apple Post,3
+AAPL,The Bridge Chronicle,1
+AAPL,The Business Times,1
+AAPL,The Cryptonomist,1
+AAPL,The Daily Upside,1
+AAPL,The Fifth Person,1
+AAPL,The Financial Express,1
+AAPL,The Globe and Mail,1
+AAPL,The Guardian,1
+AAPL,The Mac Observer,18
+AAPL,The Mirror,1
+AAPL,The Mirror US,1
+AAPL,The Motley Fool,51
+AAPL,The Straits Times,2
+AAPL,The Tech Buzz,1
+AAPL,The Tech Outlook,1
+AAPL,The Times of India,5
+AAPL,The Whistler Newspaper,1
+AAPL,TheStreet,3
+AAPL,This is Money,1
+AAPL,TipRanks,3
+AAPL,Tom's Guide,1
+AAPL,Tom's Hardware,1
+AAPL,Traders Union,9
+AAPL,TradingKey,4
+AAPL,TradingView,8
+AAPL,Trefis,11
+AAPL,Variety,2
+AAPL,Victorville Daily Press,1
+AAPL,Vocal,1
+AAPL,WKMG,1
+AAPL,WSJ,2
+AAPL,Watcher Guru,9
+AAPL,Wccftech,2
+AAPL,WebWire,1
+AAPL,YTECHB,1
+AAPL,Yahoo Finance,160
+AAPL,Yahoo Finance Australia,1
+AAPL,Yahoo! Finance Canada,2
+AAPL,Yen News,1
+AAPL,Zacks Investment Research,2
+AAPL,ad-hoc-news.de,8
+AAPL,digitimes,1
+AAPL,heise online,1
+AAPL,iClarified,5
+AAPL,iPhone in Canada,1
+AAPL,investingLive,1
+AAPL,marketscreener.com,1
+AAPL,reactormag.com,1
+AAPL,supercarblondie.com,1
+AAPL,tastylive,1
+AAPL,Новини.Live,1
+AAPL,Українські Національні Новини (УНН),1
+AMZN,24/7 Wall St.,29
+AMZN,9to5Toys,1
+AMZN,ABC News & Headlines – Australian Broadcasting Corporation,1
+AMZN,ABC7 WWSB,1
+AMZN,AP News,1
+AMZN,About Amazon,5
+AMZN,Ad Age,1
+AMZN,AdExchanger,2
+AMZN,Amazon Investor Relations,2
+AMZN,Analytics Insight,2
+AMZN,Android Authority,1
+AMZN,AppleInsider,1
+AMZN,Axios,1
+AMZN,BBC,3
+AMZN,BNN Bloomberg,3
+AMZN,Barchart.com,8
+AMZN,Barron's,9
+AMZN,Benzinga,7
+AMZN,BigGo Finance,2
+AMZN,Blockonomi,3
+AMZN,Bloody Disgusting,1
+AMZN,Bloomberg,6
+AMZN,Bloomberg.com,7
+AMZN,Business Insider,7
+AMZN,CNBC,14
+AMZN,CarbonCredits.com,1
+AMZN,CoinCentral,1
+AMZN,Deadline,3
+AMZN,Decorah Leader,1
+AMZN,Distractify,1
+AMZN,Dread Central,1
+AMZN,Eurogamer.net,1
+AMZN,FXStreet,2
+AMZN,Financial Times,1
+AMZN,Finbold,8
+AMZN,Finviz,2
+AMZN,FoodNavigator.com,1
+AMZN,Forbes,5
+AMZN,Foreign Policy Journal,3
+AMZN,Fortune,3
+AMZN,FreightWaves,1
+AMZN,GameSpot,1
+AMZN,GeekWire,4
+AMZN,Gizmodo,1
+AMZN,Global Data Center Hub,1
+AMZN,Good Housekeeping,1
+AMZN,GuruFocus,16
+AMZN,HR Executive,1
+AMZN,Heavy Duty Trucking,1
+AMZN,High On Films,1
+AMZN,IG,1
+AMZN,IGN,5
+AMZN,Inc.com,3
+AMZN,Investing.com,6
+AMZN,Investopedia,5
+AMZN,Investor's Business Daily,19
+AMZN,Invezz,2
+AMZN,Irish Star,1
+AMZN,KARK,1
+AMZN,Kotaku,6
+AMZN,Kursiv Media Узбекистан,1
+AMZN,LADbible,1
+AMZN,LBB - Little Black Book,1
+AMZN,LinkedIn,1
+AMZN,Livemint,5
+AMZN,Luxurylaunches,1
+AMZN,MLQ.ai,3
+AMZN,MarketBeat,22
+AMZN,MarketWatch,3
+AMZN,Marketplace Pulse,1
+AMZN,Markets.com,1
+AMZN,Modern Retail,1
+AMZN,MoneyCheck,1
+AMZN,Moomoo,6
+AMZN,Morningstar,7
+AMZN,NDTV,1
+AMZN,NJ.com,1
+AMZN,Nintendo Life,1
+AMZN,Oregon Public Broadcasting - OPB,1
+AMZN,PYMNTS.com,1
+AMZN,Parade Magazine,1
+AMZN,Pluang,1
+AMZN,Post Journal,1
+AMZN,Procurement Magazine,1
+AMZN,Quiver Quantitative,15
+AMZN,Ragan Communications,1
+AMZN,Reuters,2
+AMZN,Seeking Alpha,54
+AMZN,SiliconANGLE,1
+AMZN,Simply Wall St,1
+AMZN,Spotlight PA,1
+AMZN,StockStory,1
+AMZN,Stocks Down Under,1
+AMZN,Stocktwits,3
+AMZN,TIKR.com,13
+AMZN,TechCrunch,2
+AMZN,Techloy,1
+AMZN,The American Bazaar,1
+AMZN,The Arkansas Democrat-Gazette,1
+AMZN,The Business Journals,1
+AMZN,The Cryptonomist,3
+AMZN,The Edge Singapore,1
+AMZN,The Japan Times,1
+AMZN,The Jerusalem Post,1
+AMZN,The Motley Fool,76
+AMZN,The Seattle Times,3
+AMZN,The Straits Times,1
+AMZN,The Tech Buzz,1
+AMZN,The Times of India,3
+AMZN,TheBull.com.au,1
+AMZN,TheDesk.net,1
+AMZN,TheStreet,7
+AMZN,TheWrap,1
+AMZN,TipRanks,5
+AMZN,Traders Union,3
+AMZN,TradingKey,9
+AMZN,TradingView,14
+AMZN,Trefis,17
+AMZN,USA Today,1
+AMZN,Upworthy,1
+AMZN,ValleyCentral.com,1
+AMZN,Variety,2
+AMZN,VegNews.com,1
+AMZN,WKMG,1
+AMZN,WSJ,3
+AMZN,Watcher Guru,18
+AMZN,Webull Malaysia,1
+AMZN,Yahoo Finance,152
+AMZN,Yahoo Finance UK,1
+AMZN,Zacks Investment Research,2
+AMZN,ad-hoc-news.de,1
+AMZN,chinadailyhk,1
+AMZN,https://www.moneydigest.com/,1
+AMZN,ig.com,1
+AMZN,investingLive,2
+AMZN,tastylive,1
+AMZN,tech-insider.org,1
+AMZN,www.timothysykes.com,1
+AMZN,www.trendingtopics.eu,1
+AMZN,سانا,1
+AMZN,富途牛牛,1
+GOOGL,24/7 Wall St.,18
+GOOGL,3DVF,1
+GOOGL,9to5Google,2
+GOOGL,Alpha Match Technology,1
+GOOGL,Analytics Insight,4
+GOOGL,Android Authority,5
+GOOGL,Android Police,1
+GOOGL,Arizona State University (ASU),1
+GOOGL,Ars Technica,1
+GOOGL,Axios,1
+GOOGL,BMI,1
+GOOGL,BNN Bloomberg,2
+GOOGL,Barchart.com,7
+GOOGL,Barron's,12
+GOOGL,BeInCrypto,2
+GOOGL,Benzinga,7
+GOOGL,BigGo Finance,2
+GOOGL,Blockonomi,1
+GOOGL,Bloomberg,1
+GOOGL,Bloomberg.com,5
+GOOGL,Business Insider,6
+GOOGL,CNBC,14
+GOOGL,CNN,1
+GOOGL,CTech,1
+GOOGL,Cantech Letter,1
+GOOGL,ChannelNews.com.au,1
+GOOGL,Chosunbiz,2
+GOOGL,Chrome Unboxed,1
+GOOGL,CryptoDaily,1
+GOOGL,Daily Journal,1
+GOOGL,Daily Tribune,1
+GOOGL,EBC Financial Group,2
+GOOGL,ETF Database,1
+GOOGL,ETF Trends,2
+GOOGL,EdTech Innovation Hub,1
+GOOGL,Engadget,1
+GOOGL,Entrepreneur,1
+GOOGL,Euronews.com,1
+GOOGL,Financial Times,2
+GOOGL,Finbold,3
+GOOGL,Forbes,5
+GOOGL,Foreign Policy Journal,5
+GOOGL,Fortune,4
+GOOGL,Gizmodo,1
+GOOGL,Global Data Center Hub,1
+GOOGL,GuruFocus,5
+GOOGL,Hindustan Times,2
+GOOGL,Hürriyet Daily News,1
+GOOGL,IG Bank,1
+GOOGL,Inc.com,2
+GOOGL,India.com,1
+GOOGL,IndulgExpress,1
+GOOGL,Investing.com,4
+GOOGL,Investopedia,4
+GOOGL,Investor's Business Daily,11
+GOOGL,Kiplinger,1
+GOOGL,KuCoin,1
+GOOGL,Livemint,3
+GOOGL,MLQ.ai,3
+GOOGL,MarketBeat,6
+GOOGL,MarketWatch,1
+GOOGL,MarketWise,2
+GOOGL,Mashable India,1
+GOOGL,Mitrade,2
+GOOGL,MoneyCheck,1
+GOOGL,MoneyWeek,1
+GOOGL,Moneycontrol.com,2
+GOOGL,Moomoo,2
+GOOGL,Morningstar,6
+GOOGL,NAI500,1
+GOOGL,NDTV,5
+GOOGL,New York Post,1
+GOOGL,Opening Bell Daily,2
+GOOGL,PiunikaWeb,1
+GOOGL,Pluang,1
+GOOGL,Quartz,1
+GOOGL,Quiver Quantitative,14
+GOOGL,Reuters,6
+GOOGL,Rolling Out,2
+GOOGL,SC Media,1
+GOOGL,Search Engine Journal,4
+GOOGL,Search Engine Land,1
+GOOGL,Search Engine Roundtable,1
+GOOGL,See It Market,1
+GOOGL,Seeking Alpha,18
+GOOGL,Shacknews,1
+GOOGL,Simply Wall St,2
+GOOGL,Skift,1
+GOOGL,Social Media Today,2
+GOOGL,Stock Titan,2
+GOOGL,TIKR.com,13
+GOOGL,Tech Times,1
+GOOGL,TechCrunch,1
+GOOGL,Telegraph India,1
+GOOGL,The Cryptonomist,6
+GOOGL,The Economic Times,2
+GOOGL,The Globe and Mail,2
+GOOGL,The Guardian,1
+GOOGL,The Independent,1
+GOOGL,The Indian Express,1
+GOOGL,The Information,1
+GOOGL,The Jerusalem Post,1
+GOOGL,The Mac Observer,1
+GOOGL,The Motley Fool,60
+GOOGL,The Motley Fool Australia,1
+GOOGL,The New York Times,1
+GOOGL,The Register,1
+GOOGL,The Straits Times,1
+GOOGL,The Tech Buzz,1
+GOOGL,The Telegraph,1
+GOOGL,The Times of India,10
+GOOGL,The Tribune,1
+GOOGL,TheBull.com.au,1
+GOOGL,TheStreet,1
+GOOGL,Time Magazine,1
+GOOGL,Timothy Sykes,1
+GOOGL,TipRanks,4
+GOOGL,Traders Union,3
+GOOGL,TradingKey,7
+GOOGL,TradingView,10
+GOOGL,Trefis,16
+GOOGL,WION,1
+GOOGL,WSJ,3
+GOOGL,Watcher Guru,17
+GOOGL,Yahoo Finance,96
+GOOGL,Yahoo Finance Singapore,1
+GOOGL,Yahoo Finance UK,2
+GOOGL,Yahoo! Finance Canada,1
+GOOGL,ad-hoc-news.de,3
+GOOGL,blog.google,1
+GOOGL,https://tech-insider.org/,1
+GOOGL,פורבס ישראל,1
+GOOGL,صحيفة مال,1
+GOOGL,매일경제,1
+GOOGL,조선일보,1
+META,24/7 Wall St.,30
+META,AFR,1
+META,AMD,1
+META,ANI News,1
+META,AOL.com,1
+META,AP News,2
+META,Al Jazeera,1
+META,Analytics Insight,3
+META,Axios,2
+META,BBC,2
+META,BNN Bloomberg,1
+META,Barchart.com,6
+META,Barron's,19
+META,BeInCrypto,1
+META,Benzinga,10
+META,Blockonomi,1
+META,Bloomberg,3
+META,Bloomberg.com,17
+META,Briefly News,1
+META,Business Chief,1
+META,Business Insider,22
+META,Business Today,1
+META,BusinessLine,1
+META,CNBC,29
+META,CNBC TV18,1
+META,Capital.com,1
+META,ChartMill,3
+META,Cloudmagazin,1
+META,CoinDesk,1
+META,Cryptonews,1
+META,Culture.org,1
+META,Deccan Chronicle,1
+META,Decrypt,1
+META,ET CIO,1
+META,ETF Trends,1
+META,Engadget,1
+META,Entertainment Tonight,1
+META,Facebook,1
+META,Fast Company,2
+META,Financial Times,5
+META,Finbold,2
+META,Finviz,1
+META,Forbes,5
+META,Foreign Policy Journal,4
+META,Fortune,6
+META,Fox Business,1
+META,Hindustan Times,2
+META,India Today,1
+META,Indian Startup News,1
+META,Institute on Taxation and Economic Policy,1
+META,International Business Times Australia,1
+META,Investing.com,3
+META,Investing.com Canada,2
+META,Investopedia,11
+META,Investor's Business Daily,19
+META,Just Jared,1
+META,KSL News,1
+META,Kalkine Media,1
+META,Korea JoongAng Daily,1
+META,Legit News,1
+META,Livemint,3
+META,Los Angeles Times,1
+META,MLQ.ai,3
+META,MarkTechPost,1
+META,MarketBeat,13
+META,MarketWatch,2
+META,MarketWise,1
+META,MediaNama,1
+META,Meta Investor Relations,1
+META,Mexico Business News,1
+META,MoneyCheck,1
+META,MoneyLion,1
+META,MoneyMagpie,1
+META,Moomoo,3
+META,Morningstar,13
+META,Morningstar Australia,2
+META,NAI500,2
+META,NBC News,1
+META,New York Post,6
+META,Northwise,1
+META,OC3D,1
+META,Open Magazine,1
+META,PR Newswire,1
+META,Phemex,1
+META,Pluang,2
+META,Proactive financial news,1
+META,Quartz,3
+META,Quiver Quantitative,5
+META,QuotedData,1
+META,RealMoney Pro,1
+META,Reuters,10
+META,Rolling Out,2
+META,SFist,1
+META,Seeking Alpha,24
+META,Sharecast.com,1
+META,SiliconANGLE,2
+META,Simply Wall Street,1
+META,Social Media Today,1
+META,St. John's University,1
+META,Startup Fortune,1
+META,StockInvest.us,1
+META,StockStory,1
+META,Stocktwits,3
+META,Storyboard18,1
+META,Sustainable Views,1
+META,TIKR.com,14
+META,TMX Newsfile,1
+META,TechCrunch,1
+META,Technobezz,1
+META,The Acquirer's Multiple,1
+META,The American Bazaar,1
+META,The Business Times,1
+META,The Cryptonomist,1
+META,The Decoder,1
+META,The Economic Times,4
+META,The Globe and Mail,2
+META,The Guardian,2
+META,The Information,1
+META,The Mercury News,1
+META,The Motley Fool,51
+META,The New York Times,4
+META,The Register,1
+META,The Standard (HK),1
+META,The Times,1
+META,The Times of India,3
+META,TheBull.com.au,2
+META,TheStreet,3
+META,TheWrap,1
+META,Timothy Sykes,2
+META,TipRanks,2
+META,Tom's Hardware,1
+META,Traders Union,8
+META,TradingKey,7
+META,TradingView,12
+META,Trefis,9
+META,Voronoi by Visual Capitalist,1
+META,WION,1
+META,WSJ,7
+META,Watcher Guru,1
+META,XTB.com,1
+META,Yahoo Finance,141
+META,Yahoo Finance Singapore,1
+META,Yahoo Finance UK,5
+META,Yahoo! Finance Canada,11
+META,Ynetnews,1
+META,Zacks Investment Research,1
+META,ad-hoc-news.de,5
+META,https://www.dars.gov.et/,1
+META,indica News,1
+META,tastylive,1
+META,tech-insider.org,1
+META,the deep dive,1
+META,www.thestack.technology,1
+META,매일경제,1
+MSFT,24/7 Wall St.,24
+MSFT,AP News,1
+MSFT,ARNnet,1
+MSFT,Admirals,1
+MSFT,Anadolu Ajansı,1
+MSFT,Analytics Insight,2
+MSFT,Axios,2
+MSFT,BNN Bloomberg,1
+MSFT,Barchart.com,1
+MSFT,Barron's,7
+MSFT,Benzinga,4
+MSFT,BetaNews,1
+MSFT,BleepingComputer,2
+MSFT,Blockonomi,2
+MSFT,Bloomberg,1
+MSFT,Bloomberg.com,7
+MSFT,Business Insider,1
+MSFT,CNBC,14
+MSFT,ChartMill,3
+MSFT,CoinCentral,1
+MSFT,Coinpaper,1
+MSFT,Computer Weekly,2
+MSFT,Computerworld,1
+MSFT,CyberSecurityNews,1
+MSFT,ERP Today,1
+MSFT,ETF Trends,1
+MSFT,FXEmpire,1
+MSFT,Financial Times,1
+MSFT,Forbes,4
+MSFT,Foreign Policy Journal,2
+MSFT,GeekWire,6
+MSFT,GlobeNewswire,3
+MSFT,GuruFocus,10
+MSFT,HDFC Sky,1
+MSFT,Hindustan Times,2
+MSFT,INDmoney,2
+MSFT,IO+,1
+MSFT,India Today,1
+MSFT,Investing.com,3
+MSFT,Investing.com Canada,1
+MSFT,Investopedia,4
+MSFT,Investor's Business Daily,6
+MSFT,Invezz,1
+MSFT,Kiplinger,1
+MSFT,Latest news from Azerbaijan,1
+MSFT,MEXC,1
+MSFT,MarketBeat,6
+MSFT,MarketPulse,2
+MSFT,MarketWatch,10
+MSFT,MarketWise,2
+MSFT,Microsoft Source,2
+MSFT,Moneycontrol.com,1
+MSFT,Moomoo,1
+MSFT,Morningstar,7
+MSFT,MyBroadband,1
+MSFT,NAI500,1
+MSFT,NDTV,1
+MSFT,Neowin,5
+MSFT,NerdWallet,1
+MSFT,PR Newswire,1
+MSFT,People Matters Global,1
+MSFT,Petri IT Knowledgebase,1
+MSFT,Quartz,1
+MSFT,Quiver Quantitative,7
+MSFT,RealMoney Pro,1
+MSFT,Reuters,3
+MSFT,SC Media,1
+MSFT,Seeking Alpha,39
+MSFT,Stock Titan,1
+MSFT,Stocktwits,1
+MSFT,Storyboard18,1
+MSFT,TIKR.com,6
+MSFT,TechRepublic,1
+MSFT,TechTarget,1
+MSFT,Technobezz,1
+MSFT,The Economic Times,1
+MSFT,The Globe and Mail,4
+MSFT,The Indian Express,1
+MSFT,The Motley Fool,55
+MSFT,The Spokesman-Review,1
+MSFT,The Straits Times,1
+MSFT,The Tech Buzz,1
+MSFT,The Times,1
+MSFT,The Times of India,4
+MSFT,The Verge,1
+MSFT,TheBull.com.au,1
+MSFT,TheStreet,1
+MSFT,Thurrott.com,1
+MSFT,TipRanks,4
+MSFT,Traders Union,7
+MSFT,TradingKey,5
+MSFT,TradingView,9
+MSFT,Trefis,9
+MSFT,W.Media,1
+MSFT,WHBL News,1
+MSFT,WSJ,3
+MSFT,Watcher Guru,8
+MSFT,Windows Central,1
+MSFT,Windows Report,5
+MSFT,XDA,1
+MSFT,Yahoo Finance,151
+MSFT,Zacks Investment Research,3
+MSFT,ad-hoc-news.de,10
+MSFT,finance.biggo.com,1
+MSFT,infoq.com,1
+MSFT,www.inc.com,1
+MSFT,www.thelec.net,1
+MSFT,www.thepost.co.nz,1
+MSFT,富途牛牛,2
+NVDA,24/7 Wall St.,31
+NVDA,ACHR News,1
+NVDA,AOL.com,2
+NVDA,AP News,1
+NVDA,Anadolu Ajansı,1
+NVDA,Analytics Insight,1
+NVDA,Arizona State University (ASU),1
+NVDA,Axios,1
+NVDA,BASENOR - Tesla Accessories,1
+NVDA,BBC,1
+NVDA,Barchart.com,6
+NVDA,Barron's,21
+NVDA,BeInCrypto,2
+NVDA,Benzinga,6
+NVDA,Bloomberg,2
+NVDA,Bloomberg.com,6
+NVDA,Briefs Finance,1
+NVDA,Broadband Breakfast,1
+NVDA,Business Insider,4
+NVDA,Business Insider Africa,1
+NVDA,Business North Carolina,1
+NVDA,CIO Dive,1
+NVDA,CMC Markets,1
+NVDA,CNBC,20
+NVDA,CRN,1
+NVDA,CX Today,1
+NVDA,Capacity Media,1
+NVDA,Carson Group,1
+NVDA,ChartMill,2
+NVDA,Chosunbiz,1
+NVDA,Club386,1
+NVDA,CoStar,1
+NVDA,CoinDesk,1
+NVDA,CommBank,1
+NVDA,CryptoRank,1
+NVDA,Cryptonews.net,1
+NVDA,Data Center Dynamics,1
+NVDA,Direxion,1
+NVDA,EBC Financial Group,2
+NVDA,ETF Trends,1
+NVDA,Electric Vehicles,1
+NVDA,FOREX.com,1
+NVDA,FXEmpire,1
+NVDA,Fast Company,1
+NVDA,Finbold,8
+NVDA,Finimize,1
+NVDA,Forbes,7
+NVDA,Foreign Policy Journal,1
+NVDA,Fortune,5
+NVDA,GameSpot,2
+NVDA,Global Banking & Finance Review,1
+NVDA,GuruFocus,11
+NVDA,Inc.com,2
+NVDA,Inquirer.net,1
+NVDA,Investing.com,2
+NVDA,Investopedia,8
+NVDA,Investor's Business Daily,15
+NVDA,Invezz,1
+NVDA,Livemint,1
+NVDA,MarketBeat,5
+NVDA,MarketWatch,5
+NVDA,MarketWise,1
+NVDA,Marketplace.org,1
+NVDA,Markets.com,1
+NVDA,Mitrade,1
+NVDA,MoneyLion,1
+NVDA,Moomoo,4
+NVDA,Morningstar,3
+NVDA,NAI500,1
+NVDA,NBC News,1
+NVDA,NPR,1
+NVDA,NVIDIA,1
+NVDA,NVIDIA Newsroom,8
+NVDA,NerdWallet,1
+NVDA,Nikkei Asia,2
+NVDA,Notebookcheck,2
+NVDA,OregonLive.com,1
+NVDA,Pam Insight,1
+NVDA,Pluang,1
+NVDA,Pulse 2.0,1
+NVDA,Quiver Quantitative,4
+NVDA,R&D World,1
+NVDA,RealClearMarkets,1
+NVDA,RealMoney Pro,1
+NVDA,Reuters,4
+NVDA,SMH.com.au,1
+NVDA,See It Market,1
+NVDA,Seeking Alpha,22
+NVDA,Semafor,1
+NVDA,Shacknews,1
+NVDA,South China Morning Post,1
+NVDA,Sportskeeda Tech,1
+NVDA,Stock Titan,2
+NVDA,StockStory,2
+NVDA,Stocks Down Under,1
+NVDA,Stocktwits,1
+NVDA,TIKR.com,3
+NVDA,TechCrunch,3
+NVDA,TechPowerUp,1
+NVDA,TechRadar,1
+NVDA,Techzine Global,1
+NVDA,The Business Journals,2
+NVDA,The Economic Times,1
+NVDA,The Edge Singapore,1
+NVDA,The Globe and Mail,1
+NVDA,The Japan Times,2
+NVDA,The Korea Times,1
+NVDA,The Motley Fool,78
+NVDA,The New York Times,1
+NVDA,The Singju Post,1
+NVDA,The Straits Times,3
+NVDA,The Times,1
+NVDA,The Times of India,3
+NVDA,TheStreet,4
+NVDA,Tom's Guide,2
+NVDA,Tom's Hardware,3
+NVDA,Traders Union,2
+NVDA,TradingKey,10
+NVDA,TradingView,9
+NVDA,Trefis,6
+NVDA,TweakTown,1
+NVDA,Türkiye Today,1
+NVDA,Ubiratã Online Notícias,1
+NVDA,WSJ,2
+NVDA,Watcher Guru,1
+NVDA,Wccftech,3
+NVDA,Wilson Asset Management,1
+NVDA,XDA,1
+NVDA,XTB.com,1
+NVDA,Yahoo Autos,1
+NVDA,Yahoo Finance,135
+NVDA,Yahoo Finance Singapore,2
+NVDA,Yahoo Finance UK,2
+NVDA,Yahoo! Finance Canada,4
+NVDA,Zacks Investment Research,5
+NVDA,ad-hoc-news.de,6
+NVDA,https://www.dars.gov.et/,3
+NVDA,ing think,1
+NVDA,logos-pres.md,1
+NVDA,tastylive,1
+NVDA,tech-insider.org,1
+NVDA,www.equiti.com,1
+NVDA,매일경제,1
+NVDA,조선일보,3

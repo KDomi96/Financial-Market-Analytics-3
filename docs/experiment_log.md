@@ -85,3 +85,50 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Status:** 77 tests pass locally and in Docker; notebook 05 runs all seven code cells; both local and Docker pipeline modes exit 0; v1 and v2 hashes unchanged after the pipelines. Linux retraining matches every discrete value in 72 files with forecast differences up to 0.017 Z; saved-weight reload in Docker is within 1.49e-8. See `outputs/metrics/phase5_review_validation.json` and `outputs/metrics/phase5_docker_validation.json`.
 - **Interpretation:** In [Phase 5 analysis](phase_planning/phase_5_analysis.md). The conclusions of EXP-006 stand; the validation trading result and base rates are now reported with them.
 - **Next:** Sentiment, API/web, and submission packaging.
+
+## EXP-008 | 2026-11-02 | Fixed FinBERT benchmark evaluation
+
+- **Question:** Measure the unchanged checkpoint on the two existing labeled datasets before collecting the study's news.
+- **Change from previous:** First sentiment evaluation. No model fitting or threshold tuning.
+- **Data:** Benchmark snapshot `20261102T194353691191Z`; 377 retained FiQA headlines and 375 retained FinEntity paragraphs. Publication-date ranges are not recorded in these source files. Fit window: none. No project market data from the unseen period was used for this evaluation.
+- **Settings:** `configs/sentiment.json`; FinBERT revision `0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031`, CPU, four threads, batch size 16, 512-token limit. FiQA classes use -0.3/0.3 and VADER uses -0.05/0.05; 1,000 row-bootstrap samples with seed 42. PhraseBank is used only for the overlap screen. Command: `uv run --locked python scripts/run_sentiment.py --stage benchmarks`.
+- **Environment:** Python 3.12.13, torch 2.15.0+cpu, transformers 5.22.1, scikit-learn 1.9.1, vaderSentiment 3.3.2. The saved `benchmark_run.json` records the lock, source, and code hashes. No Phase 1-5 pipeline was run.
+- **Result:** FiQA macro-F1: FinBERT 0.682572, VADER 0.542773, majority reference 0.202952; FinBERT accuracy 0.673740. FinEntity macro-F1: FinBERT 0.436579, VADER 0.324563, majority reference 0.265383; FinBERT accuracy 0.424000 against the majority reference's 0.661333. No retained record was truncated. Counts, intervals, confusion matrices, numeric FiQA diagnostics, and disagreement IDs are under `outputs/metrics/sentiment/sentiment_v1/`.
+- **Status:** Completed benchmark run; full-study and offline reproduction checks remain.
+- **Interpretation:** FinBERT has higher macro-F1 than the references on both collections, but lower accuracy than the majority reference on FinEntity. These results do not measure accuracy on the unlabeled Google News headlines.
+- **Next:** Check the unscored news pilot and keep collection decisions separate from sentiment scores.
+
+## EXP-009 | 2026-11-02 | Unscored six-company Google News pilot
+
+- **Question:** Check whether the adopted RSS queries retrieve enough usable headlines to proceed with the descriptive study.
+- **Change from previous:** First saved collection pilot; no news scoring.
+- **Data:** Snapshot `20261102T195054616236Z`; the first full Monday-Friday week of each month from January to July 2026, spanning 5 January to 10 July. This explicitly uses 2026 news dates for coverage checks. No fitting or model selection; market outcomes were not used to choose queries or cleaning rules.
+- **Settings:** Six adopted company queries, English/US edition, three-second minimum request spacing, date-window splitting at 100 results, local date checks, title relevance and several-company exclusions, and normalized-title deduplication. A week needs five retained headlines; a company needs four usable weeks; four companies must pass. Command: `uv run --locked python scripts/download_google_news.py --pilot`.
+- **Environment:** Same locked venv as EXP-008. The snapshot manifest records settings, acquisition code hash, attempts, response hashes, and collection times.
+- **Result:** 68 requests for 42 initial company-weeks; 55 leaf windows, of which 54 succeeded and one remained capped. Cleaning retained 1,016 items and excluded 887. There are 1,015 date-only items and one timed item. Usable weeks: AAPL/MSFT/NVDA five each, AMZN/GOOGL six each, META four. All six pass. See `pilot_report.json` and the accompanying pilot tables under `outputs/metrics/sentiment/sentiment_v1/`.
+- **Status:** Completed pilot; full collection remains in progress.
+- **Interpretation:** The adopted pass rule supports proceeding, with uneven coverage and one cap recorded. It does not establish complete historical coverage or historical availability.
+- **Next:** Keep the adopted queries and cleaning rules, collect January-July, and score only after collection rules are recorded.
+
+## EXP-010 | 2026-11-02 | Six-stock sentiment study and offline reproduction
+
+- **Question:** Describe the retrieved six-company news sample and reproduce the results from saved inputs without rerunning Phases 1-5.
+- **Change from previous:** Full snapshot `20261102T195614519732Z` after the pilot passed; the adopted queries and cleaning rules are unchanged. Review fixes cover timing-gap propagation, empty schemas, fixed-threshold validation, and snapshot roles/settings/windows.
+- **Data:** 1 January-31 July 2026 news; 3,846 retained headlines after 4,136 exclusions. This explicitly uses 2026 news and, for the weekly descriptive comparison, the saved unseen market returns. No fitting window: FinBERT is unchanged, and no trading/model rule was selected from these outcomes. The saved Phase 4 Z-scores and five eligible entries are read without refitting.
+- **Settings:** `configs/sentiment.json`, same pinned FinBERT and benchmark settings as EXP-008, 186 initial collection windows and 326 requests. Daily summaries and headline-weighted Saturday-Friday weeks; partial, empty, failed, or capped weeks are omitted from comparisons as recorded. Commands: `uv run --locked python scripts/run_sentiment.py`, notebook 06 execution, and the README's network-disabled Docker command.
+- **Environment:** Python 3.12.13 and the locked packages from EXP-008 on Windows and Linux. The image is `financial-market-analytics-3:sentiment`. The first offline container attempt failed because uv tried rebuilding the project and could not fetch an uncached build dependency. The verified command uses `--no-sync` with the image's already-installed locked environment. All source/model/market inputs are mounted read-only and outputs are separate.
+- **Result:** 251 successful and five capped leaf windows, no failed leaf requests. Of the retained headlines, 3,837 are date-only and nine are timed. Outputs include 1,272 daily rows, 186 weekly rows, ten signal-stock rows, and five figures. Weekly score/return Spearman correlations range from 0.034799 to 0.506716 over 27-30 eligible weeks per company; the full table is `weekly_return_associations.csv`. The early 7 January event has incomplete lookback coverage, so its means remain missing.
+- **Status:** Completed. All 93 tests pass locally and in Docker; all eight notebook code cells execute. All 26 CSV tables and five figures reproduce exactly locally. Docker preserves labels, counts, exclusions, and classification metrics exactly; maximum probability difference is `1.6093254e-6` and score-derived table difference `2.5033951e-6`, within `1e-5`. FiQA MAE/RMSE differ only at about `1e-8`, with the numeric/classification distinction recorded in methodology. All 285 handoff hashes and Phase 4/5's 13/59 contract file hashes remain unchanged; the old Phase 5 lock mismatch is expected. Weekly returns reconstructed from Close ratios differ by at most `5.33e-16`. See `outputs/metrics/sentiment/sentiment_v1/verification.json`, `local_reproduction.json`, and `docker_reproduction.json`.
+- **Interpretation:** The sample supports a descriptive news study, not measured news-label accuracy or a predictive/causal claim. FinEntity performance and collection/timestamp limitations remain as reported in [sentiment findings](phase_planning/sentiment_analysis.md).
+- **Next:** Phase 6 step 1 decides whether to display the saved sentiment results; submission packaging must settle access to the local-only inputs.
+
+## EXP-011 | 2026-11-02 | Corrected sentiment run (sentiment_v2)
+
+- **Question:** Rerun the sentiment study after a review found that cleaning skipped the saved responses of split request windows and that two benchmark rules were applied too broadly.
+- **Change from previous:** Cleaning reads every saved successful response, narrower requests first. A FiQA headline listed under two IDs for different targets counts as multi-annotation. PhraseBank containment needs an entry of at least five words. Queries, model, thresholds, and comparison rules are unchanged. EXP-010 outputs stay in the `sentiment_v1` folders.
+- **Data:** Same benchmark, pilot, and full news snapshots as EXP-008 to EXP-010; same saved Phase 4 and market inputs. No fitting.
+- **Settings:** `configs/sentiment.json` with version `sentiment_v2`. Command: `uv run --locked python scripts/run_sentiment.py`, then notebook 06 and the README's network-disabled Docker command.
+- **Result:** FiQA 376 records, FinBERT accuracy 0.672872 and macro-F1 0.681713; FinEntity 378 records, accuracy 0.425926 and macro-F1 0.438488. News: 5,715 retained headlines (3,846 in EXP-010), 1,908 of them copies from split-window responses, 9,267 exclusions. Pilot recount 1,287 retained with unchanged usable weeks. Weekly score/return Spearman 0.034799 to 0.498779 over 27-30 weeks. See `outputs/metrics/sentiment/sentiment_v2/`.
+- **Status:** Completed. 103 tests pass locally. The notebook matched the reference exactly. Docker matches labels, counts, exclusions, and classification metrics exactly; maximum probability difference 1.9e-6, within 1e-5.
+- **Interpretation:** In [sentiment findings](phase_planning/sentiment_analysis.md). Conclusions are unchanged in direction; coverage counts are higher and the excluded capped weeks contain large Alphabet and NVIDIA moves.
+- **Next:** Phase 6 and submission packaging.

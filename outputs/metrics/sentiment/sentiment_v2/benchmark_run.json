@@ -1,0 +1,147 @@
+{
+  "stage": "benchmarks",
+  "finished_at_utc": "2026-11-02T21:35:28.850802+00:00",
+  "fit": "none; unchanged local FinBERT checkpoint, fixed rules",
+  "benchmark_snapshot": "data/raw/sentiment/benchmarks/20261102T194353691191Z",
+  "model_revision": "0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031",
+  "settings": {
+    "version": "sentiment_v2",
+    "start_date": "2026-01-01",
+    "end_date": "2026-07-31",
+    "benchmark_snapshot": "data/raw/sentiment/benchmarks/20261102T194353691191Z",
+    "news_snapshot": "data/raw/sentiment/google_news/20261102T195614519732Z",
+    "pilot_snapshot": "data/raw/sentiment/google_news/20261102T195054616236Z",
+    "model": {
+      "repository": "ProsusAI/finbert",
+      "revision": "0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031",
+      "license": "CC BY-NC-SA 4.0; copyright MIH AI B.V.",
+      "directory": "artifacts/sentiment/sentiment_v1/finbert",
+      "files": [
+        "config.json",
+        "model.safetensors",
+        "tokenizer_config.json",
+        "special_tokens_map.json",
+        "vocab.txt",
+        "README.md"
+      ],
+      "batch_size": 16,
+      "max_length": 512,
+      "cpu_threads": 4
+    },
+    "evaluation": {
+      "seed": 42,
+      "bootstrap_samples": 1000,
+      "fiqa_negative_below": -0.3,
+      "fiqa_positive_above": 0.3,
+      "vader_positive_at_least": 0.05,
+      "vader_negative_at_most": -0.05
+    },
+    "rss": {
+      "language": "en-US",
+      "country": "US",
+      "edition": "US:en",
+      "minimum_interval_seconds": 3,
+      "retry_delays_seconds": [
+        30,
+        60,
+        120
+      ],
+      "timeout_seconds": 30,
+      "result_limit": 100
+    },
+    "companies": {
+      "MSFT": {
+        "query": "(Microsoft OR MSFT) (stock OR shares OR earnings)",
+        "names": [
+          "Microsoft",
+          "MSFT"
+        ]
+      },
+      "GOOGL": {
+        "query": "(Alphabet OR Google OR GOOGL OR GOOG) (stock OR shares OR earnings)",
+        "names": [
+          "Alphabet",
+          "Google",
+          "GOOGL",
+          "GOOG"
+        ]
+      },
+      "NVDA": {
+        "query": "(Nvidia OR NVDA) (stock OR shares OR earnings)",
+        "names": [
+          "Nvidia",
+          "NVDA"
+        ]
+      },
+      "AAPL": {
+        "query": "(Apple OR AAPL) (stock OR shares OR earnings)",
+        "names": [
+          "Apple",
+          "AAPL"
+        ]
+      },
+      "AMZN": {
+        "query": "(Amazon OR AMZN) (stock OR shares OR earnings)",
+        "names": [
+          "Amazon",
+          "AMZN"
+        ]
+      },
+      "META": {
+        "query": "Meta (stock OR shares OR earnings)",
+        "names": [
+          "Meta"
+        ]
+      }
+    },
+    "pilot": {
+      "minimum_headlines_per_week": 5,
+      "minimum_usable_weeks": 4,
+      "minimum_companies": 4
+    },
+    "early_closes": {
+      "2026-11-27": "13:00",
+      "2026-12-24": "13:00"
+    },
+    "early_close_source": "https://www.nyse.com/markets/hours-calendars",
+    "paths": {
+      "raw_news": "data/raw/sentiment/google_news",
+      "interim": "data/interim/sentiment/sentiment_v2",
+      "processed": "data/processed/sentiment/sentiment_v2",
+      "metrics": "outputs/metrics/sentiment/sentiment_v2",
+      "figures": "outputs/figures/sentiment/sentiment_v2",
+      "market_master": "data/processed/master_unseen.csv",
+      "zscores": "data/processed/statistical_baseline/unseen_zscores.csv",
+      "signals": "outputs/backtests/statistical_baseline/phase4_v1/unseen/signals.csv"
+    }
+  },
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "torch": "2.15.0+cpu",
+    "transformers": "5.22.1",
+    "scikit-learn": "1.9.1",
+    "vaderSentiment": "3.3.2"
+  },
+  "source_hashes": {
+    "financial_phrasebank/FinancialPhraseBank-v1.0.zip": "0e1a06c4900fdae46091d031068601e3773ba067c7cecb5b0da1dcba5ce989a6",
+    "financial_phrasebank/dataset_card.md": "274523f90fee5ef947c24bd95388818a551dbd2c1d9ee55469446329cb6c82e0",
+    "fiqa/task1_headline_ABSA_train.json": "24bfd3dd662a22c95dbe2d2c86ac2ea75408dafb1027246ed27b53b5c7bad821",
+    "fiqa/task1_headline_ABSA_test.json": "a5ab90b9c6b5768a199bb1ffd377fa809af3e1418b2df6bf3f19123f10d7eb85",
+    "fiqa/mirror_README.md": "ea3cc99dbe25636706e985e064fdaea26c94528c04f2ccf572cee4ccb2007112",
+    "fiqa/organizer_page.html": "0851255692a562849fb3b1b63405b2728bd9712a05ae9633414b869308636957",
+    "finentity/FinEntity.json": "3208667de69383120b0380aebeaabe360669eda72269c33e1c8b09d63df55463",
+    "finentity/authors_README.md": "e910c284c16c41a44fb308979f544f63158f5c2ba121edd727037593df8d296d",
+    "finentity/dataset_card.md": "eca00186d6b0c8422908816c13726dd8981befbf5de4effbfa27bd2370edb875"
+  },
+  "code_hashes": {
+    "src/market_analytics/sentiment/benchmarks.py": "3562b3ec29ac08d7a45424aacf0b148ffcfe832e141c9d3234ec62c58a5d5ec3",
+    "src/market_analytics/sentiment/evaluation.py": "442ce585b3672b883e527f72288f0ed2507de468ca980357836674e078e81b82",
+    "src/market_analytics/sentiment/headlines.py": "dbcadd3107cbc9225921a2b164d34ee1c94d9294a8419a03a2f6af048cc6f7d2",
+    "src/market_analytics/sentiment/model.py": "f124a53665888e4fc6d6f6e994c1374d4f36ccae61b02cd3df659f6fe6928885",
+    "src/market_analytics/sentiment/news.py": "f250b6ab8df0295bd36faa50d0c27e07828436772e255da3ac4adc48ae59c7ab",
+    "src/market_analytics/sentiment/study.py": "bf5a97e9af1887b2ffa872a944384ee44aedc98cb9168192419691a3c6062f82"
+  },
+  "lock_sha256": "3f09873616e9a6b70199bea6ef929c0e19a4ac439cd6c5c438484390e068463a"
+}

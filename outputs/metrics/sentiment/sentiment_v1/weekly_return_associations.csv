@@ -1,0 +1,7 @@
+ticker,weeks,spearman,interpretation
+AAPL,30,0.3793103448275862,descriptive association; no predictive or causal claim
+AMZN,30,0.2756395995550612,descriptive association; no predictive or causal claim
+GOOGL,27,0.03479853479853479,descriptive association; no predictive or causal claim
+META,27,0.5067155067155067,descriptive association; no predictive or causal claim
+MSFT,30,0.18442714126807563,descriptive association; no predictive or causal claim
+NVDA,27,0.08485958485958486,descriptive association; no predictive or causal claim

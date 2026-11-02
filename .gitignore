@@ -19,6 +19,13 @@ docs/phase_completion.md
 # Nothing from IBKR is committed: not the snapshots, not their manifests.
 data/raw/ibkr/
 
+# Keep sentiment source text local; record provenance and download commands.
+data/raw/sentiment/
+# Prepared benchmark rows and headline tables carry the same third-party text.
+data/interim/sentiment/
+# FinBERT files: third-party weights over GitHub's 100 MB file limit.
+artifacts/sentiment/*/finbert/
+
 # Python environments, bytecode, test/lint caches, and build products.
 .venv/
 .tools/

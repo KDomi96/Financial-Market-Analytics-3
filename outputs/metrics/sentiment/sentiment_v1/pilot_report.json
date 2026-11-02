@@ -1,0 +1,29 @@
+{
+  "snapshot": "data/raw/sentiment/google_news/20261102T195054616236Z",
+  "usable_weeks": {
+    "AAPL": 5,
+    "AMZN": 6,
+    "GOOGL": 6,
+    "META": 4,
+    "MSFT": 5,
+    "NVDA": 5
+  },
+  "supported_companies": [
+    "AAPL",
+    "AMZN",
+    "GOOGL",
+    "META",
+    "MSFT",
+    "NVDA"
+  ],
+  "passed": true,
+  "kept": 1016,
+  "excluded": 887,
+  "exclusion_counts": {
+    "outside_requested_window": 537,
+    "unrelated_company": 216,
+    "multiple_companies": 91,
+    "duplicate_title": 43
+  },
+  "scored": false
+}

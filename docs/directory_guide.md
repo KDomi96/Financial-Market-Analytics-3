@@ -44,6 +44,8 @@ is ignored and is not part of the submission.
 | `docs/phase_planning/phase_4_analysis.md` | Historical/unseen findings, signal and trade counts, stock-leg P&L, exposures, and limitations traced to saved outputs. |
 | `docs/phase_planning/phase_5_plan.md` | LSTM roadmap: earlier-fit validation, dated features/sequences, model selection, final refit, forecast-filtered comparison, artifacts, and checks. |
 | `docs/phase_planning/phase_5_analysis.md` | Forecast and trading findings, seed sensitivity, fitted scales, and the Windows/Linux retraining limitation. |
+| `docs/phase_planning/phase_6_plan.md` | Web application roadmap: price input, single-pair test, signals, saved-model forecasts, Docker services, and checks. |
+| `docs/phase_planning/sentiment_plan.md` | Sentiment roadmap: benchmark checks of FinBERT, the Google News pilot and collection, cleaning and timestamp rules, weekly description, storage, and checks. |
 | `docs/experiment_log.md` | Append-only record of each run's settings, date windows, and results, with links to saved outputs. Started with the Phase 2 EDA run. |
 | `docs/deployment.md` | Future operational guide. |
 
@@ -85,7 +87,7 @@ data folders.
 | `src/market_analytics/cointegration/` | Statistical relationship testing and ranking. |
 | `src/market_analytics/trading/` | Strategy rules and backtest accounting. |
 | `src/market_analytics/models/` | Fit, save, load, and evaluate models; provide forecasts. |
-| `src/market_analytics/sentiment/` | Text processing and sentiment estimation. |
+| `src/market_analytics/sentiment/` | Pinned downloads, benchmark preparation/evaluation, RSS collection/cleaning, local scoring, and descriptive summaries. |
 | `src/market_analytics/api/` | Provide routing, request validation, artifact loading, and inference responses. |
 | `scripts/` | Thin command-line entry points that call the shared package. |
 | `tests/` | Meaningful checks of data integrity, chronology, calculations, and API behavior. |
@@ -94,12 +96,16 @@ data folders.
 The root package has an `__init__.py` so it can be installed and imported.
 The data subpackage implements acquisition, source comparison, and the master
 build. Analysis, cointegration, trading, features, and models implement
-Phases 2-5; sentiment and serving subdirectories remain placeholders.
+Phases 2-5. The sentiment package implements the separate news study and
+external evaluations. The serving subdirectories remain planned.
 Acquisition files are:
 
 | Location | Purpose |
 | --- | --- |
 | `configs/yahoo_finance.json` | Eight Yahoo symbols and separate historical/unseen date boundaries. |
+| `configs/sentiment_benchmarks.json` | Pinned FiQA, FinEntity, and PhraseBank source URLs, revisions, file roles, and terms. |
+| `src/market_analytics/sentiment/benchmarks.py` | Unchanged benchmark downloads, source checks, and snapshot manifests under the local `data/raw/sentiment/` directory. |
+| `scripts/download_sentiment_benchmarks.py` | Thin benchmark acquisition entry point; the README gives the command. |
 | `src/market_analytics/data/yahoo.py` | Downloads, source-preserving CSV exports, validation, and acquisition manifests. |
 | `scripts/download_yahoo.py` | Thin executable entry point; see README for the verified command. |
 | `tests/test_yahoo.py` | Offline checks for dates, missing data, and VIX nontrading records. |
@@ -212,6 +218,17 @@ Its main additions are:
 | `tests/test_lstm_sequences.py`, `tests/test_lstm_forecast.py`, `tests/test_forecast_filter.py`, `tests/test_pipeline_freeze.py` | Chronology, artifact reload, selection, forecast metrics, filter decisions, accounting, and pipeline handoff checks. |
 | `docs/phase_planning/phase_5_analysis.md` | Findings from the saved evaluations and their limits. |
 | `outputs/metrics/phase5_review_validation.json`, `phase5_docker_validation.json` | Independent calculations, test results, repeated hashes, isolation checks, and Docker runs. |
+
+## Sentiment study
+
+The separate sentiment study uses `notebooks/06_sentiment.ipynb`, the sentiment
+package, and thin download/run scripts. Its plan and findings are in
+`docs/phase_planning/sentiment_plan.md` and `sentiment_analysis.md`. Raw
+responses, text-bearing interim tables, and FinBERT files remain local;
+daily/weekly tables, ID-based metrics, figures, and the model revision record
+are public candidates. The checks are `tests/test_sentiment.py` and
+`tests/verify_sentiment_reproduction.py`. Paths are fixed by
+`configs/sentiment.json`; the README gives the saved-input and offline commands.
 
 ## Placeholder files and packaging
 

@@ -12,9 +12,20 @@ carries AMZN_META and NVDA_AMZN forward as exploratory candidates. No pair
 meets all the adopted support conditions. Phase 4 applies fixed 2025
 normalization and saves baseline signals, stock-leg fills, trades, and daily
 accounts. Phase 5 saves the fitted LSTMs, dated forecasts, persistence errors,
-and matched strategy comparisons. Sentiment, API, and web interface remain.
+and matched strategy comparisons. The separate sentiment study evaluates
+FinBERT on FiQA and FinEntity and describes 5,715 collected Google News
+headlines, with saved-input local and Docker reproduction. API and web
+interface work remain.
 The Python 3.12.13 environment is managed with uv. Docker configuration is
 provided for the environment.
+
+The sentiment dependencies changed `uv.lock` after the evaluated Phase 5 run.
+Its saved contract still requires the earlier lock. Keep the existing
+Phase 1-5 outputs and run sentiment separately; the current full pipeline
+will refuse to reuse Phase 5 with the new lock. Reproducing the earlier run
+requires its original checkout and lock, not changing the saved contract.
+The numbered-phase commands below document those earlier runs; use their
+matching checkout when reproducing the evaluated outputs.
 
 ## Environment setup
 
@@ -30,7 +41,7 @@ uv creates `.venv/` and installs the local package. `.python-version` selects
 Python 3.12.13. Project dependencies belong in `pyproject.toml`; `uv.lock` records
 the resolved versions. Both files belong in version control, while `.venv/`
 does not. Runtime dependencies currently include yfinance, pandas, NumPy,
-matplotlib, and statsmodels.
+matplotlib, statsmodels, torch, transformers, vaderSentiment, and scikit-learn.
 
 On this workstation, uv is available as the project-local `.tools/uv.exe`.
 Use `.\.tools\uv.exe` in place of `uv` in the commands above if uv is not on PATH.
@@ -106,6 +117,126 @@ the chosen sources are in the [Phase 1 source analysis](docs/phase_planning/phas
 See [data sources and acquisition results](docs/data_sources.md), including
 VIX holiday records handled during master-data alignment. Downloading
 data does not fit models or use the unseen period for analytical decisions.
+
+## Download sentiment benchmarks
+
+The Sentiment Phase evaluates the unchanged sentiment model separately on
+FiQA headlines and FinEntity paragraphs. Financial PhraseBank is downloaded
+only for the overlap screen. Download the pinned source files with:
+
+```powershell
+uv run --locked python scripts/download_sentiment_benchmarks.py
+```
+
+On this workstation, use `.\.tools\uv.exe --cache-dir .tools/uv-cache` in place
+of `uv`. The downloader uses Python's standard library and adds no dependency.
+Each run saves unchanged responses and a manifest under
+`data/raw/sentiment/benchmarks/<timestamp>/`. The settings in
+`configs/sentiment_benchmarks.json` record source revisions and terms.
+
+FiQA's organizer links were unavailable, so the headline files come from a
+challenge-participant mirror. Its test file has no gold scores; it is not a
+scored test set. FinEntity's full source includes duplicates and some entity
+span/value mismatches, which must be handled during benchmark preparation.
+Source snapshots stay local under the Git exclusions. See
+[data sources](docs/data_sources.md#sentiment-benchmark-snapshots) for verified
+counts and limitations. This command acquires data; it does not evaluate the
+model or collect news for the six stocks.
+
+## Run the sentiment study
+
+The [plan](docs/phase_planning/sentiment_plan.md) and
+[findings](docs/phase_planning/sentiment_analysis.md) describe the rules and
+limitations. No manual sentiment labeling or API key is needed. Acquisition
+uses the network; analysis reads saved inputs and model files.
+
+```powershell
+uv run --locked python scripts/download_finbert.py
+uv run --locked python scripts/run_sentiment.py --stage benchmarks
+uv run --locked python scripts/download_google_news.py --pilot
+uv run --locked python scripts/download_google_news.py
+```
+
+`configs/sentiment.json` selects the benchmark, pilot, and full-news snapshot
+paths and pins the model revision. A new download prints its snapshot path;
+select that path in the settings before analysis. Inspect the unscored pilot
+report and record any collection-rule change before full collection. The
+reported run passed with the adopted rules unchanged. To resume a news
+snapshot, pass `--resume data/raw/sentiment/google_news/SNAPSHOT`; include
+`--pilot` when resuming a pilot. Successful requests are retained.
+
+For the supplied saved snapshots:
+
+```powershell
+$env:HF_HUB_OFFLINE = '1'
+$env:TRANSFORMERS_OFFLINE = '1'
+uv run --locked python scripts/run_sentiment.py
+uv run --locked jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebooks/06_sentiment.ipynb
+uv run --locked python -m unittest discover -s tests -v
+```
+
+Use the project-local uv executable/cache on this workstation. The notebook
+checks that its kernel is inside `.venv`; restricted sessions may need the
+project-local Jupyter/IPython directories described in the master-data section.
+
+Daily/weekly tables are under `data/processed/sentiment/sentiment_v2/`;
+metrics and figures are under the corresponding `outputs/` folders. The
+`sentiment_v1` folders hold the first run, kept unchanged after the review
+corrections described in the findings. The model files stay under
+`artifacts/sentiment/sentiment_v1/finbert/` for both runs. Text,
+raw responses, and model weights stay local. A later RSS search can return
+different items; download instructions alone cannot reproduce the exact
+reported news snapshot.
+
+### Offline Docker reproduction
+
+This command uses saved inputs and writes comparison outputs separately.
+The source snapshots, model, and market inputs must already exist locally.
+The model and raw sentiment files are excluded from the image.
+
+```powershell
+docker build -t financial-market-analytics-3:sentiment .
+$sentimentDockerOut = Join-Path (Get-Location) '.tools/sentiment_docker_v2'
+foreach ($folder in @('interim','processed','metrics','figures')) {
+    New-Item -ItemType Directory -Path (Join-Path $sentimentDockerOut $folder) -Force | Out-Null
+}
+$sentimentDockerArgs = @(
+    'run','--name','fma3-sentiment-v2','--network','none',
+    '-e','HF_HUB_OFFLINE=1','-e','TRANSFORMERS_OFFLINE=1',
+    '-v',"${PWD}/configs/sentiment.json:/workspace/configs/sentiment.json:ro",
+    '-v',"${PWD}/data/raw/sentiment:/workspace/data/raw/sentiment:ro",
+    '-v',"${PWD}/artifacts/sentiment/sentiment_v1/finbert:/workspace/artifacts/sentiment/sentiment_v1/finbert:ro",
+    '-v',"${PWD}/data/processed/master_unseen.csv:/workspace/data/processed/master_unseen.csv:ro",
+    '-v',"${PWD}/data/processed/statistical_baseline:/workspace/data/processed/statistical_baseline:ro",
+    '-v',"${PWD}/outputs/backtests/statistical_baseline/phase4_v1/unseen:/workspace/outputs/backtests/statistical_baseline/phase4_v1/unseen:ro",
+    '-v',"${PWD}/.tools/sentiment_docker_v2/interim:/workspace/data/interim/sentiment/sentiment_v2",
+    '-v',"${PWD}/.tools/sentiment_docker_v2/processed:/workspace/data/processed/sentiment/sentiment_v2",
+    '-v',"${PWD}/.tools/sentiment_docker_v2/metrics:/workspace/outputs/metrics/sentiment/sentiment_v2",
+    '-v',"${PWD}/.tools/sentiment_docker_v2/figures:/workspace/outputs/figures/sentiment/sentiment_v2",
+    'financial-market-analytics-3:sentiment','uv','run','--locked',
+    '--no-dev','--no-editable','--no-sync','--offline','python','scripts/run_sentiment.py'
+)
+& docker @sentimentDockerArgs
+```
+
+The image was installed with `uv sync --locked`; `--no-sync` preserves that
+environment during the network-disabled run. Without it, uv tried to rebuild
+the project and could not fetch its uncached build dependency. Choose a new
+container name for another run.
+
+The reported comparison preserved the first v2 outputs under
+`.tools/sentiment_reference_v2/` before rerunning the notebook and container.
+The verification tool compares copies containing `interim/`, `processed/`,
+and `metrics/` folders:
+
+```powershell
+uv run --locked python tests/verify_sentiment_reproduction.py --reference .tools/sentiment_reference_v2 --actual .tools/sentiment_docker_v2 --report outputs/metrics/sentiment/sentiment_v2/docker_reproduction.json
+```
+
+The saved local and Docker reproduction reports record exact discrete and
+classification agreement and numerical differences under the `1e-5` bound.
+The optional local handoff hash inventory is in `.tools/`; the earlier
+phases' public file contracts are checked independently in every run.
 
 ## Build Phase 1 master data
 
@@ -333,7 +464,9 @@ Start-Process -FilePath "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe" -Wi
 docker version
 ```
 
-Build the image and run the default pipeline from the project root:
+For the earlier pipeline checkout, build the image and run its default batch
+command from the project root. The current sentiment run uses the separate
+offline command above.
 
 ```powershell
 docker build -t financial-market-analytics-3 .
@@ -343,7 +476,8 @@ docker run --rm financial-market-analytics-3
 The image creates its own Linux environment from `pyproject.toml` and `uv.lock`;
 the Windows `.venv/` is excluded. It runs as an unprivileged user. The default
 command is `scripts/run_pipeline.py`: it builds the masters from the copied
-snapshots, then runs EDA, pair selection, and the statistical baseline, and
+snapshots, then runs EDA, pair selection, the statistical baseline, and the
+LSTM comparison, and
 writes all outputs inside the container.
 This is a batch command: exit code 0 means every phase finished. No web server
 is implemented yet. A single phase can be run by passing its script, for

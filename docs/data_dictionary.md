@@ -338,3 +338,81 @@ inventory hashes and checks. `split_audit.csv` lists actual fitted-object
 dates. `evaluation_contract.json` fixes code/settings/input/artifact hashes;
 `evaluation_started.json` also protects the evaluated unseen input hash,
 including a run interrupted before its final metadata is saved.
+
+## Sentiment study
+
+The sentiment settings are in `configs/sentiment.json`. Source responses and
+text-bearing tables stay local. Committed summaries contain counts, model
+scores, labels, and record IDs. They do not contain news or benchmark text.
+
+### Local inputs and scored records
+
+| File or field | Meaning |
+| --- | --- |
+| Raw benchmark manifest | Dataset revision, licence note, canonical URL, download time, file size, SHA-256, and structural counts. PhraseBank is used only for the overlap screen. |
+| Raw news manifest | Pilot/full role, acquisition settings and fingerprint, intended root/leaf windows, every request attempt and response hash. A window is pending, split, success, capped, or failed. A capped window still returned at least 100 raw items after splitting to one day. |
+| `record_id` | Original benchmark row identifier prefixed by its dataset; disagreements can be located in the local source snapshot. |
+| `gold_label`, `gold_score` | FiQA's fixed derived class and original numeric score in `[-1, 1]`; FinEntity's native lower-case class and a missing numeric score. |
+| `text`, `target` | Benchmark text and its annotated entity; present only in the ignored interim tables. |
+| `headline_id` | First 24 hex characters of SHA-256 of the queried ticker and RSS GUID. |
+| `raw_title`, `text` | Original RSS title and the cleaned headline after removing a matching publisher suffix. Both remain local. |
+| `publisher`, `publisher_source_url`, `google_news_url` | RSS source name, its source URL, and the Google News article link. The source URL is not assumed to be a direct article URL. |
+| `reported_time_raw`, `reported_time_utc`, `reported_date` | Original `pubDate`, timezone-aware UTC time, and its UTC calendar date, used for local request-boundary checks. |
+| `date_only`, `analysis_date` | Pacific-midnight items use their Pacific date. Other items use the next applicable saved trading session under the close rule. Neither establishes historical availability. Items outside the analysis window are excluded. |
+| `collected_at_utc`, `window_id`, `guid` | Collection time and request window of the response that supplied the kept copy, and the RSS record identifier. Narrower requests are read before the split windows they replaced. Collection time is not substituted for publication time. |
+| `capped_window`, `split_window` | The kept copy came from a one-day request still at 100 items, or from a 100-item response whose window was then split. |
+| `publisher_suffix_unmatched` | True when the title did not end with the exact source-name suffix; the title was left unchanged. |
+| `p_positive`, `p_negative`, `p_neutral` | FinBERT probabilities in `[0, 1]`, summing to one within floating-point precision. The model's output order is read from its saved configuration. |
+| `predicted_label`, `score` | Highest-probability class and `p_positive - p_negative` in `[-1, 1]`. These are model estimates, not gold labels for the news. |
+| `token_count`, `truncated` | Tokenized length including special tokens, and whether it exceeded the fixed 512-token limit. |
+| `vader_compound`, `vader_label` | Benchmark-only compound score and class under the fixed inclusive +/-0.05 boundaries. |
+| Exclusion log `reason` | The first applicable rule, including invalid items, out-of-window dates, unrelated company, several companies, duplicate GUID/title, multiple annotations, invalid entity span, benchmark duplicates, or PhraseBank overlap. Duplicate GUIDs are mostly copies returned by both a split window and one of its parts. Counts follow the recorded cleaning order. |
+
+### Daily and weekly summaries
+
+These tables are in `data/processed/sentiment/sentiment_v2/`. The
+`sentiment_v1` folders hold the first run, kept for comparison.
+
+| Field | Meaning and missing values |
+| --- | --- |
+| `ticker`, `date` | One of the six stocks and each calendar date from 1 January to 31 July 2026. The daily table includes weekends and holidays. |
+| `observed_headline_count` | Number of retained scored records assigned to the date, even when collection is incomplete. |
+| `headline_count` | Observed count when coverage is complete; missing when a source query failed or a source-timing gap affects the date. Capped counts are lower bounds and remain flagged. A successful uncapped empty day has zero. |
+| `mean_score` | Headline-weighted mean of model scores; missing with no retained headlines or incomplete coverage. It is never filled with zero for an empty day. |
+| `date_only_share` | Fraction of retained daily records with Pacific-midnight timestamps; missing with no retained records. |
+| `direct_request_complete` | All intended leaf requests covering that reported date succeeded or were capped. |
+| `source_timing_gap` | A failed or capped source date could have contributed timed items to this next trading session. The original uncertainty is propagated once. |
+| `request_complete`, `capped` | Direct coverage plus the source-timing adjustment. Capped data remain marked even when a request succeeded. |
+| `week_end` | Friday ending a Saturday-Friday calendar week. Weekly scores weight headlines rather than daily means. |
+| `partial_study_week` | Fewer than seven study dates, including the initial 1-2 January window. Such weeks are excluded from comparisons. |
+| `sparse_pilot_coverage` | The company failed the pilot's four-usable-weeks rule. Its counts remain visible but trend comparisons are omitted. |
+| `comparison_eligible` | A full week with complete, uncapped coverage, at least one retained headline, and a company that passed the pilot. |
+
+### Metrics and comparisons
+
+Files are under `outputs/metrics/sentiment/sentiment_v2/`. Confusion matrices
+use gold labels as rows and predicted labels as columns, in negative,
+neutral, positive order. Accuracy, precision, recall, F1, and confidence limits
+are fractions. Bootstrap intervals use 1,000 paired row resamples and seed 42.
+FiQA MAE/RMSE compare a classifier score with its numeric targets; they do not
+make FinBERT a calibrated regression model.
+
+`weekly_market_comparison.csv` adds the compounded saved percentage returns
+as `weekly_return` in fractional units and records the trading-session count.
+`weekly_return_associations.csv` gives Spearman correlation and the number of
+eligible weeks; an undefined correlation is missing. Pair differences are the
+dependent stock's weekly mean score minus the independent stock's.
+
+`entry_signal_context.csv` has two stock rows for each eligible Phase 4 entry.
+`lookback_sessions` lists the five sessions ending before the signal date.
+Counts and mean scores refer only to those sessions; signal-day counts are
+separate. Date-only items are not assigned to sessions, so weekend and
+holiday headlines between the five sessions are not counted. Completeness and cap flags accompany both the lookback and signal
+day. Missing means can reflect no headlines or incomplete coverage, as shown
+by the counts and flags. No statistical inference is made from five events.
+
+Run metadata records the model revision, settings, source/model/market input
+hashes, code hashes, lock hash, counts, collection status, and, by company,
+how many kept copies came from split-window responses. Reproduction
+records identify the compared outputs and numerical tolerance. Headline
+scoring does not fit or modify the Phase 1-5 artifacts.

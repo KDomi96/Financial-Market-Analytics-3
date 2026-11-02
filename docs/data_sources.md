@@ -186,6 +186,160 @@ DeepSeek and tariff-pause reporting. The notes do not establish that any event
 was the sole cause of a move. Unseen flags are saved without event investigation.
 The source limitations in the Phase 1 source analysis still apply.
 
+## Sentiment benchmark snapshots
+
+The first benchmark snapshot is
+`data/raw/sentiment/benchmarks/20261102T173344495719Z/`. It was downloaded on
+2 November 2026 using `scripts/download_sentiment_benchmarks.py` in the locked
+venv. No dependencies were added. Its manifest records URLs, source revisions,
+download times, file sizes, SHA-256 hashes, source summaries, and acquisition
+settings/code hashes. All seven saved file hashes and dataset counts were
+checked independently after the download. Source records are unchanged.
+
+| Dataset | Downloaded source | Observed contents |
+| --- | --- | --- |
+| FiQA 2018 Task 1 headlines | `dayanfcosta/fiqa-2018-task1`, revision `acd0f4cfafa6421774bc8f009e8fa3e0ec441357` | Training file: 438 headline records, 503 target annotations with numeric scores, 378 records with one annotation. Test file: 93 headlines without gold scores. |
+| FinEntity | Authors' `yixuantt/FinEntity`, revision `3b6cedc5485b669c2ed168f1d949f517636eb7b8` | 979 paragraphs and 2,131 annotations: 503 positive, 498 negative, and 1,130 neutral. There are 390 paragraphs with one annotation before preparation. |
+
+### FiQA source and limitations
+
+The [organizer page](https://sites.google.com/view/fiqa/home) describes
+target-specific sentiment scores from -1 to +1 and links its training and
+test downloads. Both linked Google Drive files returned errors during source
+discovery. The local files therefore come from a pinned
+[challenge-participant repository](https://github.com/dayanfcosta/fiqa-2018-task1),
+whose README identifies its FiQA submission. The organizer page and the mirror's
+README are saved alongside the data. The mirror was not verified byte for byte
+against the unavailable organizer release.
+
+The training file has 438 headline records and 503 target scores, ranging from
+-0.938 to 0.975. These are the downloaded counts, which differ from the 436
+training headlines reported in the [challenge paper](https://andrefreitas.org/papers/www_fiqa_2018.pdf).
+The 93 test headlines have targets and snippets but no sentiment scores.
+They cannot provide test accuracy. The labeled training file is available for
+external evaluation of the unchanged checkpoint; it is not used to fit it.
+Microblog files were not downloaded because the planned study uses headlines.
+
+The organizer page states non-commercial use for its training and testing
+downloads. The mirror provides no separate dataset licence. The original
+scores, targets, snippets, and aspect fields are preserved; no class labels
+have been derived yet.
+
+### FinEntity source and limitations
+
+The [authors' repository](https://github.com/yixuantt/FinEntity) supplies
+`data/FinEntity.json` and links the
+[authors' Hugging Face dataset](https://huggingface.co/datasets/yixuantt/FinEntity).
+Its saved dataset card, revision `e86e5451a1fce4731fe07c710649a229d92e5cab`,
+declares the `odc-by` licence. The [paper](https://arxiv.org/html/2310.12406)
+describes the Reuters source, annotation procedure, and three sentiment classes.
+
+The download check found 11 repeated paragraph texts in the full source.
+For 70 annotations, `content[start:end]` differs from the saved entity value
+using an end-exclusive substring check. Label names agree across the `tag`
+and `label` fields, and all offsets are within the corresponding paragraph.
+These are source issues, not repairs made during acquisition. The planned
+evaluation excludes inconsistent spans and duplicate texts, then records the
+retained single-annotation count. A whole-paragraph classifier does not solve
+the full entity recognition and multi-entity sentiment task.
+
+Raw sentiment snapshots are excluded from Git. Their presence locally does
+not establish permission to redistribute the underlying news text. The first
+benchmark downloads alone do not establish 2026 news coverage. Subsequent
+model, screen-file, and pilot acquisition is recorded below.
+
+## Google News RSS preliminary requests
+
+Three requests to `https://news.google.com/rss/search` returned HTTP 200 on
+2 November 2026 from the project venv, using Python's standard library.
+Each used `hl=en-US`, `gl=US`, and `ceid=US:en`, without an API key or sign-in.
+
+| Search query (`q`) | Raw item count | Earliest / latest reported publication time (UTC) |
+| --- | --- | --- |
+| `Microsoft (stock OR shares OR earnings) after:2026-01-01 before:2026-01-08` | 24 | 2026-01-02 08:00 / 2026-01-08 08:00 |
+| `NVIDIA (stock OR shares OR earnings) after:2026-07-01 before:2026-07-08` | 10 | 2026-07-02 07:00 / 2026-07-08 07:00 |
+| `Microsoft stock when:7d` | 100 | 2026-10-26 17:06:07 / 2026-11-02 17:31:02 |
+
+These were connectivity and retrieval probes. The responses were inspected
+in memory rather than saved as source snapshots, and the counts precede
+relevance, date-boundary, and duplicate checks. The queries are recorded here
+to explain the next collection step, not as the final six-company query set.
+In particular, the historical results included the dates named by `before:`;
+the collector must check returned dates rather than assume boundary semantics.
+
+The older responses used repeated fixed publication times. That observation
+does not establish their actual publication times or historical availability.
+The saved pilot must examine timestamp precision before session assignment;
+uncertain times support publication-date summaries only. The recent query's
+100 items also show why short windows and possible-limit flags are needed.
+
+The [GNews documentation](https://github.com/ranahaani/GNews#results-specification)
+describes its Google News RSS backend, language/region and date settings, and
+default 100-result setting. The planned collector accesses RSS directly.
+The saved pilot and full collection are recorded below.
+Retrieved headlines form a sample of indexed coverage, not a complete archive.
+
+## Sentiment model, overlap screen, and saved pilot
+
+The second benchmark snapshot is
+`data/raw/sentiment/benchmarks/20261102T194353691191Z/`. It adds the unchanged
+Financial PhraseBank v1.0 zip and dataset card at revision
+`8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964`. The zip is read directly; no remote
+dataset loader is executed. Its 50%-agreement file has 4,846 sentences and is
+used only for the overlap screen. The saved card declares CC BY-NC-SA 3.0.
+The nine files match their manifest hashes. FiQA and FinEntity's pinned source
+files match the first snapshot; the live FiQA organizer page changed.
+
+FinBERT's six planned files are saved under
+`artifacts/sentiment/sentiment_v1/finbert/` at revision
+`0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031`. The
+[model record](../artifacts/sentiment/sentiment_v1/model_revision.json) gives
+the canonical URLs, download times, sizes, hashes, and licence. The saved
+model card declares CC BY-NC-SA 4.0, copyright MIH AI B.V. The 437,965,908-byte
+safetensors file's SHA-256 also matches the pinned repository's LFS metadata.
+The other framework weight files were not downloaded. Model loading uses
+local files only; the three labels come from the saved configuration.
+
+The unscored Google News pilot is saved under
+`data/raw/sentiment/google_news/20261102T195054616236Z/`. It covers the first
+full Monday-Friday week of each month, January-July 2026, for all six
+companies. The manifest records 68 attempts for 42 initial windows, including
+split requests. Its 55 leaf windows comprise 54 successful requests and one
+capped single-day request. Raw responses, request URLs, intended windows,
+attempts, collection times, and hashes remain local.
+
+The first cleaning retained 1,016 headlines, the count on which the pilot
+decision was made; see the
+[first pilot report](../outputs/metrics/sentiment/sentiment_v1/pilot_report.json).
+The corrected cleaning also reads the responses of split windows. It retains
+1,287 headlines and logs 1,916 exclusions: 781 outside the intended window,
+720 duplicate GUIDs, 247 without the queried company in the title, 112 naming
+several of the six companies, and 56 duplicate titles. Of the retained items,
+1,284 have the date-only Pacific-midnight pattern and three have other times.
+This heuristic does not establish historical availability. The
+[corrected pilot report](../outputs/metrics/sentiment/sentiment_v2/pilot_report.json)
+and accompanying coverage, publisher, title-format, and timestamp tables give
+the counts. All six companies passed the adopted coverage rule under both
+counts, with the same usable weeks, and the queries were kept unchanged.
+
+## Full Google News snapshot
+
+The full Google News snapshot is
+`data/raw/sentiment/google_news/20261102T195614519732Z/`, collected on
+2 November 2026 for 1 January-31 July 2026. Its 326 attempts cover 186 initial
+Saturday-Friday company windows. After splitting, 251 leaf windows succeeded
+and five single-day windows remained capped; none failed. All saved response
+hashes were independently checked. The 70 split windows' own responses are
+part of the snapshot. In 42 of them, the final narrower requests together
+returned fewer than the 100 items of the wider request, so cleaning reads
+both. The corrected cleaning retains 5,715 headlines, of which 5,704 fit the
+Pacific-midnight date-only rule and 11 have other times. The first cleaning,
+which skipped the split windows' responses, retained 3,846.
+The manifest preserves each request, raw response, reported time, and
+collection time. This retrospective snapshot does not prove historical
+availability or completeness. Counts and exclusions are in
+[the findings](phase_planning/sentiment_analysis.md#retrieved-news-coverage).
+
 ## Sources and permitted use
 
 - [yfinance documentation](https://ranaroussi.github.io/yfinance/): independent
@@ -206,6 +360,7 @@ The source limitations in the Phase 1 source analysis still apply.
   public repository.
 
 Public display or redistribution through the eventual app requires checking
-the applicable provider permissions. This acquisition does not establish
-redistribution rights. Sentiment data have not been acquired. Their source
-and role are recorded in methodology; actual coverage remains unverified.
+the applicable provider permissions. Acquisition does not establish
+redistribution rights. The sentiment benchmarks, model, pilot, and full
+six-company snapshot have been acquired. Their source and role are recorded
+in methodology; saved manifests and coverage tables document what was retrieved.

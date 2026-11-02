@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "run": "sentiment_v2",
+  "unit_tests_local": 103,
+  "sentiment_tests": 18,
+  "notebook_code_cells": 8,
+  "notebook_rerun": "All eight cells ran without errors; every CSV, JSON metric, and figure matched the first v2 run exactly. Only a comment and a docstring in evaluation.py changed afterwards, so the code hashes differ from the reference and that run is not saved as a passing comparison.",
+  "docker_reproduction": "docker_reproduction.json",
+  "news_rows": 5715,
+  "date_only_rows": 5704,
+  "kept_from_split_windows": 1908,
+  "daily_rows": 1272,
+  "weekly_rows": 186,
+  "signal_stock_rows": 10,
+  "notebook_local_paths_removed": true,
+  "phases_1_to_5_rerun": false
+}

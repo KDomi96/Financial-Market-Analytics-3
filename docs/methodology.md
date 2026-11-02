@@ -21,6 +21,12 @@ unseen results.
 
 | Date | Area | Decision | Status |
 | --- | --- | --- | --- |
+| 2026-11-02 | Phase 6 sentiment | No sentiment page or route; the sentiment study stays a separate experiment and is not used as a signal | Adopted |
+| 2026-11-02 | Sentiment rules | One finance-term query per company; titles must name the company; titles naming several of the six left out; VADER thresholds of ±0.05; pilot pass rule; weekly comparisons; headline text and model files kept out of Git | Adopted |
+| 2026-11-02 | Sentiment collection | Plan direct English/US Google News RSS collection in short date windows, with saved responses and coverage checks; use date summaries when publication times cannot support session assignment | Adopted |
+| 2026-11-02 | Sentiment evaluation | Reuse FiQA headline scores and FinEntity entity labels for two separate benchmarks of the unchanged FinBERT checkpoint; replace the earlier SEntFiN-only plan and manual annotation task; keep benchmark results separate from the six-stock news study | Adopted |
+| 2026-11-02 | Phase 6 serving | API and app containers read the saved Phase 5 models, processed masters, and Phase 3 tables from read-only mounts; forecast origins end at 2026-07-31; no sentiment page until the sentiment results exist | Adopted |
+| 2026-11-02 | Phase 6 application | Uploaded CSV or the project's prices; one pair tested with Phase 3 settings and called cointegrated when the direction-adjusted Engle-Granger p is at most 0.05 and the Johansen trace rank is one; normalization from the final year before a chosen fit end; Phase 4 signals; exploratory view for failing pairs; saved Phase 5 models on a separate forecast route | Adopted |
 | 2026-11-02 | Phase 5 trading filter | Accept a fresh long/short entry only when the day-five forecast moves in the reversion direction; retain Phase 4's observed-Z exits | Adopted |
 | 2026-11-02 | Phase 5 targets and batch order | Train on five-session changes in Z and add them to the origin's Z for the forecast; shuffle training windows each epoch with a seeded generator | Adopted |
 | 2026-11-02 | Phase 5 implementation defaults | 20-session trailing volatility, training-only feature scaling, four compact LSTM candidates, persistence comparison, and matched entry calendars | Adopted |
@@ -880,30 +886,262 @@ spread signals. It is not an LSTM input. Headlines collected now cannot show
 what was available at a past prediction time, which is a further reason not to
 use them as model inputs.
 
-### Procedure (Proposed)
+### Evaluation (Adopted 2026-11-02)
 
-- Run a small collection pilot first to establish usable coverage; the target
-  window is January-July 2026, adjusted to the pilot's findings. RSS results are
-  limited, so completeness is checked rather than assumed.
-- Collect through the `gnews` package or the RSS feeds directly.
-- Remove irrelevant name matches and duplicate or syndicated headlines.
-- Convert publication times to US Eastern time; a headline published after the
-  16:00 close is assigned to the next trading day.
-- Define sentiment as sentiment toward the named company, with a written
-  labelling guide covering headlines that mention several companies.
-- Hand-label 150-300 headlines across companies and dates. The project author
-  does the labelling so the evaluation is independent of the model and the
-  assistant. FinBERT is not fine-tuned, so the whole labelled set is evaluation
-  data.
-- Report class counts, macro-F1, a confusion matrix, and representative errors,
-  with VADER and a majority-class rule as comparison baselines.
-- Show article counts alongside sentiment so sparse coverage is visible.
-- Save the source snapshot and model version.
+Use two existing labeled datasets instead of manually labeling 150-300
+headlines. The earlier SEntFiN-only plan was replaced on 2 November 2026 to
+cover both short financial headlines and longer paragraphs with entity
+annotations. The model remains `ProsusAI/finbert`, without fine-tuning.
+
+- **FiQA 2018 Task 1 headlines:** preserve the target-specific numeric sentiment
+  scores in `[-1, 1]`. The [organizer page](https://sites.google.com/view/fiqa/home)
+  describes the task. Its download links were unavailable, so the local snapshot
+  uses a pinned [challenge participant's mirror](https://github.com/dayanfcosta/fiqa-2018-task1).
+  It contains 438 labeled headline records with 503 target scores. The separate
+  93-headline test file contains inputs but no gold scores and cannot supply
+  test accuracy. The mirror's counts differ from those reported in the original
+  [challenge paper](https://andrefreitas.org/papers/www_fiqa_2018.pdf); the saved
+  snapshot counts are the counts used here.
+- **FinEntity:** use the [authors' release](https://github.com/yixuantt/FinEntity)
+  of 979 paragraphs with 2,131 positive, negative, or neutral entity
+  annotations. The [paper](https://arxiv.org/html/2310.12406) describes its human
+  annotation and consistency checks. The source contains 390 paragraphs with
+  exactly one annotation, before duplicate and span checks. This subset can
+  evaluate whole-paragraph sentiment against the one annotated entity; it is
+  not an evaluation of entity recognition or the full multi-entity task.
+
+The original file names and split names are retained. Using labeled FiQA
+records from a file called `train` does not mean fitting FinBERT on those
+records. They are an external evaluation collection for this fixed checkpoint,
+subject to the overlap check below. Acquisition details and source issues are
+recorded in [data sources](data_sources.md#sentiment-benchmark-snapshots).
+
+Financial PhraseBank is part of FinBERT's documented fine-tuning data, as
+stated in its [model card](https://huggingface.co/ProsusAI/finbert).
+Screen normalized benchmark text against that dataset and exclude matching
+records before scoring. Do not treat an evaluation on the whole
+Financial PhraseBank as independent evidence. The overlap screen checks the
+documented fine-tuning corpus; it cannot prove the absence of all prior
+training exposure.
+
+Report each benchmark separately, with class counts, macro-F1, accuracy,
+per-class precision/recall/F1, and a confusion matrix. Compare against VADER
+with thresholds fixed before scoring and a majority-class reference derived
+from the benchmark's class counts.
+Use the existing labels for disagreement examples; no new manual annotation
+is required. The benchmark is for evaluation, not model or threshold tuning.
+
+Neither benchmark establishes accuracy on the six companies' 2026 Google News
+headlines or validates their collection and company-matching rules. The news study
+therefore reports model-estimated sentiment and coverage, without a measured
+accuracy claim for that collection. Its input window still depends on the
+coverage pilot.
+
+### Benchmark preparation (Adopted 2026-11-02)
+
+- Keep records with exactly one annotation for each benchmark. Retain the
+  complete source files, but exclude multi-annotation records from the simple
+  whole-text evaluation. A text that appears in several records carries all
+  of their annotations, so a headline listed again for a second target is
+  excluded, while an exact repeat keeps one copy. Record all exclusion counts
+  and cross-dataset overlap.
+- Remove duplicate evaluation texts and exclude FinEntity records whose saved
+  entity value does not match the annotated text span. Do not repair labels
+  or spans silently. The download check found 11 duplicate paragraph texts and
+  70 span/value mismatches in the full FinEntity source; usable subset counts
+  are determined during preparation.
+- Take the overlap-screen input from Financial PhraseBank v1.0, the zip in the
+  [`takala/financial_phrasebank`](https://huggingface.co/datasets/takala/financial_phrasebank)
+  repository, at a pinned revision. Screen against the 50%-agreement file,
+  which contains every sentence in the three stricter files. Exclude a
+  benchmark record when its normalized text equals a PhraseBank sentence or
+  contains one, since a paragraph can include a sentence without being equal
+  to it. Containment counts only for sentences of at least five words; the
+  shorter entries are greetings and fragments that occur in ordinary text, so
+  they count only by an exact match. The file is used only for this screen
+  and is never scored.
+- Derive FiQA classes using fixed boundaries: below `-0.3` is negative, above
+  `0.3` is positive, and the inclusive middle interval is neutral. This is a
+  project mapping, not a native FiQA label. Fix it before model evaluation and
+  do not search for boundaries that improve the result. Also report MAE, RMSE,
+  and the Spearman correlation of `P(positive) - P(negative)` against the
+  original scores as separate diagnostics; the classifier score is not a
+  calibrated FiQA regression model.
+- Classify VADER's compound score with the thresholds its authors recommend:
+  at least `0.05` is positive, at most `-0.05` is negative, and anything in
+  between is neutral.
+- Keep FinEntity's original classes. Present headline and paragraph results
+  separately, with their different target definitions and retained counts.
+- Add seeded bootstrap 95% intervals for accuracy and macro-F1. Each prepared
+  benchmark keeps a few hundred records, so a difference of a few points
+  between FinBERT and VADER may be noise.
+
+### Procedure (Adopted 2026-11-02)
+
+The ordered steps, file list, and checks are in the
+[sentiment plan](phase_planning/sentiment_plan.md). The pilot may still change
+the queries, names, or cleaning rules, but only on counts and relevance, never
+on scores, and each change is recorded here with its reason.
+
+- Save a collection pilot before the full run: the first full Monday-Friday
+  week of each month from January to July 2026, for each company. A sampled
+  week is usable when at least five headlines remain after the relevance,
+  several-company, and duplicate rules, about one per trading day. The full
+  collection goes ahead if at least four companies have at least four usable
+  weeks out of seven. A company below that is still collected, but its results
+  are reported as sparse coverage without trend comparisons. If fewer than four
+  companies pass, revise this procedure before collecting. Pilot headlines are
+  not scored, so queries and rules are chosen from counts and relevance only.
+  RSS search does not give a complete news archive; the study reports
+  retrieved coverage. The preliminary requests are described in
+  [data sources](data_sources.md#google-news-rss-preliminary-requests).
+- Use the RSS feeds directly, with English/US settings. The preliminary
+  requests needed no API key or new dependencies. Each company has one query:
+  its names and tickers joined by `OR`, followed by
+  `(stock OR shares OR earnings)`. The finance terms keep results to coverage
+  of the company as a business and a stock, and none of them favours positive
+  or negative stories. The names are Microsoft and MSFT; Alphabet, Google,
+  GOOGL, and GOOG; Nvidia and NVDA; Apple and AAPL; Amazon and AMZN; and Meta.
+  Google is a subsidiary, but it is how most headlines name Alphabet. Product
+  and other subsidiary names are not used, so each company is matched the same
+  way.
+- Query short date windows and split those returning 100 items into smaller
+  windows. Record a possible limit if a one-day window still returns 100.
+  Read every saved successful response during cleaning, including those of
+  split windows, because the narrower requests can miss items that the wider
+  request returned.
+  Query each window one day wider on each side and keep items by their
+  reported date, because the preliminary requests returned items dated on the
+  `before:` day. Save unchanged responses, queries, requested windows,
+  collection times, hashes, request outcomes, and retries. Respect rate limits
+  and retain failed windows for resumption rather than treating them as days
+  without news.
+- Google News matches a query against more than the title, so a headline counts
+  for a company only when its title names that company, using the names above
+  as whole words regardless of case. Titles naming two or more of the six
+  companies are left out of the company series and counted. A whole-headline
+  prediction cannot say which company its sentiment is about, and both
+  benchmarks are scored only on records with one annotated target.
+- Before those checks, remove the trailing ` - Publisher` that RSS adds to a
+  title when it matches the item's source name. Otherwise copies of one story
+  from different publishers would not match, and the model would read
+  publisher names. Within a company, titles equal after Unicode normalization,
+  lower case, and single spacing are duplicates; keep the earliest reported
+  time. Preserve the original title, publisher, Google News link, reported
+  publication time, and any verified publisher URL or time. Do not require
+  article-body access. The cleaning rules are fixed before any headline is
+  scored.
+- Keep reported publication time separate from collection time and historical
+  availability. Treat an item as date-only when its reported time is exactly
+  midnight in `America/Los_Angeles`. Both preliminary historical requests fit
+  this: 08:00 UTC in January and 07:00 UTC in July. A single UTC hour would
+  misread items after the daylight-saving change on 8 March 2026. Summarize
+  date-only items by date, without inventing a time or applying an after-close
+  rule.
+- Where publication times are supported, convert them to US Eastern time and
+  assign after-close, weekend, and holiday items to the next trading session.
+  Use the actual close, including early closes listed in the settings from the
+  NYSE calendar. This is an analysis convention, not evidence that the story
+  was available historically.
+- Define sentiment as sentiment toward the one company a headline names. Score
+  with FinBERT from local files at a pinned revision, saving the three class
+  probabilities, the predicted label, and `P(positive) - P(negative)`.
+- Save a daily table by company and calendar date, with article counts beside
+  sentiment so sparse coverage is visible. Keep days without headlines
+  distinguishable from days with neutral sentiment, and failed windows
+  distinguishable from both.
+- Compare with market data by Saturday-Friday week, so weekend headlines join
+  the following trading week. A date-only day runs past the 16:00 close, and a
+  weekly unit makes that uncertainty matter less. Three comparisons are fixed
+  before scoring: for each company, the Spearman correlation between weekly
+  mean score and weekly return, described as an association; for each
+  shortlisted pair, the weekly score difference beside the Phase 4 unseen
+  Z-scores; and a table of the five eligible Phase 4 entry signals with each
+  stock's headline count and mean score over the five sessions before the
+  signal. Five signals are too few for statistics. Other comparisons are added
+  here before they are computed, or labelled exploratory.
+- Save source snapshots, the model revision, settings, probabilities, and
+  coverage and exclusion counts. Keep headline and benchmark text, prepared
+  benchmark rows, and the FinBERT files out of Git, as with the raw snapshots;
+  committed tables identify records by ID. The weights (438 MB) also exceed
+  GitHub's file size limit. Docker reads the model folder from a read-only
+  mount in offline mode. The sentiment runner is a separate command rather than
+  part of the default pipeline, because a fresh clone lacks its local-only
+  inputs.
+- An offline rerun from saved snapshots and model files must reproduce labels,
+  counts, exclusions, and classification metrics exactly. Probabilities and
+  score-derived numeric diagnostics/tables must agree within an absolute
+  `1e-5`. Exact floating-point equality between Windows and Linux is not
+  assumed. The numeric distinction was clarified during verification on
+  2 November 2026: Docker's FiQA MAE/RMSE differed by about `3e-9` and `2e-8`,
+  while its classification metrics were identical. The tolerance itself did
+  not change; numeric errors derived from probabilities use the same bound.
+
+### Pilot decision (2026-11-02)
+
+The saved 42-company-week pilot passed the adopted rule. Apple, Microsoft,
+and NVIDIA each had five usable weeks; Amazon and Alphabet had six; Meta had
+four. The pilot retained 1,016 headlines without scoring them. The queries,
+company names, and cleaning rules stay as adopted. Counts and exclusions are
+in [the pilot report](../outputs/metrics/sentiment/sentiment_v1/pilot_report.json).
+
+Benchmark overlap normalization uses NFKC, case folding, and Unicode word
+tokens joined by spaces, so punctuation and tokenization do not hide an
+otherwise equal sentence. Headline deduplication keeps the adopted NFKC,
+lower-case, and single-spacing rule. A copy outside a request's intended
+window is excluded before marking its GUID as seen, so it cannot hide the
+valid copy in a neighbouring window.
+
+Weekly comparisons omit incomplete study weeks as well as failed or capped
+weeks. In particular, 1-2 January is not a full Saturday-Friday news week.
+Weekly scores weight individual headlines rather than giving each day's mean
+equal weight. These are aggregation rules, fixed before scoring the news.
+
+A failed or capped source date also flags the next trading session, because
+missing timed items after close could have been assigned there. This carries
+the original source gap forward once; it does not propagate gaps recursively.
+Daily outputs keep direct-request status separate from this timing uncertainty.
+Saved pilot/full roles, acquisition settings, and expected windows are checked
+before use. Settings that differ from the adopted sentiment thresholds are
+rejected rather than silently recorded alongside hard-coded labels.
+
+### Review corrections (2026-11-02)
+
+A review of the first full run (`sentiment_v1`) found three rules applied
+differently from their purpose. I changed them for coverage and consistency,
+not because of the scores, and reran the study into `sentiment_v2`. The first
+run's outputs are kept unchanged.
+
+- **Split windows.** Cleaning had read only the final narrower requests of a
+  split window. Google's results for a window and its parts do not add up: in
+  42 of the 70 split windows of the full snapshot, the narrower requests
+  together returned fewer items than the wider request's 100. Every saved
+  successful response is now read, the narrower requests first, and an item
+  returned more than once is kept once. Leaf requests still decide
+  completeness and capped flags; the wider responses only add items. The full
+  study retains 5,715 headlines instead of 3,846. The pilot recount retains
+  1,287 instead of 1,016 with the same usable weeks for every company, so the
+  pilot decision stands; see the
+  [corrected pilot report](../outputs/metrics/sentiment/sentiment_v2/pilot_report.json).
+- **Repeated benchmark text.** FiQA lists one headline under two IDs, each
+  annotating a different target. Keeping the first copy treated a two-target
+  headline as a single-annotation record. Both copies are now excluded.
+- **Short PhraseBank entries.** Three FinEntity paragraphs had been excluded
+  for containing a PhraseBank entry of one to three words. An entry that short
+  does not show that the paragraph was in FinBERT's fine-tuning data, and the
+  adopted check already keeps text that shares only a few words with a
+  sentence. Containment now needs at least five words. On this data, any
+  limit of four words or more gives the same result.
 
 ### Open items
 
-- FinBERT licence terms are checked against the model card before use and
-  recorded with the citation.
+- The corrected study is implemented and reproduced locally and in Docker.
+  Findings and verification are in
+  [sentiment analysis](phase_planning/sentiment_analysis.md).
+- Phase 6 does not display the saved results (see the next section).
+  Submission packaging must settle access to the local-only snapshots and
+  model files; a later RSS search cannot reproduce the same news sample by
+  itself.
 
 ## API and web application
 
@@ -915,14 +1153,16 @@ use them as model inputs.
   separate validation library; Django REST Framework is built for database-backed
   applications; model-serving platforms such as BentoML add packaging beyond
   this project's needs.
-- **Interface: Streamlit.** The application mainly presents saved analysis plus
-  one live prediction flow, which Streamlit handles in plain Python with little
-  code. Dash offers finer layout control at roughly two to three times the code;
-  Gradio suits single input-to-prediction demos better than a multi-view
-  dashboard.
+- **Interface: Streamlit.** The interface needs a file upload, a few inputs,
+  result tables, and line charts of the spread and Z-scores, all of which
+  Streamlit provides in plain Python with little code. Dash offers finer layout
+  control at roughly two to three times the code; Gradio suits single
+  input-to-prediction demos better than a page of test results and charts.
+  (Rationale revised 2026-11-02 for the flow below; the choice is unchanged.)
 - **Rule:** the Streamlit app reaches models only through the API over HTTP.
   It never loads model artifacts directly, so the interface-to-API-to-model
-  path is what gets tested.
+  path is what gets tested. The service does every calculation; the interface
+  only sends requests and draws the responses.
 - **Deployment:** local Docker first. Hosting is Open; a public URL is claimed
   only if verified.
 
@@ -937,18 +1177,136 @@ different commands, through one Compose file, because both are long-running
 servers and the app reaches the API over HTTP.
 
 The image never contains `data/interim`, `data/processed`, or `outputs` from
-the workstation. Every container run rebuilds derived data from the raw
+the workstation. Every batch run rebuilds derived data from the raw
 snapshots, so a result that exists only on the workstation, or a script that
-fails without writing its file, cannot pass the Docker check. IBKR data are
+fails without writing its file, cannot pass the Docker check. The serving
+containers read saved files instead; see
+[Serving containers](#serving-containers-adopted-2026-11-02). IBKR data are
 excluded for licensing reasons.
 
-### Routes and user flow (Proposed)
+### Price input and cointegration test (Adopted 2026-11-02)
 
-Routes: `GET /health`, `GET /pairs`, `GET /pairs/{pair}/zscores`,
-`POST /predict`, and `GET /backtests/{pair}`. The app lets a user select a pair,
-inspect its selection evidence, view its spread and dated forecasts, and compare
-both strategies, with a separate sentiment view. The scope is a clearly dated
-historical demonstration, not live trading.
+The application tests one pair on prices the user supplies. The user either
+uploads one CSV file, with a `Date` column and one column of closing prices
+per stock headed by its ticker, or loads the project's own closing prices for
+one of the 15 pairs. Both reach the same API route as a price table, so the
+analysis never reads project files itself. The API rejects a request rather
+than repairing it when dates repeat, are out of order, or fail to parse, when a
+price is missing, non-positive, or non-finite, or when the two tickers are the
+same. Prices are not fetched from a provider at request time: the same request
+could then return different results, and the application would stop working
+whenever Yahoo was unreachable.
+
+The user chooses a fit end date, which defaults to 2025-12-31 for the
+project's prices. At least 504 sessions must fall on or before it and at least
+20 after it. The data up to the fit end go through the Phase 3 procedure with
+the Phase 3 settings: OLS on log prices in both directions with an
+Engle-Granger test of each, and a Johansen trace test. The direction with the
+smaller Engle-Granger p-value defines the spread. The pair counts as
+cointegrated when the direction-adjusted p-value, `min(1, 2 * smaller
+directional p)`, is at most 0.05 and the trace test gives rank one at 95%. The
+I(1) checks on each stock are reported as warnings and do not decide the
+result.
+
+There is no correction across pairs. Phase 3 searched all 15 pairs and applied
+Holm's correction to that search, whereas here the user names one pair before
+it is tested. On the project's prices with a 2025-12-31 fit end, AMZN_META
+passes (direction-adjusted p 0.0284; trace statistic 17.60 against 15.49)
+although Phase 3 labelled it exploratory, and NVDA_AMZN fails both tests.
+Choosing AMZN_META because Phase 3 ranked it first is itself a search, so its
+single-pair p-value overstates the evidence. The application says so beside
+the result for any of the 15 project pairs.
+
+### Spread, Z-scores, and signals (Adopted 2026-11-02)
+
+The spread's mean and sample standard deviation (`ddof=1`) come from the final
+year of the fitting window: the sessions later than the same calendar date one
+year before the fit end. With a 2025-12-31 fit end this is Phase 4's 2025
+window of 250 sessions. The regression and normalization stay fixed for the
+sessions after the fit end. Z-scores up to the fit end are returned as
+in-sample context.
+
+Signals follow the [Phase 4 trading rules](#trading-rules-adopted-2026-11-01)
+unchanged, over the sessions after the fit end. The run starts flat, and the
+last Z-score of the fitting window serves only as the comparison for the first
+later session. The response gives dated signals and long and short counts,
+counted as in Phase 4. It includes no P&L backtest; Phase 4 already reports
+one for the project pairs.
+
+When the pair fails the test, the response carries the test results only. The
+user can request an exploratory view, which returns the spread, Z-scores, and
+signals labelled exploratory, in the same way the
+[weak-evidence rule](#pair-handling-when-evidence-is-weak-adopted) carried the
+Phase 3 shortlist forward.
+
+Phase 4's `fit_normalization` accepts only 2025 residuals, and the Phase 4 and
+Phase 5 evaluation contracts hash the trading, features, and models code. The
+window calculation is therefore new code under `src/market_analytics/api/`,
+which imports the Phase 3-5 functions without editing them. Run on the
+project's AMZN_META prices with a 2025-12-31 fit end, it must reproduce the
+saved Phase 4 unseen Z-scores and signal counts.
+
+### Saved-model forecasts and routes (Adopted 2026-11-02)
+
+A separate route serves the saved `phase5_v2` LSTM bundles for AMZN_META and
+NVDA_AMZN through `forecast_from_prices`. At startup the API reproduces each
+bundle's saved example forecast; the function then rereads the small bundle on
+every request. Each bundle carries its own 2018-2025 regression and 2025
+normalization, which the route uses instead of the user's fit, so the
+interface shows forecasts apart from the test results. A request needs at
+least 39 consecutive sessions of closing prices ending at the forecast origin:
+the 20-session input window plus the 19 earlier sessions its first rolling
+standard deviation needs. The interface notes that persistence beat both
+models on the unseen period at every horizon.
+
+Forecast origins must fall on or before 2026-07-31, the last session in the
+project's masters. `forecast_from_prices` checks the supplied dates against an
+independent calendar so that a missing session cannot pass unnoticed, and the
+project's own dates are that calendar. Later origins would need an exchange
+calendar library, which nothing in the project requires. Target dates after
+2026-07-31 are returned as horizons without dates.
+
+- `GET /health`: service status and the loaded bundle versions.
+- `GET /pairs`: the six tickers, the 15 pairs with their Phase 3 labels, and
+  which pairs have a saved LSTM bundle.
+- `GET /samples/{pair}`: the project's closing prices for a pair from
+  2018-01-02 to 2026-07-31, in the upload format.
+- `POST /analyze`: prices, fit end, and the exploratory flag. Returns the test
+  results and, when allowed, the regression, normalization, spread, Z-scores,
+  and signals.
+- `POST /forecast`: a pair with a saved bundle and its closing prices. Returns
+  five forecasts, dated where the project calendar reaches, and whether the
+  day-five forecast moves toward zero, the condition the Phase 5 filter uses.
+
+The application is a demonstration on historical prices, not a trading tool.
+
+### Serving containers (Adopted 2026-11-02)
+
+The API and app containers start from the batch image with different
+commands. They read `artifacts/lstm/phase5_v2/`, `data/processed/`, and
+`outputs/metrics/pair_selection/` from read-only mounts of the project folder.
+The image itself still excludes these folders, so the batch pipeline keeps
+rebuilding everything from the raw snapshots.
+
+The forecasts served therefore match the reported Windows results: Phase 5's
+Docker check reloaded those weights on Linux within 1.49e-8. Retraining inside
+the API container would move them by up to 0.017 Z and take minutes at every
+start. Copying the saved files into the image would also put them in
+the batch image. The mounts need the project folder, which is present for
+local use and in the submission archive. A hosted deployment would need
+another way to supply these files.
+
+### Sentiment in the application
+
+Decided 2 November 2026: the interface has no sentiment page and the API no
+sentiment route. The study's results are mixed. FinBERT beats VADER on both
+benchmarks, but its FinEntity accuracy is below a constant neutral reference,
+and almost all collected headlines carry dates without times, so they cannot
+be placed before or after a session's close. That supports reporting the
+study on its own. It does not support feeding the scores into signals or
+showing them next to the pair analysis, where they would read as an input to
+it. The study stays in its notebook and in the report as a separate
+experiment.
 
 ## References
 
@@ -968,6 +1326,11 @@ versions when implementing.
 - [Scikit-learn common pitfalls](https://scikit-learn.org/stable/common_pitfalls.html):
   fitting preprocessing on training data and preventing evaluation leakage.
 - [FinBERT model card](https://huggingface.co/ProsusAI/finbert): model
-  description and licence, to be confirmed before use.
-- [gnews package](https://pypi.org/project/gnews/): Google News RSS access
-  without an API key.
+  description, label order, training data, and licence.
+- [Financial PhraseBank dataset card](https://huggingface.co/datasets/takala/financial_phrasebank):
+  the overlap-screen files and their licence.
+- [VADER](https://github.com/cjhutto/vaderSentiment): the rule-based comparison
+  and its recommended compound-score thresholds.
+- [GNews documentation](https://github.com/ranahaani/GNews#results-specification):
+  Google News RSS language, region, date, and result-count settings. The
+  collector reads the feed directly rather than through this package.

@@ -36,6 +36,7 @@ dist
 
 # Rebuild derived data inside the image from permitted raw snapshots.
 data/raw/ibkr
+data/raw/sentiment
 data/interim
 data/processed
 outputs
@@ -47,4 +48,6 @@ artifacts/lstm/phase5_v1
 artifacts/statistical/phase5_v2
 artifacts/preprocessing/phase5_v2
 artifacts/lstm/phase5_v2
+# FinBERT files are mounted read-only at run time instead of built into the image.
+artifacts/sentiment/*/finbert
 docs/*.docx

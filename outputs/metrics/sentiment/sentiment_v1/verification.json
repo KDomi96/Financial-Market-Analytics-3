@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "unit_tests": {
+    "local": 93,
+    "docker": 93
+  },
+  "notebook_code_cells": 8,
+  "news_rows": 3846,
+  "date_only_rows": 3837,
+  "daily_rows": 1272,
+  "weekly_rows": 186,
+  "zero_headline_days": 424,
+  "signal_stock_rows": 10,
+  "incomplete_signal_stock_rows": 2,
+  "max_weekly_return_error_from_close_ratios": 5.323432666903827e-16,
+  "public_candidates_checked": 49,
+  "source_text_found_in_public_candidates": false,
+  "source_text_check_minimum_normalized_characters": 40,
+  "private_paths_ignored": true,
+  "source_and_model_hashes_checked": true,
+  "local_figures_byte_identical": true,
+  "figures_visually_inspected": [
+    "AMZN_META_news_and_zscore.png",
+    "benchmark_confusion_matrices.png",
+    "NVDA_AMZN_news_and_zscore.png",
+    "weekly_coverage.png",
+    "weekly_sentiment.png"
+  ],
+  "frozen": {
+    "handoff_inventory_present": true,
+    "handoff_files_checked": 285,
+    "handoff_files_changed": [],
+    "contracts": {
+      "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": {
+        "checked": 13,
+        "changed": []
+      },
+      "outputs/metrics/lstm/phase5_v2/evaluation_contract.json": {
+        "checked": 59,
+        "changed": []
+      }
+    },
+    "frozen_code_diff": [],
+    "phase5_lock_mismatch_expected": true
+  },
+  "documentation_local_links_checked": 119
+}

@@ -1,0 +1,41 @@
+{
+  "version": "sentiment_v2",
+  "start_date": "2026-01-01",
+  "end_date": "2026-07-31",
+  "benchmark_snapshot": "data/raw/sentiment/benchmarks/20261102T194353691191Z",
+  "news_snapshot": "data/raw/sentiment/google_news/20261102T195614519732Z",
+  "pilot_snapshot": "data/raw/sentiment/google_news/20261102T195054616236Z",
+  "model": {
+    "repository": "ProsusAI/finbert",
+    "revision": "0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031",
+    "license": "CC BY-NC-SA 4.0; copyright MIH AI B.V.",
+    "directory": "artifacts/sentiment/sentiment_v1/finbert",
+    "files": ["config.json", "model.safetensors", "tokenizer_config.json", "special_tokens_map.json", "vocab.txt", "README.md"],
+    "batch_size": 16,
+    "max_length": 512,
+    "cpu_threads": 4
+  },
+  "evaluation": {"seed": 42, "bootstrap_samples": 1000, "fiqa_negative_below": -0.3, "fiqa_positive_above": 0.3, "vader_positive_at_least": 0.05, "vader_negative_at_most": -0.05},
+  "rss": {"language": "en-US", "country": "US", "edition": "US:en", "minimum_interval_seconds": 3, "retry_delays_seconds": [30, 60, 120], "timeout_seconds": 30, "result_limit": 100},
+  "companies": {
+    "MSFT": {"query": "(Microsoft OR MSFT) (stock OR shares OR earnings)", "names": ["Microsoft", "MSFT"]},
+    "GOOGL": {"query": "(Alphabet OR Google OR GOOGL OR GOOG) (stock OR shares OR earnings)", "names": ["Alphabet", "Google", "GOOGL", "GOOG"]},
+    "NVDA": {"query": "(Nvidia OR NVDA) (stock OR shares OR earnings)", "names": ["Nvidia", "NVDA"]},
+    "AAPL": {"query": "(Apple OR AAPL) (stock OR shares OR earnings)", "names": ["Apple", "AAPL"]},
+    "AMZN": {"query": "(Amazon OR AMZN) (stock OR shares OR earnings)", "names": ["Amazon", "AMZN"]},
+    "META": {"query": "Meta (stock OR shares OR earnings)", "names": ["Meta"]}
+  },
+  "pilot": {"minimum_headlines_per_week": 5, "minimum_usable_weeks": 4, "minimum_companies": 4},
+  "early_closes": {"2026-11-27": "13:00", "2026-12-24": "13:00"},
+  "early_close_source": "https://www.nyse.com/markets/hours-calendars",
+  "paths": {
+    "raw_news": "data/raw/sentiment/google_news",
+    "interim": "data/interim/sentiment/sentiment_v2",
+    "processed": "data/processed/sentiment/sentiment_v2",
+    "metrics": "outputs/metrics/sentiment/sentiment_v2",
+    "figures": "outputs/figures/sentiment/sentiment_v2",
+    "market_master": "data/processed/master_unseen.csv",
+    "zscores": "data/processed/statistical_baseline/unseen_zscores.csv",
+    "signals": "outputs/backtests/statistical_baseline/phase4_v1/unseen/signals.csv"
+  }
+}

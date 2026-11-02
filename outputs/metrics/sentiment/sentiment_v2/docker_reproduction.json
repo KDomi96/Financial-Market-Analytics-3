@@ -1,0 +1,159 @@
+{
+  "csv_files": [
+    {
+      "file": "interim/benchmark_exclusions.csv",
+      "rows": 756
+    },
+    {
+      "file": "interim/finentity_prepared.csv",
+      "rows": 378
+    },
+    {
+      "file": "interim/finentity_scored.csv",
+      "rows": 378
+    },
+    {
+      "file": "interim/fiqa_prepared.csv",
+      "rows": 376
+    },
+    {
+      "file": "interim/fiqa_scored.csv",
+      "rows": 376
+    },
+    {
+      "file": "interim/news_cleaned.csv",
+      "rows": 5715
+    },
+    {
+      "file": "interim/news_excluded.csv",
+      "rows": 9267
+    },
+    {
+      "file": "interim/news_scored.csv",
+      "rows": 5715
+    },
+    {
+      "file": "interim/pilot_cleaned.csv",
+      "rows": 1287
+    },
+    {
+      "file": "interim/pilot_excluded.csv",
+      "rows": 1916
+    },
+    {
+      "file": "processed/daily_sentiment.csv",
+      "rows": 1272
+    },
+    {
+      "file": "processed/weekly_sentiment.csv",
+      "rows": 186
+    },
+    {
+      "file": "metrics/entry_signal_context.csv",
+      "rows": 10
+    },
+    {
+      "file": "metrics/finentity_disagreements.csv",
+      "rows": 217
+    },
+    {
+      "file": "metrics/fiqa_disagreements.csv",
+      "rows": 123
+    },
+    {
+      "file": "metrics/news_exclusion_counts.csv",
+      "rows": 30
+    },
+    {
+      "file": "metrics/news_monthly_counts.csv",
+      "rows": 42
+    },
+    {
+      "file": "metrics/news_publisher_counts.csv",
+      "rows": 1070
+    },
+    {
+      "file": "metrics/pilot_coverage.csv",
+      "rows": 42
+    },
+    {
+      "file": "metrics/pilot_daily_counts.csv",
+      "rows": 168
+    },
+    {
+      "file": "metrics/pilot_publishers.csv",
+      "rows": 449
+    },
+    {
+      "file": "metrics/pilot_timestamp_precision.csv",
+      "rows": 39
+    },
+    {
+      "file": "metrics/pilot_title_format.csv",
+      "rows": 6
+    },
+    {
+      "file": "metrics/weekly_market_comparison.csv",
+      "rows": 186
+    },
+    {
+      "file": "metrics/weekly_pair_differences.csv",
+      "rows": 54
+    },
+    {
+      "file": "metrics/weekly_return_associations.csv",
+      "rows": 6
+    }
+  ],
+  "json_files": [
+    {
+      "file": "benchmark_preparation.json",
+      "exact": true,
+      "numeric_diagnostics_within_tolerance": true,
+      "max_numeric_diagnostic_difference": 0.0
+    },
+    {
+      "file": "fiqa_metrics.json",
+      "exact": true,
+      "numeric_diagnostics_within_tolerance": true,
+      "max_numeric_diagnostic_difference": 1.666847149195405e-08
+    },
+    {
+      "file": "finentity_metrics.json",
+      "exact": true,
+      "numeric_diagnostics_within_tolerance": true,
+      "max_numeric_diagnostic_difference": 0.0
+    },
+    {
+      "file": "pilot_report.json",
+      "exact": true,
+      "numeric_diagnostics_within_tolerance": true,
+      "max_numeric_diagnostic_difference": 0.0
+    }
+  ],
+  "errors": [],
+  "probability_tolerance": 1e-05,
+  "max_probability_difference": 1.9073486328125e-06,
+  "max_continuous_difference": 3.7848949432997547e-06,
+  "frozen": {
+    "handoff_inventory_present": true,
+    "handoff_files_checked": 285,
+    "handoff_files_changed": [],
+    "contracts": {
+      "outputs/metrics/statistical_baseline/phase4_v1/evaluation_contract.json": {
+        "checked": 13,
+        "changed": []
+      },
+      "outputs/metrics/lstm/phase5_v2/evaluation_contract.json": {
+        "checked": 59,
+        "changed": []
+      }
+    },
+    "frozen_code_diff": [],
+    "phase5_lock_mismatch_expected": true
+  },
+  "passed": true,
+  "reference": ".tools/sentiment_reference_v2",
+  "actual": ".tools/sentiment_docker_v2",
+  "validator_sha256": "d6a1599266ecb4bc56e54d59881d71ecc67388d847b68094fbe755aa49955673"
+}
