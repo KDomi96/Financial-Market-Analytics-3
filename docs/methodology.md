@@ -19,34 +19,34 @@ unseen results.
 
 ## Decision log
 
-| Date | Area | Decision | Status |
-| --- | --- | --- | --- |
-| 2026-11-02 | Phase 6 sentiment | No sentiment page or route; the sentiment study stays a separate experiment and is not used as a signal | Adopted |
-| 2026-11-02 | Sentiment rules | One finance-term query per company; titles must name the company; titles naming several of the six left out; VADER thresholds of ±0.05; pilot pass rule; weekly comparisons; headline text and model files kept out of Git | Adopted |
-| 2026-11-02 | Sentiment collection | Plan direct English/US Google News RSS collection in short date windows, with saved responses and coverage checks; use date summaries when publication times cannot support session assignment | Adopted |
-| 2026-11-02 | Sentiment evaluation | Reuse FiQA headline scores and FinEntity entity labels for two separate benchmarks of the unchanged FinBERT checkpoint; replace the earlier SEntFiN-only plan and manual annotation task; keep benchmark results separate from the six-stock news study | Adopted |
-| 2026-11-02 | Phase 6 serving | API and app containers read the saved Phase 5 models, processed masters, and Phase 3 tables from read-only mounts; forecast origins end at 2026-07-31; no sentiment page until the sentiment results exist | Adopted |
-| 2026-11-02 | Phase 6 application | Uploaded CSV or the project's prices; one pair tested with Phase 3 settings and called cointegrated when the direction-adjusted Engle-Granger p is at most 0.05 and the Johansen trace rank is one; normalization from the final year before a chosen fit end; Phase 4 signals; exploratory view for failing pairs; saved Phase 5 models on a separate forecast route | Adopted |
-| 2026-11-02 | Phase 5 trading filter | Accept a fresh long/short entry only when the day-five forecast moves in the reversion direction; retain Phase 4's observed-Z exits | Adopted |
-| 2026-11-02 | Phase 5 targets and batch order | Train on five-session changes in Z and add them to the origin's Z for the forecast; shuffle training windows each epoch with a seeded generator | Adopted |
-| 2026-11-02 | Phase 5 implementation defaults | 20-session trailing volatility, training-only feature scaling, four compact LSTM candidates, persistence comparison, and matched entry calendars | Adopted |
-| 2026-11-01 | Phase 4 design | 2025 mean and `ddof=1` std; enter on ±2 crossings while flat, exit when Z reaches 0, exit takes priority, start flat; separate USD 10,000 accounts; beta-weighted fixed shares sized at the next open; 5 bps per leg; mark open trades at the final close | Adopted |
-| 2026-11-01 | Phase 3 design | ADF lags by AIC and Johansen VAR order by BIC; direction by the smaller Engle-Granger p-value; Holm over 15 pair-level p-values; rank by method agreement, then Engle-Granger p-value; stop on any failed fit; shortlist of two | Adopted |
-| 2026-10-25 | Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
-| 2026-10-25 | Phase 2 methods | Pearson return and log-price correlations, return/risk definitions, OLS beta with intercept, 60-session rolling window, VIX terciles | Adopted |
-| 2026-10-25 | Docker runtime | One image; ordered batch pipeline as the default command; API and app as two containers from that image | Adopted |
-| 2026-10-25 | LSTM device | CPU-only PyTorch build; final models and reported metrics produced on CPU | Adopted |
-| 2026-10-25 | Build reproducibility | Verify only selected Yahoo periods; slice shared Cboe history before price checks; omit wall-clock time from the build manifest | Adopted |
-| 2026-10-24 | Data sources | VIX close from Cboe; stocks and S&P 500 from Yahoo; IBKR used only to check Yahoo | Adopted |
-| 2026-10-24 | Master layout | Column set, hard stops instead of filling, 15% move flag, `\n` line endings | Adopted |
-| 2026-10-18 | Prices | Close drives returns, spreads, and P&L; dividends are omitted and documented | Adopted |
-| 2026-10-18 | Calendar fields | Master stores integer Year, Quarter, and Month; each analysis encodes them as needed | Adopted |
-| 2026-10-18 | Pair selection | If no pair qualifies, carry forward the strongest candidates labelled exploratory | Adopted |
-| 2026-10-18 | LSTM splits | Select on 2018-2023 training / 2024-2025 validation, then refit through 2025 | Adopted |
-| 2026-10-18 | Execution | Signal after the close on day t; fill at the open on day t+1 | Adopted |
-| 2026-10-18 | LSTM framework | PyTorch | Adopted |
-| 2026-10-18 | Sentiment | Google News headlines scored locally with FinBERT; standalone descriptive study | Adopted |
-| 2026-10-18 | API and app | FastAPI API; Streamlit interface calling it over HTTP; local Docker first | Adopted |
+| Area | Decision | Status |
+| --- | --- | --- |
+| Phase 6 sentiment | No sentiment page or route; the sentiment study stays a separate experiment and is not used as a signal | Adopted |
+| Sentiment rules | One finance-term query per company; titles must name the company; titles naming several of the six left out; VADER thresholds of ±0.05; pilot pass rule; weekly comparisons; headline text and model files kept out of Git | Adopted |
+| Sentiment collection | Plan direct English/US Google News RSS collection in short date windows, with saved responses and coverage checks; use date summaries when publication times cannot support session assignment | Adopted |
+| Sentiment evaluation | Reuse FiQA headline scores and FinEntity entity labels for two separate benchmarks of the unchanged FinBERT checkpoint; replace the earlier SEntFiN-only plan and manual annotation task; keep benchmark results separate from the six-stock news study | Adopted |
+| Phase 6 serving | API and app containers read the saved Phase 5 models, processed masters, and Phase 3 tables from read-only mounts; forecast origins end at 2026-07-31; no sentiment page until the sentiment results exist | Adopted |
+| Phase 6 application | Uploaded CSV or the project's prices; one pair tested with Phase 3 settings and called cointegrated when the direction-adjusted Engle-Granger p is at most 0.05 and the Johansen trace rank is one; normalization from the final year before a chosen fit end; Phase 4 signals; exploratory view for failing pairs; saved Phase 5 models on a separate forecast route | Adopted |
+| Phase 5 trading filter | Accept a fresh long/short entry only when the day-five forecast moves in the reversion direction; retain Phase 4's observed-Z exits | Adopted |
+| Phase 5 targets and batch order | Train on five-session changes in Z and add them to the origin's Z for the forecast; shuffle training windows each epoch with a seeded generator | Adopted |
+| Phase 5 implementation defaults | 20-session trailing volatility, training-only feature scaling, four compact LSTM candidates, persistence comparison, and matched entry calendars | Adopted |
+| Phase 4 design | 2025 mean and `ddof=1` std; enter on ±2 crossings while flat, exit when Z reaches 0, exit takes priority, start flat; separate USD 10,000 accounts; beta-weighted fixed shares sized at the next open; 5 bps per leg; mark open trades at the final close | Adopted |
+| Phase 3 design | ADF lags by AIC and Johansen VAR order by BIC; direction by the smaller Engle-Granger p-value; Holm over 15 pair-level p-values; rank by method agreement, then Engle-Granger p-value; stop on any failed fit; shortlist of two | Adopted |
+| Phase 2 scope | Compare return and risk, cover all 15 pairs and benchmark sensitivity, examine relationships by year and with rolling correlations, and add VIX context | Adopted |
+| Phase 2 methods | Pearson return and log-price correlations, return/risk definitions, OLS beta with intercept, 60-session rolling window, VIX terciles | Adopted |
+| Docker runtime | One image; ordered batch pipeline as the default command; API and app as two containers from that image | Adopted |
+| LSTM device | CPU-only PyTorch build; final models and reported metrics produced on CPU | Adopted |
+| Build reproducibility | Verify only selected Yahoo periods; slice shared Cboe history before price checks; omit wall-clock time from the build manifest | Adopted |
+| Data sources | VIX close from Cboe; stocks and S&P 500 from Yahoo; IBKR used only to check Yahoo | Adopted |
+| Master layout | Column set, hard stops instead of filling, 15% move flag, `\n` line endings | Adopted |
+| Prices | Close drives returns, spreads, and P&L; dividends are omitted and documented | Adopted |
+| Calendar fields | Master stores integer Year, Quarter, and Month; each analysis encodes them as needed | Adopted |
+| Pair selection | If no pair qualifies, carry forward the strongest candidates labelled exploratory | Adopted |
+| LSTM splits | Select on 2018-2023 training / 2024-2025 validation, then refit through 2025 | Adopted |
+| Execution | Signal after the close on day t; fill at the open on day t+1 | Adopted |
+| LSTM framework | PyTorch | Adopted |
+| Sentiment | Google News headlines scored locally with FinBERT; standalone descriptive study | Adopted |
+| API and app | FastAPI API; Streamlit interface calling it over HTTP; local Docker first | Adopted |
 
 ## Phase 1: Master data
 
@@ -83,7 +83,7 @@ the period (AAPL 4:1 on 2020-08-31, NVDA 4:1 on 2021-07-20 and 10:1 on
 shows no artificial jumps at those dates.
 
 `Adj Close` additionally adjusts for dividends, but it was computed at download
-time in October 2026. Its historical values therefore include dividends paid in
+time, after the unseen period ended. Its historical values therefore include dividends paid in
 2026: on 2025-12-31 the Adj Close/Close ratio is 0.9973 for AAPL and 0.9937 for
 MSFT, not 1.0. Using it would place information from the unseen period in the
 training data, and its values would depend on the download date.
@@ -165,7 +165,7 @@ also reproduces the manifest bytes; acquisition times remain in the raw manifest
 
 ## Phase 2: Exploratory analysis
 
-### Scope (Adopted 2026-10-25)
+### Scope (Adopted)
 
 The analysis compares the six stocks' returns and risk, examines all 15 stock
 pairs, and describes each stock's sensitivity to the S&P 500. Annual
@@ -180,7 +180,7 @@ All 15 pairs continue to Phase 3; an EDA correlation does not qualify or
 exclude a pair. Cointegration tests, spread regressions, and pair ranking
 belong to that phase.
 
-### Return and risk measures (Adopted 2026-10-25)
+### Return and risk measures (Adopted)
 
 Use the existing Close-based percentage returns, with dividends excluded.
 Include the S&P 500 as a reference alongside the six stocks in the performance
@@ -213,7 +213,7 @@ summary, so a loss on the first session of a later year is counted. Annual
 drawdowns describe losses within that year; the whole-period drawdown can
 span several years. They are labelled separately.
 
-### Pair relationships (Adopted 2026-10-25)
+### Pair relationships (Adopted)
 
 Use Pearson correlation of same-day daily returns as the main comparison.
 Save all 15 unique unordered pairs, their sample counts, and a six-stock
@@ -226,7 +226,7 @@ labelled separately from return correlation. This comparison illustrates how
 similar trends can produce high level correlations without establishing a
 stable equilibrium. Neither measure is evidence of cointegration.
 
-### Benchmark sensitivity (Adopted 2026-10-25)
+### Benchmark sensitivity (Adopted)
 
 For each stock, fit `stock_return = alpha + beta * GSPC_return + error`, using
 same-day percentage returns and an explicit intercept. Save beta, alpha in
@@ -244,7 +244,7 @@ It is not a causal effect, a cointegration hedge ratio, or a CAPM estimate
 using excess returns. Alpha is not presented as evidence of investment skill.
 P-values and confidence intervals are outside this descriptive analysis.
 
-### Relationship stability (Adopted 2026-10-25)
+### Relationship stability (Adopted)
 
 Compare daily-return correlations for all 15 pairs within each calendar year.
 Alongside them, use one fixed trailing window of 60 trading observations,
@@ -265,7 +265,7 @@ from the inputs before an estimate is accepted. Constant or insufficient
 samples in static correlations or benchmark regressions likewise produce
 missing estimates with a status, not invented zeros or infinities.
 
-### VIX context (Adopted 2026-10-25)
+### VIX context (Adopted)
 
 Plot the historical VIX and compare stock volatility and pair correlations
 across low-, medium-, and high-VIX groups. VIX measures expected S&P 500
@@ -303,7 +303,7 @@ No 2026 observations enter this investigation.
 
 ### Adoption
 
-The methods above were reviewed and adopted on 2026-10-25, before any of them
+The methods above were reviewed and adopted before any of them
 was calculated on the historical master: Pearson return correlations, the
 log-price comparison, the return/risk definitions, OLS benchmark sensitivity
 with an intercept, the fixed 60-session rolling window, and the VIX grouping
@@ -319,7 +319,7 @@ carried into later phases and labelled exploratory throughout. They are not
 described as established cointegrated pairs. Given the divergence of these
 stocks over 2018-2025, weak results are a realistic outcome.
 
-### Test design (Adopted 2026-11-01)
+### Test design (Adopted)
 
 These settings were fixed before any Phase 3 result was calculated. The
 [Phase 3 plan](phase_planning/phase_3_plan.md) gives the work order and files.
@@ -403,7 +403,7 @@ Trace rank 1 supplies the main Johansen comparison flag. Maximum-eigenvalue
 disagreement remains visible. The implementation supplies no p-values, so
 none are inferred from the critical-value tables.
 
-### Comparison and shortlist (Adopted 2026-11-01)
+### Comparison and shortlist (Adopted)
 
 The two directions of a pair test the same hypothesis, that the two stocks are
 not cointegrated, so the multiple-testing family has 15 members rather than
@@ -442,7 +442,7 @@ evidence above, they are carried forward with exploratory labels and an
 explanation, following the adopted weak-evidence policy. The specification is
 not changed to produce qualifying results.
 
-### Supporting diagnostics (Adopted 2026-11-01)
+### Supporting diagnostics (Adopted)
 
 Fit `spread_t = a + phi * spread_(t-1) + error_t` to each selected-direction
 historical spread. For 0 < phi < 1, report the discrete AR(1) half-life
@@ -469,7 +469,7 @@ refitting windows remain as recorded below.
 
 ## Phase 4: Statistical baseline
 
-### Spread and normalization (Adopted 2026-11-01)
+### Spread and normalization (Adopted)
 
 The saved Phase 3 regression fitted on 2018-2025 defines the spread. Load its
 full-precision intercept, beta, and stock orientation rather than fitting it
@@ -486,7 +486,7 @@ non-finite residual stops the run. Neither the regression nor the normalization
 parameters are refitted on 2026. Save the actual normalization dates, count,
 mean, standard deviation, and source artifact hashes.
 
-### Trading rules (Adopted 2026-11-01)
+### Trading rules (Adopted)
 
 - Long entry crossing: `Z(t-1) >= -2` and `Z(t) < -2`.
 - Short entry crossing: `Z(t-1) <= 2` and `Z(t) > 2`.
@@ -510,7 +510,7 @@ Daily conditions would permit an entry immediately after starting outside the
 band; that is a different strategy. Save counts of both outside-band days and
 raw crossings so this choice does not hide the observed spread behaviour.
 
-### Execution and accounting (Adopted: timing 2026-10-18, accounting 2026-11-01)
+### Execution and accounting (Adopted)
 
 - **Timing (Adopted):** signals are computed after the close on day t and
   executed at the open on day t+1. Exits follow the same rule. The equity curve
@@ -519,7 +519,7 @@ raw crossings so this choice does not hide the observed spread behaviour.
   next calendar day. A queued market order fills even if the next open gaps
   beyond the signal level; it is not cancelled using later information.
 
-The accounting details were adopted on 1 November 2026:
+The accounting details are:
 
 - **Accounts:** evaluate each pair in a separate USD 10,000 account. Both
   spreads contain AMZN, so do not add their returns or describe the results as
@@ -571,7 +571,7 @@ Cash P&L comes from both stock legs, not from changes in the log spread. The
 fixed holdings approximate the fitted log relationship at entry; their dollar
 weights drift afterwards. Record both legs' exposure through the trade.
 
-### Counts, returns, and diagnostics (Adopted 2026-11-01)
+### Counts, returns, and diagnostics (Adopted)
 
 Report long and short counts separately for outside-band days, raw crossings,
 eligible entry signals while flat, executed entries, and closed trades. The
@@ -610,7 +610,7 @@ Trade-level metrics are then descriptive, and a single trade can decide the
 win rate. That is reported as found and is not a reason to change the
 thresholds.
 
-### Historical checks and evaluation order (Adopted 2026-11-01)
+### Historical checks and evaluation order (Adopted)
 
 First exercise the engine on small known examples. Then run it over
 2018-2025 with the saved full-history coefficients and fixed 2025 normalization,
@@ -651,7 +651,7 @@ The final refit has no validation set. It trains for the epoch count selected
 in the selection stage. Its unseen Z-scores are identical to Phase 4's, so both
 strategies trade the same series and no scale conversion is needed.
 
-### Inputs and targets (Adopted; details 2026-11-02)
+### Inputs and targets (Adopted)
 
 - Features per day, in order: Z, Z lag 1, lag 2, lag 3, and trailing rolling
   standard deviation of Z. The rolling window is 20 trading sessions,
@@ -683,7 +683,7 @@ Twenty feature rows with a trailing 20-session statistic need 39 consecutive
 spread observations. Keep insufficient-context rows visible in the exclusion
 audit rather than padding them.
 
-### Model (Adopted; design 2026-11-02)
+### Model (Adopted)
 
 PyTorch was chosen for explicit control over the training loop, early
 stopping, and the final-refit epoch rule. Models are saved as `.pt` files with
@@ -716,7 +716,7 @@ stops the run for investigation. Poor forecasts do not justify silently
 adding more trials. Validation errors are selection evidence, not an unbiased
 estimate for the selected model.
 
-### Targets and batch order (Adopted 2026-11-02)
+### Targets and batch order (Adopted)
 
 The network predicts the five changes `Z(t+h) - Z(t)` for h = 1 to 5. The
 forecast for each horizon is `Z(t)` plus the predicted change, and errors and
@@ -735,7 +735,7 @@ training, so batch order is an optimization choice, not a leakage control.
 In date order, every epoch would end on the latest months of the training
 period. Validation, evaluation, and inference keep date order.
 
-### Training device (Adopted 2026-10-25)
+### Training device (Adopted)
 
 Training and inference run on CPU, using the CPU-only PyTorch build on both
 Windows and Docker. Each pair contributes under 2,000 short sequences to a
@@ -757,7 +757,7 @@ Linux; [PyTorch documents that limitation](https://docs.pytorch.org/docs/stable/
 Test repeated training and artifact reload separately. Record platform
 differences instead of changing seeds until results agree.
 
-### Evaluation (Adopted 2026-11-02)
+### Evaluation (Adopted)
 
 Report MAE and RMSE for horizons 1-5 for each pair. For N complete origins,
 pooled MAE is the mean absolute error over all `5*N` origin/horizon cells;
@@ -783,13 +783,13 @@ the selection training data, the mean five-session change after Z > 2 was
 decisions may be fragile. The diagnostics are reported only; they select
 nothing.
 
-### LSTM-enhanced strategy (Adopted 2026-11-02)
+### LSTM-enhanced strategy (Adopted)
 
 Use a fixed day-five direction filter on fresh statistical entry crossings
 while that strategy is flat. Accept a long only if `forecast_z_h5 > Z_t`,
 and a short only if `forecast_z_h5 < Z_t`. Equality rejects the entry. There
 is no optimized margin, horizon search, or forecast-based exit. I chose
-this fixed rule on 2 November 2026 to keep the comparison simple
+this fixed rule to keep the comparison simple
 and avoid another layer of strategy tuning.
 
 Observed-Z exits, exit priority, next-open execution, sizing, costs, and
@@ -813,7 +813,7 @@ toward it would treat a validation short crossing as a move away from
 equilibrium. I save each stage's level and report it with the filter
 decisions instead of changing the rule.
 
-### Comparison calendar and reporting (Adopted 2026-11-02)
+### Comparison calendar and reporting (Adopted)
 
 Score forecasts from the final historical close through the last origin
 whose five target dates are all inside the evaluation period. For trading,
@@ -843,7 +843,7 @@ period is held out from model fitting but is not a newly untouched test.
 Do not use those results to choose model settings, filters, or exclusions.
 Retain any corrected evaluated run and record why it changed.
 
-### Implementation and reproduction (Recorded 2026-11-02)
+### Implementation and reproduction (Recorded)
 
 Inference validates input
 sessions against the saved training calendar. Later dates require an
@@ -886,10 +886,10 @@ spread signals. It is not an LSTM input. Headlines collected now cannot show
 what was available at a past prediction time, which is a further reason not to
 use them as model inputs.
 
-### Evaluation (Adopted 2026-11-02)
+### Evaluation (Adopted)
 
 Use two existing labeled datasets instead of manually labeling 150-300
-headlines. The earlier SEntFiN-only plan was replaced on 2 November 2026 to
+headlines. The earlier SEntFiN-only plan was replaced to
 cover both short financial headlines and longer paragraphs with entity
 annotations. The model remains `ProsusAI/finbert`, without fine-tuning.
 
@@ -937,7 +937,7 @@ therefore reports model-estimated sentiment and coverage, without a measured
 accuracy claim for that collection. Its input window still depends on the
 coverage pilot.
 
-### Benchmark preparation (Adopted 2026-11-02)
+### Benchmark preparation (Adopted)
 
 - Keep records with exactly one annotation for each benchmark. Retain the
   complete source files, but exclude multi-annotation records from the simple
@@ -976,7 +976,7 @@ coverage pilot.
   benchmark keeps a few hundred records, so a difference of a few points
   between FinBERT and VADER may be noise.
 
-### Procedure (Adopted 2026-11-02)
+### Procedure (Adopted)
 
 The ordered steps, file list, and checks are in the
 [sentiment plan](phase_planning/sentiment_plan.md). The pilot may still change
@@ -1072,12 +1072,12 @@ on scores, and each change is recorded here with its reason.
   counts, exclusions, and classification metrics exactly. Probabilities and
   score-derived numeric diagnostics/tables must agree within an absolute
   `1e-5`. Exact floating-point equality between Windows and Linux is not
-  assumed. The numeric distinction was clarified during verification on
-  2 November 2026: Docker's FiQA MAE/RMSE differed by about `3e-9` and `2e-8`,
+  assumed. The numeric distinction was clarified during verification:
+  Docker's FiQA MAE/RMSE differed by about `3e-9` and `2e-8`,
   while its classification metrics were identical. The tolerance itself did
   not change; numeric errors derived from probabilities use the same bound.
 
-### Pilot decision (2026-11-02)
+### Pilot decision
 
 The saved 42-company-week pilot passed the adopted rule. Apple, Microsoft,
 and NVIDIA each had five usable weeks; Amazon and Alphabet had six; Meta had
@@ -1105,7 +1105,7 @@ Saved pilot/full roles, acquisition settings, and expected windows are checked
 before use. Settings that differ from the adopted sentiment thresholds are
 rejected rather than silently recorded alongside hard-coded labels.
 
-### Review corrections (2026-11-02)
+### Review corrections
 
 A review of the first full run (`sentiment_v1`) found three rules applied
 differently from their purpose. I changed them for coverage and consistency,
@@ -1158,7 +1158,7 @@ run's outputs are kept unchanged.
   Streamlit provides in plain Python with little code. Dash offers finer layout
   control at roughly two to three times the code; Gradio suits single
   input-to-prediction demos better than a page of test results and charts.
-  (Rationale revised 2026-11-02 for the flow below; the choice is unchanged.)
+  (Rationale revised for the flow below; the choice is unchanged.)
 - **Rule:** the Streamlit app reaches models only through the API over HTTP.
   It never loads model artifacts directly, so the interface-to-API-to-model
   path is what gets tested. The service does every calculation; the interface
@@ -1166,7 +1166,7 @@ run's outputs are kept unchanged.
 - **Deployment:** local Docker first. Hosting is Open; a public URL is claimed
   only if verified.
 
-### Docker runtime (Adopted 2026-10-25)
+### Docker runtime (Adopted)
 
 One Dockerfile builds one image holding all project code and the locked
 dependencies. Its default command runs the batch phases in order, each phase
@@ -1181,10 +1181,10 @@ the workstation. Every batch run rebuilds derived data from the raw
 snapshots, so a result that exists only on the workstation, or a script that
 fails without writing its file, cannot pass the Docker check. The serving
 containers read saved files instead; see
-[Serving containers](#serving-containers-adopted-2026-11-02). IBKR data are
+[Serving containers](#serving-containers-adopted). IBKR data are
 excluded for licensing reasons.
 
-### Price input and cointegration test (Adopted 2026-11-02)
+### Price input and cointegration test (Adopted)
 
 The application tests one pair on prices the user supplies. The user either
 uploads one CSV file, with a `Date` column and one column of closing prices
@@ -1217,7 +1217,7 @@ Choosing AMZN_META because Phase 3 ranked it first is itself a search, so its
 single-pair p-value overstates the evidence. The application says so beside
 the result for any of the 15 project pairs.
 
-### Spread, Z-scores, and signals (Adopted 2026-11-02)
+### Spread, Z-scores, and signals (Adopted)
 
 The spread's mean and sample standard deviation (`ddof=1`) come from the final
 year of the fitting window: the sessions later than the same calendar date one
@@ -1226,7 +1226,7 @@ window of 250 sessions. The regression and normalization stay fixed for the
 sessions after the fit end. Z-scores up to the fit end are returned as
 in-sample context.
 
-Signals follow the [Phase 4 trading rules](#trading-rules-adopted-2026-11-01)
+Signals follow the [Phase 4 trading rules](#trading-rules-adopted)
 unchanged, over the sessions after the fit end. The run starts flat, and the
 last Z-score of the fitting window serves only as the comparison for the first
 later session. The response gives dated signals and long and short counts,
@@ -1246,7 +1246,7 @@ which imports the Phase 3-5 functions without editing them. Run on the
 project's AMZN_META prices with a 2025-12-31 fit end, it must reproduce the
 saved Phase 4 unseen Z-scores and signal counts.
 
-### Saved-model forecasts and routes (Adopted 2026-11-02)
+### Saved-model forecasts and routes (Adopted)
 
 A separate route serves the saved `phase5_v2` LSTM bundles for AMZN_META and
 NVDA_AMZN through `forecast_from_prices`. At startup the API reproduces each
@@ -1280,7 +1280,7 @@ calendar library, which nothing in the project requires. Target dates after
 
 The application is a demonstration on historical prices, not a trading tool.
 
-### Serving containers (Adopted 2026-11-02)
+### Serving containers (Adopted)
 
 The API and app containers start from the batch image with different
 commands. They read `artifacts/lstm/phase5_v2/`, `data/processed/`, and
@@ -1298,7 +1298,7 @@ another way to supply these files.
 
 ### Sentiment in the application
 
-Decided 2 November 2026: the interface has no sentiment page and the API no
+The interface has no sentiment page and the API no
 sentiment route. The study's results are mixed. FinBERT beats VADER on both
 benchmarks, but its FinEntity accuracy is below a constant neutral reference,
 and almost all collected headlines carry dates without times, so they cannot

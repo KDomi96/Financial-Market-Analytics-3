@@ -1,6 +1,6 @@
 # Phase 2 plan: exploratory analysis
 
-Status: implemented and verified, 25 October 2026; results are in the
+Status: implemented and verified; results are in the
 [Phase 2 analysis](phase_2_analysis.md). The scope and the detailed methods are
 adopted in [methodology](../methodology.md#phase-2-exploratory-analysis):
 compare return and risk, examine every stock pair and benchmark sensitivity,
@@ -58,7 +58,7 @@ The input master remains unchanged.
 
 **3. Explore return and risk in the notebook.** Build the performance and
 drawdown views, then the whole-period and annual summaries using the
-[return and risk definitions](../methodology.md#return-and-risk-measures-adopted-2026-10-25).
+[return and risk definitions](../methodology.md#return-and-risk-measures-adopted).
 Record the peak and trough dates of each maximum drawdown with its size.
 Check compounding, percentage units, annual boundaries, and the initial
 drawdown baseline before interpreting any comparison.
@@ -89,7 +89,7 @@ window or a pair because it looks most favourable. Keep all 15 pairs available
 for Phase 3.
 
 **7. Add VIX context.** Plot the historical VIX, then apply the
-[grouping method](../methodology.md#vix-context-adopted-2026-10-25)
+[grouping method](../methodology.md#vix-context-adopted)
 to dates with valid stock and benchmark returns. Save the group boundaries at
 full precision, with their estimation dates, in the run metadata; rounded
 values could put a VIX close that sits on a boundary in the wrong group. Calculate the grouped daily
@@ -105,7 +105,7 @@ tables and figures without requiring an interactive notebook session. Add
 small tests for calculations and date handling that could fail silently.
 Add the pipeline script, which runs the master build and then the EDA, and
 make it the image's default command, as set out under
-[Docker runtime](../methodology.md#docker-runtime-adopted-2026-10-25).
+[Docker runtime](../methodology.md#docker-runtime-adopted).
 
 **9. Write the findings and verify reproduction.** Execute the notebook from
 top to bottom, reproduce its numeric outputs through the script, and inspect

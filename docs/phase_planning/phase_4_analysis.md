@@ -1,7 +1,5 @@
 # Phase 4 analysis: the statistical baseline
 
-1 November 2026
-
 The fixed baseline loses 3.69% on AMZN on META and gains 21.83% on AMZN on
 NVDA over the 145 sessions from 2 January to 31 July 2026. Each pair uses a
 separate USD 10,000 account. Both remain exploratory: these trading results
@@ -152,7 +150,7 @@ dates, directions, counts, and statuses agree exactly. The largest CSV
 difference is 2.18e-11. See the
 [review record](../../outputs/metrics/phase4_review_validation.json),
 [Docker record](../../outputs/metrics/phase4_docker_validation.json), and
-[EXP-004](../experiment_log.md#exp-004--2026-11-01--phase-4-statistical-baseline).
+[EXP-004](../experiment_log.md#exp-004--phase-4-statistical-baseline).
 
 ## Limits and Phase 5 handoff
 

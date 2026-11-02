@@ -1,7 +1,7 @@
 # Market data sources and acquisition
 
 The initial market dataset was acquired programmatically from Yahoo Finance
-on 17 October 2026 using yfinance 1.7.0, pandas 3.0.6, and Python 3.12.13.
+using yfinance 1.7.0, pandas 3.0.6, and Python 3.12.13.
 The exact installed dependencies are recorded in `uv.lock` and each acquisition
 manifest. No API key is required by this downloader.
 
@@ -90,8 +90,8 @@ so committed source-file bytes continue to match their recorded checksums.
 VIX in the master comes from Cboe's official daily history file, not from
 Yahoo. The reasons are in the [Phase 1 source analysis](phase_planning/phase_1_analysis.md).
 
-Snapshot: `data/raw/cboe/20261024T163804809102Z/VIX.csv`, downloaded on
-24 October 2026 with `scripts/download_cboe.py` from
+Snapshot: `data/raw/cboe/20261024T163804809102Z/VIX.csv`, downloaded with
+`scripts/download_cboe.py` from
 `https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv`
 (Cboe redirects to `cdn-api.cboe.com`). The response body is saved unchanged,
 so unlike the Yahoo files this is the provider's original file. It holds
@@ -106,8 +106,8 @@ is aligned to the stock calendar.
 
 ## Interactive Brokers (cross-check only)
 
-Snapshot: `data/raw/ibkr/20261024T163751761776Z/`, downloaded on 24 October
-2026 with `scripts/download_ibkr.py` through a read-only IB Gateway session
+Snapshot: `data/raw/ibkr/20261024T163751761776Z/`, downloaded
+with `scripts/download_ibkr.py` through a read-only IB Gateway session
 (ib_async 2.1.0, API server version 178). It contains daily `TRADES` bars for
 the same eight instruments: date, open, high, low, close, volume, average
 (VWAP), and barCount. IBKR documents `TRADES` bars as split-adjusted but not
@@ -142,7 +142,7 @@ results.
 
 ## Phase 1 processing provenance
 
-The master build on 25 October 2026 uses the Yahoo snapshot
+The master build uses the Yahoo snapshot
 `20261017T112037944190Z` for the six stocks and S&P 500, and the Cboe snapshot
 `20261024T163804809102Z` for VIX. No IBKR records enter the build. Raw files
 remain unchanged. Snapshot IDs, selected input hashes, build-file hashes,
@@ -170,7 +170,7 @@ from the build is below 0.0000000001 percentage points. Repeat builds reproduce
 all eight generated CSV hashes and the manifest bytes in the local environment.
 The executed `notebooks/01_master_data.ipynb` records these checks and findings.
 
-The Docker build was also verified on 25 October 2026. It starts without
+The Docker build was also verified. It starts without
 prebuilt interim/processed files and regenerates all eight CSVs from the
 permitted raw snapshots. Their hashes match Windows exactly; all 64 data
 checks and 13 offline tests pass. The container runs as UID 10001 and exits
@@ -189,8 +189,8 @@ The source limitations in the Phase 1 source analysis still apply.
 ## Sentiment benchmark snapshots
 
 The first benchmark snapshot is
-`data/raw/sentiment/benchmarks/20261102T173344495719Z/`. It was downloaded on
-2 November 2026 using `scripts/download_sentiment_benchmarks.py` in the locked
+`data/raw/sentiment/benchmarks/20261102T173344495719Z/`. It was downloaded
+using `scripts/download_sentiment_benchmarks.py` in the locked
 venv. No dependencies were added. Its manifest records URLs, source revisions,
 download times, file sizes, SHA-256 hashes, source summaries, and acquisition
 settings/code hashes. All seven saved file hashes and dataset counts were
@@ -250,15 +250,15 @@ model, screen-file, and pilot acquisition is recorded below.
 
 ## Google News RSS preliminary requests
 
-Three requests to `https://news.google.com/rss/search` returned HTTP 200 on
-2 November 2026 from the project venv, using Python's standard library.
+Three requests to `https://news.google.com/rss/search` returned HTTP 200
+from the project venv, using Python's standard library.
 Each used `hl=en-US`, `gl=US`, and `ceid=US:en`, without an API key or sign-in.
 
 | Search query (`q`) | Raw item count | Earliest / latest reported publication time (UTC) |
 | --- | --- | --- |
 | `Microsoft (stock OR shares OR earnings) after:2026-01-01 before:2026-01-08` | 24 | 2026-01-02 08:00 / 2026-01-08 08:00 |
 | `NVIDIA (stock OR shares OR earnings) after:2026-07-01 before:2026-07-08` | 10 | 2026-07-02 07:00 / 2026-07-08 07:00 |
-| `Microsoft stock when:7d` | 100 | 2026-10-26 17:06:07 / 2026-11-02 17:31:02 |
+| `Microsoft stock when:7d` | 100 | Spread over the seven days before the request |
 
 These were connectivity and retrieval probes. The responses were inspected
 in memory rather than saved as source snapshots, and the counts precede
@@ -325,8 +325,8 @@ counts, with the same usable weeks, and the queries were kept unchanged.
 ## Full Google News snapshot
 
 The full Google News snapshot is
-`data/raw/sentiment/google_news/20261102T195614519732Z/`, collected on
-2 November 2026 for 1 January-31 July 2026. Its 326 attempts cover 186 initial
+`data/raw/sentiment/google_news/20261102T195614519732Z/`, collected
+for 1 January-31 July 2026. Its 326 attempts cover 186 initial
 Saturday-Friday company windows. After splitting, 251 leaf windows succeeded
 and five single-day windows remained capped; none failed. All saved response
 hashes were independently checked. The 70 split windows' own responses are
@@ -350,7 +350,7 @@ availability or completeness. Counts and exclusions are in
 - [Yahoo Finance S&P 500 history](https://finance.yahoo.com/quote/%5EGSPC/history/):
   benchmark identifier and provider price-field descriptions.
 - [Cboe VIX historical data](https://www.cboe.com/tradable-products/vix/vix-historical-data):
-  the official VIX history, downloaded on 24 October 2026 and used for VIX in
+  the official VIX history, downloaded and used for VIX in
   the master.
 - [IBKR TWS API historical data documentation](https://interactivebrokers.github.io/tws-api/historical_bars.html):
   bar fields, `TRADES` adjustment, and volume filtering for the cross-check

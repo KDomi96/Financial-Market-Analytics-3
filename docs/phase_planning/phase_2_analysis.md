@@ -1,7 +1,5 @@
 # Phase 2 analysis: exploring the historical data
 
-25 October 2026
-
 This note reports what the exploratory analysis found for the six stocks and
 the S&P 500 over 2018-2025. The only input is
 `data/processed/master_historical.csv`; the unseen 2026 data were not opened.
@@ -202,4 +200,4 @@ relationships and assess cointegration evidence for all 15 pairs using
 Engle-Granger and Johansen tests.
 
 Code corrections made after review, which left every table unchanged, are
-recorded in [EXP-002](../experiment_log.md#exp-002--2026-10-25--phase-2-review-and-rerun).
+recorded in [EXP-002](../experiment_log.md#exp-002--phase-2-review-and-rerun).

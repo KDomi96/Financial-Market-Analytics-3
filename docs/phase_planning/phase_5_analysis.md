@@ -1,7 +1,5 @@
 # Phase 5 analysis: LSTM forecasts and the entry filter
 
-2 November 2026
-
 The LSTM does not improve on persistence on the unseen interval for either
 exploratory pair, at any of the five horizons. The day-five filter leaves AMZN
 on META's trades unchanged. For AMZN on NVDA, it rejects the first long

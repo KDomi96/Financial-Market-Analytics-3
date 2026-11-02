@@ -1,7 +1,5 @@
 # Phase 3 analysis: comparing the pairs
 
-1 November 2026
-
 AMZN_META is the only pair with nominal support from Engle-Granger and
 Johansen at 5%. It does not survive the pair-level Holm adjustment. No pair
 meets all the adopted support conditions, so the two shortlisted pairs,
@@ -127,7 +125,7 @@ all saved spreads. Run checks and fitted-object dates are recorded in
 [`run_metadata.json`](../../outputs/metrics/pair_selection/run_metadata.json).
 
 The final run is logged as
-[EXP-003](../experiment_log.md#exp-003--2026-11-01--phase-3-pair-selection).
+[EXP-003](../experiment_log.md#exp-003--phase-3-pair-selection).
 All 43 offline tests pass locally and in Docker, and the notebook executes all
 five code cells without errors. Its repeat run reproduces all 24 saved output
 hashes. Independent checks use centered sums for all 30 OLS directions, verify

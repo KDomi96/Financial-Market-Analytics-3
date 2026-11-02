@@ -48,7 +48,7 @@ increasing dates, and finite positive prices with consistent OHLC values.
 Stock volume must be a positive whole number; index volume is not checked. A
 failure stops the build. Nothing is filled, interpolated, deduplicated, or
 dropped by an inner join to get past a problem. The pinned snapshots passed
-all of these checks when I inspected them on 24 October 2026.
+all of these checks when I inspected them.
 
 **2. Align.** The Yahoo S&P 500 dates define the trading calendar. Each
 stock's dates must match it exactly. The Cboe VIX series is matched to the

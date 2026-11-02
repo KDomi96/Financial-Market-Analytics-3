@@ -1,6 +1,6 @@
 # Sentiment plan: news sentiment for the six stocks
 
-Status: implemented and verified, 2 November 2026. Steps 1-16 are complete.
+Status: implemented and verified. Steps 1-16 are complete.
 Step 16 corrected the cleaning of split request windows and two benchmark
 rules after a review; the reported run is `sentiment_v2`, and the first run's
 `sentiment_v1` outputs are kept unchanged. The eight-cell notebook, the full
@@ -10,7 +10,7 @@ test suite locally and in Docker, and saved-input reruns passed. See
 The pinned model, benchmark downloads, unscored pilot, and full news snapshot
 are saved; see
 [data sources](../data_sources.md#sentiment-benchmark-snapshots). All rules
-below were adopted on 2 November 2026 (step 2). Decisions and their reasons are in
+below were adopted in step 2. Decisions and their reasons are in
 [methodology](../methodology.md#sentiment).
 
 The study scores Google News headlines about the six companies with FinBERT
@@ -33,7 +33,7 @@ is reported as found.
 | `data/processed/master_unseen.csv` | Daily returns for the weekly comparison |
 | `data/processed/statistical_baseline/unseen_zscores.csv`, `outputs/backtests/statistical_baseline/phase4_v1/unseen/signals.csv` | Phase 4 Z-scores and the five eligible entry signals |
 
-Repository details looked up on 2 November 2026, before any download:
+Repository details looked up before any download:
 
 - FinBERT's head revision was `0bc2ac10dda6929bcb1f77ccc43c7ec5c424f031`. Its
   licence terms (CC BY-NC-SA 4.0, copyright MIH AI B.V.) and a
@@ -229,14 +229,14 @@ Phases 1-5 need, but not the local sentiment inputs.
 
 ### A. Rules before code
 
-**1. Record the plan.** Done on 2 November 2026: this file, the methodology
+**1. Record the plan.** Done: this file, the methodology
 entries, and the checklist links.
 
-**2. Confirm the rules.** Done on 2 November 2026: all proposed rules were
+**2. Confirm the rules.** Done: all proposed rules were
 adopted as written, including the finance terms and leaving out headlines that
 name several companies.
 
-**3. Ignore rules.** Done on 2 November 2026. `.gitignore` now covers
+**3. Ignore rules.** Done. `.gitignore` now covers
 `data/interim/sentiment/` and `artifacts/sentiment/*/finbert/`, and
 `.dockerignore` excludes the model folder. `git check-ignore` confirmed that
 headline tables and model weights are ignored, while the daily tables, metrics,
@@ -244,7 +244,7 @@ headline tables and model weights are ignored, while the daily tables, metrics,
 
 ### B. Model side
 
-**4. Add the libraries.** Done on 2 November 2026 with
+**4. Add the libraries.** Done with
 `uv add transformers vaderSentiment scikit-learn`. A repeated trial on a copy
 of the lock and the real change agreed: all 91 locked packages kept their
 versions, none was removed, and 26 were added, including transformers 5.22.1,
@@ -271,7 +271,7 @@ differ. Download FinBERT's `config.json`, `model.safetensors`,
 and write `model_revision.json` with the revision, file hashes, licence, and
 download time. Record both in data sources.
 
-Completed on 2 November 2026. The new benchmark snapshot is
+Completed. The new benchmark snapshot is
 `20261102T194353691191Z`; all nine source hashes and all six model-file hashes
 were checked. The model weights also match the repository's LFS SHA-256.
 
@@ -347,7 +347,7 @@ the experiment log, and update data sources, the data dictionary, the local
 checklist, and the README commands. Phase 6 step 1 then decides whether the
 interface shows the results.
 
-**16. Review corrections.** Done on 2 November 2026, after a review of the
+**16. Review corrections.** Done after a review of the
 first full run. Cleaning had read only the final narrower requests of split
 windows, although the split windows' own saved responses held items those
 requests never returned. It now reads every saved response, which raises the

@@ -2,7 +2,7 @@
 
 Append-only record of runs that produced citable numbers. Interpretation and decisions are in the phase analysis documents.
 
-## EXP-001 | 2026-10-25 | Phase 2 exploratory analysis
+## EXP-001 | Phase 2 exploratory analysis
 
 - **Question:** Describe return and risk, all 15 pair correlations, S&P 500 sensitivity, their stability, and VIX context for 2018-2025.
 - **Change from previous:** First run.
@@ -14,7 +14,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** All pairs are positively but loosely correlated in returns, and the correlations moved a lot over time; this says nothing yet about cointegration.
 - **Next:** Phase 3 tests all 15 pairs for cointegration.
 
-## EXP-002 | 2026-10-25 | Phase 2 review and rerun
+## EXP-002 | Phase 2 review and rerun
 
 - **Question:** Do the implemented calculations reproduce independently, and do the review corrections change EXP-001's results?
 - **Change from previous:** Fixed missing correlations in the symmetry check and matrix diagonal, and the count of incomplete windows when history is shorter than the rolling window. Both new regression tests failed before the fixes and passed afterwards. Corrected the notebook and analysis explanations of correlation, unexplained variation, and log-price gaps.
@@ -26,7 +26,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** EXP-001's numeric results are unchanged. Its description of correlations as "loosely" correlated is replaced by the actual range, 0.525 to 0.708, in the analysis; these descriptive results do not establish cointegration or explain the causes of residual variation.
 - **Next:** Phase 3 tests all 15 pairs for cointegration.
 
-## EXP-003 | 2026-11-01 | Phase 3 pair selection
+## EXP-003 | Phase 3 pair selection
 
 - **Question:** Compare all 15 historical stock pairs, select the OLS direction, and carry two candidates forward under the adopted evidence rules.
 - **Change from previous:** First Phase 3 run. Notebook exploration was promoted into the package and rerun with the same settings; no statistical variants were tried.
@@ -38,7 +38,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** Findings and limitations are in [Phase 3 analysis](phase_planning/phase_3_analysis.md); no established cointegration or trading profit is claimed.
 - **Next:** Plan Phase 4 using the saved full-history coefficients and 2025-only normalization; retain the exploratory labels.
 
-## EXP-004 | 2026-11-01 | Phase 4 statistical baseline
+## EXP-004 | Phase 4 statistical baseline
 
 - **Question:** Apply the two exploratory spreads to unseen data and establish an auditable statistical baseline for Phase 5.
 - **Change from previous:** First Phase 4 run, using the two exploratory pairs selected in EXP-003. The reviewed settings were recorded in config before any real backtest. No threshold, sizing, shortlist, or cost variants were tried. A review before unseen evaluation corrected saved-normalization loading and protection against replacing evaluated inputs.
@@ -50,7 +50,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** These few exploratory trades describe this interval; findings, the open loss, and non-neutral exposures are discussed in [Phase 4 analysis](phase_planning/phase_4_analysis.md).
 - **Next:** Plan Phase 5 using the fixed baseline conventions and historical-only model selection.
 
-## EXP-005 | 2026-11-02 | Phase 5 historical selection and refit
+## EXP-005 | Phase 5 historical selection and refit
 
 - **Question:** Select the two spread forecasters on historical validation and prepare the fixed final models before unseen evaluation.
 - **Change from previous:** First Phase 5 run after the reviewed plan. Targets are five changes from the origin Z; training windows use seeded shuffling. The day-five filter and Phase 4 accounting are fixed.
@@ -62,31 +62,31 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** AMZN_META does not improve on persistence on this validation measure; NVDA_AMZN has a 3.08% lower RMSE. These are selection results conditional on a shortlist chosen through 2025.
 - **Next:** Finish the implementation review, verify stage and artifact isolation, then evaluate the frozen models.
 
-## EXP-006 | 2026-11-02 | Reviewed Phase 5 evaluation and reproduction
+## EXP-006 | Reviewed Phase 5 evaluation and reproduction
 
 - **Question:** Evaluate the frozen LSTMs and fixed entry filter, then verify saved results and inference in Docker.
 - **Change from previous:** Five review fixes validate reused source hashes, complete preprocessing bundles, session calendars, independent forecast keys, and selection provenance. Each has a failing-then-passing regression test. The reviewed historical sweep was repeated before unseen evaluation; candidate scores and selected epochs were unchanged. A direct Python run first failed because matplotlib selected an unavailable Tk backend; the runner now selects the headless backend. No model, seed, threshold, or trading rule changed.
 - **Data:** Same historical fitting/validation windows as EXP-005. Final models train on 1,968 samples through 2025; the unseen evaluation explicitly reads 2026-01-02 through 2026-07-31. Each pair has 141 origins from 2025-12-31 through 2026-07-24 and 705 predictions. No choice was tuned after viewing these outcomes.
 - **Settings:** Same `configs/lstm_forecast.json`, selected 32-unit / 0.001 models, seed 42, final epochs 22/29, fixed h5 direction filter, common 140-origin entry calendar, and Phase 4 accounting. Evaluation ran with training patched to raise if called. The notebook, standalone historical/evaluation stages, and historical/full pipelines were exercised.
-- **Environment:** Windows Python 3.12.13 and torch 2.15.0+cpu for reported artifacts; identical locked package versions in the Linux Docker image `financial-market-analytics-3:phase5-20261102-final`. CPU, one intra-op/inter-op thread, deterministic operations. The pipeline validates and retains the earlier frozen Phase 3 handoff to preserve Phase 4's lockfile provenance; fresh containers rebuild every phase.
+- **Environment:** Windows Python 3.12.13 and torch 2.15.0+cpu for reported artifacts; identical locked package versions in the Linux Docker image. CPU, one intra-op/inter-op thread, deterministic operations. The pipeline validates and retains the earlier frozen Phase 3 handoff to preserve Phase 4's lockfile provenance; fresh containers rebuild every phase.
 - **Result:** Unseen pooled RMSE is 0.575604 versus persistence 0.538715 for AMZN_META and 0.710382 versus 0.688589 for NVDA_AMZN. Filtered net account returns are -3.69173% and 21.00000%, versus matched baseline -3.69173% and 21.83168%. AMZN_META has one closed and one open trade; NVDA_AMZN has two closed trades. Full metrics and ledgers are under `outputs/metrics/lstm/phase5_v1/` and `outputs/backtests/lstm_comparison/phase5_v1/`.
 - **Status:** Implementation verified locally with 76 tests, six executed notebook code cells, 104 repeated Phase 5 file hashes, 14 inspected figures, and 46 unchanged protected earlier files. Both final Docker pipeline modes exit 0 and all 76 Docker tests pass. Independent equity reconstruction differs by at most USD 7.28e-12. Docker reload of the identical Windows weights differs by at most 1.49e-8. Independent Linux retraining has forecast differences up to 0.0170184 Z units, beyond the planned tolerance; that numeric check remains unresolved. Model choices, epochs, and discrete trading decisions agree. See `outputs/metrics/phase5_review_validation.json` and `outputs/metrics/phase5_docker_validation.json`.
 - **Interpretation:** Both LSTMs lose to persistence on pooled unseen errors. The entry filter leaves one pair unchanged and reduces the other pair's return. Findings and limitations are in [Phase 5 analysis](phase_planning/phase_5_analysis.md); the retraining tolerance was not widened.
 - **Next:** Review the saved findings and reproduction exception before treating Phase 5 as fully closed. Sentiment, API/web, and submission packaging remain separate tasks.
 
-## EXP-007 | 2026-11-02 | Phase 5 same-settings rerun after review
+## EXP-007 | Phase 5 same-settings rerun after review
 
 - **Question:** Correct the saved diagnostics found incomplete in review without changing any model, filter, or accounting choice.
 - **Change from previous:** `model_version` is `phase5_v2`. The run adds direction base rates to `seed_agreement.csv`, writes `filter_decisions.csv` and `unseen_filter_decisions.csv`, draws persistence on the learning curves, and keeps `ignored_reason` in its Phase 4 meaning. A pipeline helper moved from `scripts/run_pipeline.py` into `src/market_analytics/pipeline.py`. Features, training, selection, the filter rule, and accounting are unchanged. A new version was needed because the v1 evaluation contract fixes the code of an evaluated run.
 - **Data:** Same windows as EXP-005/006.
 - **Settings:** Same `configs/lstm_forecast.json` apart from the version label. Command: `uv run --locked python scripts/run_lstm_forecast.py`, followed by notebook execution and both pipeline modes.
-- **Environment:** As EXP-006; Docker image `financial-market-analytics-3:phase5-v2-20261102`.
+- **Environment:** As EXP-006, in a rebuilt Docker image.
 - **Result:** 84 of the 102 shared files are byte-identical to v1, including all weights, forecasts, ledgers, and accounts; the 18 others differ only as listed above. Validation filter decisions: AMZN_META accepts both long entries (both accounts 27.45%); NVDA_AMZN rejects 7 of 8 short entries (filtered -2.75% against matched 6.43%). Validation direction accuracy: AMZN_META 53.61% against 53.01% for a move toward zero; NVDA_AMZN 62.45% against 59.44% for a move toward the 2.784 resting level. Unseen day-five direction was right in 2 of 5 scored filter decisions.
 - **Status:** 77 tests pass locally and in Docker; notebook 05 runs all seven code cells; both local and Docker pipeline modes exit 0; v1 and v2 hashes unchanged after the pipelines. Linux retraining matches every discrete value in 72 files with forecast differences up to 0.017 Z; saved-weight reload in Docker is within 1.49e-8. See `outputs/metrics/phase5_review_validation.json` and `outputs/metrics/phase5_docker_validation.json`.
 - **Interpretation:** In [Phase 5 analysis](phase_planning/phase_5_analysis.md). The conclusions of EXP-006 stand; the validation trading result and base rates are now reported with them.
 - **Next:** Sentiment, API/web, and submission packaging.
 
-## EXP-008 | 2026-11-02 | Fixed FinBERT benchmark evaluation
+## EXP-008 | Fixed FinBERT benchmark evaluation
 
 - **Question:** Measure the unchanged checkpoint on the two existing labeled datasets before collecting the study's news.
 - **Change from previous:** First sentiment evaluation. No model fitting or threshold tuning.
@@ -98,7 +98,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** FinBERT has higher macro-F1 than the references on both collections, but lower accuracy than the majority reference on FinEntity. These results do not measure accuracy on the unlabeled Google News headlines.
 - **Next:** Check the unscored news pilot and keep collection decisions separate from sentiment scores.
 
-## EXP-009 | 2026-11-02 | Unscored six-company Google News pilot
+## EXP-009 | Unscored six-company Google News pilot
 
 - **Question:** Check whether the adopted RSS queries retrieve enough usable headlines to proceed with the descriptive study.
 - **Change from previous:** First saved collection pilot; no news scoring.
@@ -110,7 +110,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** The adopted pass rule supports proceeding, with uneven coverage and one cap recorded. It does not establish complete historical coverage or historical availability.
 - **Next:** Keep the adopted queries and cleaning rules, collect January-July, and score only after collection rules are recorded.
 
-## EXP-010 | 2026-11-02 | Six-stock sentiment study and offline reproduction
+## EXP-010 | Six-stock sentiment study and offline reproduction
 
 - **Question:** Describe the retrieved six-company news sample and reproduce the results from saved inputs without rerunning Phases 1-5.
 - **Change from previous:** Full snapshot `20261102T195614519732Z` after the pilot passed; the adopted queries and cleaning rules are unchanged. Review fixes cover timing-gap propagation, empty schemas, fixed-threshold validation, and snapshot roles/settings/windows.
@@ -122,7 +122,7 @@ Append-only record of runs that produced citable numbers. Interpretation and dec
 - **Interpretation:** The sample supports a descriptive news study, not measured news-label accuracy or a predictive/causal claim. FinEntity performance and collection/timestamp limitations remain as reported in [sentiment findings](phase_planning/sentiment_analysis.md).
 - **Next:** Phase 6 step 1 decides whether to display the saved sentiment results; submission packaging must settle access to the local-only inputs.
 
-## EXP-011 | 2026-11-02 | Corrected sentiment run (sentiment_v2)
+## EXP-011 | Corrected sentiment run (sentiment_v2)
 
 - **Question:** Rerun the sentiment study after a review found that cleaning skipped the saved responses of split request windows and that two benchmark rules were applied too broadly.
 - **Change from previous:** Cleaning reads every saved successful response, narrower requests first. A FiQA headline listed under two IDs for different targets counts as multi-annotation. PhraseBank containment needs an entry of at least five words. Queries, model, thresholds, and comparison rules are unchanged. EXP-010 outputs stay in the `sentiment_v1` folders.

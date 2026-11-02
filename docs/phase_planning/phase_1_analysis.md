@@ -1,7 +1,5 @@
 # Phase 1 analysis: checking the market data
 
-24 October 2026
-
 Yahoo Finance is the project's market data source. Before building the master
 dataset I checked the Yahoo download against two independent references:
 daily bars from Interactive Brokers (IBKR), and Cboe's official VIX history.

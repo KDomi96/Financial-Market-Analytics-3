@@ -1,13 +1,13 @@
 # Phase 5 plan: LSTM forecasts and strategy comparison
 
-Status: implemented, 2 November 2026. Local reproduction, notebook execution,
+Status: implemented. Local reproduction, notebook execution,
 both Docker pipeline modes, and saved-weight reload are verified. Independent
 Linux retraining does not meet Windows numeric tolerance; that check remains
 unresolved. See [findings](phase_5_analysis.md) and the Phase 5 review/Docker
 verification records. The fitting
 stages, input/target structure, CPU framework, and day-five entry filter are
 adopted, as are change targets, seeded shuffling, and the remaining defaults
-below (all on 2 November 2026). Decisions and
+below. Decisions and
 their reasons are in [methodology](../methodology.md#phase-5-lstm-forecasts-and-strategy-comparison).
 
 Phase 5 forecasts each shortlisted spread, measures whether those forecasts
@@ -49,15 +49,15 @@ can load without fitting anything.
 | Selection fit | Refit the fixed pair directions on 2018-2023; normalize with 2023 residuals; validate on 2024-2025 | Adopted |
 | Final fit | Load Phase 3 OLS and Phase 4 normalization; train from scratch through 2025 for the selected epoch count | Adopted |
 | Daily features | Z, lags 1/2/3, trailing standard deviation, in that order | Adopted structure |
-| Rolling feature | 20 sessions, including the current close, `ddof=1`, all 20 observations required | Adopted 2026-11-02 |
-| Scaling | Standardize each feature from unique training input rows; leave the change targets unscaled in Z units | Adopted 2026-11-02 |
-| Targets | Five changes `Z(t+h) - Z(t)`; forecast is `Z(t)` plus the predicted change | Adopted 2026-11-02 |
-| Batch order | Shuffle training windows each epoch with a generator seeded by the trial seed | Adopted 2026-11-02 |
-| Network | Separate one-layer, unidirectional LSTM for each pair, with five direct outputs | Adopted 2026-11-02 |
-| Experiment budget | Four configurations per pair; two additional seed checks for the selected configuration | Adopted 2026-11-02 |
-| Forecast reference | Persistence on exactly the same origins and target dates | Adopted 2026-11-02 |
-| Trading | Day-five forecast filters fresh entries; observed-Z exits remain unchanged | Adopted 2026-11-02 |
-| Comparison dates | Same entry-eligible origins for both strategies; keep accounting through the period endpoint | Adopted 2026-11-02 |
+| Rolling feature | 20 sessions, including the current close, `ddof=1`, all 20 observations required | Adopted |
+| Scaling | Standardize each feature from unique training input rows; leave the change targets unscaled in Z units | Adopted |
+| Targets | Five changes `Z(t+h) - Z(t)`; forecast is `Z(t)` plus the predicted change | Adopted |
+| Batch order | Shuffle training windows each epoch with a generator seeded by the trial seed | Adopted |
+| Network | Separate one-layer, unidirectional LSTM for each pair, with five direct outputs | Adopted |
+| Experiment budget | Four configurations per pair; two additional seed checks for the selected configuration | Adopted |
+| Forecast reference | Persistence on exactly the same origins and target dates | Adopted |
+| Trading | Day-five forecast filters fresh entries; observed-Z exits remain unchanged | Adopted |
+| Comparison dates | Same entry-eligible origins for both strategies; keep accounting through the period endpoint | Adopted |
 
 The shortlisted pairs and directions were selected using 2018-2025. Earlier
 OLS/preprocessing fits prevent validation observations entering those fitted

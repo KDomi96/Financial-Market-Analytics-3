@@ -507,12 +507,12 @@ overwritten. The image excludes local agent files, supplied assignment
 material, IBKR data, and previously generated datasets and outputs. It must
 therefore build the masters from the permitted raw snapshots.
 
-Phase 3 was verified on 1 November 2026 with these commands:
+Phase 3 was verified with these commands:
 
 ```powershell
-docker build -t financial-market-analytics-3:phase3-20261101-tidy .
-docker run --name financial-market-analytics-3-phase3-20261101-tidy financial-market-analytics-3:phase3-20261101-tidy python scripts/run_pipeline.py --historical-only
-docker run --rm financial-market-analytics-3:phase3-20261101-tidy python -m unittest discover -s tests -v
+docker build -t financial-market-analytics-3:phase3 .
+docker run --name financial-market-analytics-3-phase3 financial-market-analytics-3:phase3 python scripts/run_pipeline.py --historical-only
+docker run --rm financial-market-analytics-3:phase3 python -m unittest discover -s tests -v
 ```
 
 The pipeline exited with code 0 and all 43 tests passed in the image. The
@@ -525,13 +525,13 @@ Its processed directory contains only the historical master, manifest, and
 historical spreads. Local review and independent calculation evidence is in
 `outputs/metrics/phase3_review_validation.json`.
 
-Phase 4 was verified on 1 November 2026 with both pipeline modes:
+Phase 4 was verified with both pipeline modes:
 
 ```powershell
-docker build -t financial-market-analytics-3:phase4-20261101 .
-docker run --name financial-market-analytics-3-phase4-historical-20261101 financial-market-analytics-3:phase4-20261101 python scripts/run_pipeline.py --historical-only
-docker run --name financial-market-analytics-3-phase4-full-20261101 financial-market-analytics-3:phase4-20261101
-docker run --rm financial-market-analytics-3:phase4-20261101 python -m unittest discover -s tests -v
+docker build -t financial-market-analytics-3:phase4 .
+docker run --name financial-market-analytics-3-phase4-historical financial-market-analytics-3:phase4 python scripts/run_pipeline.py --historical-only
+docker run --name financial-market-analytics-3-phase4-full financial-market-analytics-3:phase4
+docker run --rm financial-market-analytics-3:phase4 python -m unittest discover -s tests -v
 ```
 
 Both pipelines exited with code 0 and all 55 tests passed. Derived data,
@@ -550,7 +550,7 @@ docker run --rm -it financial-market-analytics-3 python
 ```
 
 The Dockerfile pins Python and uv versions; its base images are version-tagged,
-not digest-pinned. The Phase 1 image was built and run on 25 October 2026 with
+not digest-pinned. The Phase 1 image was built and run with
 Docker Engine 29.8.2. It exited with code 0, passed all 13 offline tests, and
 produced the same eight CSV hashes as Windows. The 64 data-quality checks also
 passed. The evidence is in `outputs/metrics/phase1_docker_validation.json`.
@@ -560,7 +560,7 @@ hashes; the eight Phase 1 CSV hashes stayed the same. Build files
 are hashed by package path, so the module is recorded even though the container
 installs the package outside the project folder.
 
-The corrected Phase 2 image was run the same day with the historical-only pipeline. It
+The corrected Phase 2 image was also run with the historical-only pipeline. It
 exited with code 0, all 22 EDA checks and 31 offline tests passed, and the
 container held no unseen master. Its rebuilt historical master has the same
 hash as the Windows file. Five EDA tables are byte-identical and the other

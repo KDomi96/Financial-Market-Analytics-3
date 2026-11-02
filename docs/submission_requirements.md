@@ -108,5 +108,5 @@ course assignment page. It complements the project-specific requirements in
 
 ## Source note
 
-Recorded from the course page screenshot supplied on 2026-09-30. The original
+Recorded from a screenshot of the course page. The original
 page remains the authority if its requirements change.

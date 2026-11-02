@@ -1,6 +1,6 @@
 # Phase 4 plan: statistical baseline
 
-Status: implemented and verified 1 November 2026. Results are in the
+Status: implemented and verified. Results are in the
 [Phase 4 analysis](phase_4_analysis.md). The rules
 and their reasons are in
 [methodology](../methodology.md#phase-4-statistical-baseline).

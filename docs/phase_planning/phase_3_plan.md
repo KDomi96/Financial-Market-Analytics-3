@@ -1,6 +1,6 @@
 # Phase 3 plan: pair selection
 
-Status: implemented and verified, 1 November 2026. Results and limitations are
+Status: implemented and verified. Results and limitations are
 in the [Phase 3 analysis](phase_3_analysis.md). The
 statistical settings and their reasons are in
 [methodology](../methodology.md#phase-3-pair-selection).
@@ -49,11 +49,11 @@ are fitted in sample; their appearance is not a backtest.
 ## Steps
 
 **1. Fix the settings in config.** The
-[test design](../methodology.md#test-design-adopted-2026-11-01),
-[comparison rules](../methodology.md#comparison-and-shortlist-adopted-2026-11-01), and
-[diagnostics](../methodology.md#supporting-diagnostics-adopted-2026-11-01) were
-adopted on 1 November 2026. Put them in `configs/pair_selection.json` before
-running any real-data test. Changing a setting later needs a reason and
+[test design](../methodology.md#test-design-adopted),
+[comparison rules](../methodology.md#comparison-and-shortlist-adopted), and
+[diagnostics](../methodology.md#supporting-diagnostics-adopted) were
+adopted before any real-data test. Put them in `configs/pair_selection.json` before
+running it. Changing a setting later needs a reason and
 another logged run; preserve the earlier results rather than selecting
 whichever version looks best.
 
